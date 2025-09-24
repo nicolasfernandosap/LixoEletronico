@@ -1,0 +1,24 @@
+.footer {
+  background-color: #10395C;
+  border: 2px solid #95C122; /* Borda verde */
+  color: white;
+
+  padding: 1rem 2rem;
+  margin-top: 2rem;
+
+  width: 100%;
+  max-width: 100%;  /* Garante que nunca passe da largura da tela */
+  height: auto;      /* Ajusta a altura automaticamente conforme o conteúdo */
+
+  box-sizing: border-box;
+  text-align: center;
+  border-radius: 8px; /* Opcional: deixa as bordas arredondadas */
+}
+
+/* Responsivo (opcional, se quiser ajustes extras no mobile) */
+@media (max-width: 600px) {
+  .footer {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+}

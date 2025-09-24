@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap');
+
+/* HEADER */
+.header {
+  background-color: #10395C;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  width: 100vw; /* Garante largura total da viewport */
+  box-sizing: border-box;
+}
+
+/* NAV WRAPPER */
+.nav-wrapper {
+  background-color: #95C122;
+  border-radius: 28px;
+  border: 2px solid black;
+
+  padding: 0.1rem 1rem;
+  width: 89%;
+  max-width:679px;
+  height: auto;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  margin-left: auto; /*  empurra a nav-wrapper para o canto direito */
+  margin-right: 0;   /*  garante que fique encostada à direita */
+}
+
+/* NAVBAR */
+.navbar {
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem;
+  flex-wrap: wrap;          /* Permite quebrar linha em telas pequenas */
+  
+}
+
+/* RESPONSIVIDADE PARA TELAS */
+@media (max-width: 768px) {
+  .nav-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+/* LINKS DE NAVEGAÇÃO */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: bold;
+  transition: color 0.3s;
+  white-space: nowrap;
+  font-size: 1rem;
+}
+
+.nav-links a:hover {
+  color: #c8e6c9;
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .nav-wrapper {
+    padding: 1rem;
+  }
+}

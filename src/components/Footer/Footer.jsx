@@ -3,7 +3,7 @@ import './Footer.css';
 const Footer = () => {
   return (
     <footer className="footer">
-      <p>© 2025 - Seu Projeto. Todos os direitos reservados.</p>
+      <p>© 2025 Projeto Lixo Eletrônico</p>
     </footer>
   );
 };

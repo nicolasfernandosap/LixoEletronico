@@ -1,25 +1,34 @@
-import React from 'react';
+import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-import './App.css'; // Importa o CSS se quiser deixar organizado aqui
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Suas páginas
+import Home from './pages/Home';
+import AuxilioLixo from './pages/AuxilioLixo';
+import PontosAutorizados from './pages/PontosAutorizados';
+import Contato from './pages/Contato';
+import Cadastro from './pages/Cadastro';
 
 function App() {
   return (
-    <div className="app-container">
-      <Header />
+    <Router>
+      <div className="app-container">
+        <Header />
 
-      <main className="main-content">
-       
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/auxilio" element={<AuxilioLixo />} />
+            <Route path="/pontos" element={<PontosAutorizados />} />
+            <Route path="/contato" element={<Contato />} />
+            <Route path="/cadastro" element={<Cadastro />} />
+          </Routes>
+        </main>
 
-        <div className="notificacoes">
-          <div className="notificacao">Mensagem 1</div>
-          <div className="notificacao">Mensagem 2</div>
-          <div className="notificacao">Mensagem 3</div>
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

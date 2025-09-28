@@ -1,0 +1,83 @@
+.cadastro-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  background-color: #f5f5f5;
+  padding: 5px;
+}
+
+.cadastro-form {
+  background-color: #10395C;
+  padding: 30px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+.cadastro-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.cadastro-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.cadastro-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: none;
+  border-radius: 4px;
+}
+
+.btn-entrar {
+  width: 100%;
+  padding: 12px;
+  background-color: #95C122;
+  color: #10395C;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.btn-entrar:hover {
+  background-color: #7faa1d;
+}
+
+.cadastro-links {
+  margin-top: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cadastro-links a {
+  color: #95C122;
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+
+.btn-criar-conta {
+  background-color: transparent;
+  color: #95C122;
+  border: 1px solid #95C122;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-criar-conta:hover {
+  background-color: #95C122;
+  color: #10395C;
+}

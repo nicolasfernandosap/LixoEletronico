@@ -8,9 +8,9 @@ const Home = () => {
       <p>Escola CIMOL Monteiro Lobato</p>
 
       <div className="home-container">
-        <div className="box">Caixa 1</div>
-        <div className="box">Caixa 2</div>
-        <div className="box">Caixa 3</div>
+        <div className="box">Caixa Conteúdos</div>
+        <div className="box">Caixa Conteúdos</div>
+        <div className="box">Caixa Conteúdos</div>
       </div>
     </div>
   );

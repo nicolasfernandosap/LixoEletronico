@@ -8,7 +8,7 @@ import Home from './pages/Home';
 import AuxilioLixo from './pages/AuxilioLixo';
 import PontosAutorizados from './pages/PontosAutorizados';
 import Contato from './pages/Contato';
-import Cadastro from './pages/Cadastro';
+import Cadastro from './pages/CadastroFormUsuario.jsx';
 
 function App() {
   return (

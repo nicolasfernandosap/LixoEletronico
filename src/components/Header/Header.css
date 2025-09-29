@@ -4,8 +4,7 @@
 .header {
   background-color: #10395C;
   padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
+  box-shadow: 0 2px 4px #0000001a;
   width: 100vw; /* Garante largura total da viewport */
   box-sizing: border-box;
 }

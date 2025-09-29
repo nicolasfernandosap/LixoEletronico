@@ -8,7 +8,8 @@ import Home from './pages/Home';
 import AuxilioLixo from './pages/AuxilioLixo';
 import PontosAutorizados from './pages/PontosAutorizados';
 import Contato from './pages/Contato';
-import Cadastro from './pages/CadastroFormUsuario.jsx';
+import Cadastro from './pages/FormUsuarioLogin.jsx';
+import CriarContaUsuario from './pages/CriarContaUsuario';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/pontos" element={<PontosAutorizados />} />
             <Route path="/contato" element={<Contato />} />
             <Route path="/cadastro" element={<Cadastro />} />
+            <Route path="/criar-conta" element={<CriarContaUsuario />} />
           </Routes>
         </main>
 
@@ -33,3 +35,4 @@ function App() {
 }
 
 export default App;
+

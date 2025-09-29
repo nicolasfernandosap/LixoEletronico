@@ -14,7 +14,6 @@ html, body {
 /* Parte principal da página */
 .main-content {
   flex: 1;
-  padding: 2rem;
   text-align: center;
 }
 

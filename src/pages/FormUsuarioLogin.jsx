@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import './CadastroFormUsuario.css';
+import './FormUsuarioLogin.css';
+import { Link } from 'react-router-dom'; 
 
 const Cadastro = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ const Cadastro = () => {
       <form className="cadastro-form" onSubmit={handleSubmit}>
         <h2>Entrar</h2>
 
-        <label htmlFor="email">Email:</label>
+        <label htmlFor="email"></label>
         <input
           type="email"
           id="email"
@@ -26,7 +27,7 @@ const Cadastro = () => {
           required
         />
 
-        <label htmlFor="senha">Senha:</label>
+        <label htmlFor="senha"></label>
         <input
           type="password"
           id="senha"
@@ -40,8 +41,8 @@ const Cadastro = () => {
 
         <div className="cadastro-links">
           <a href="#">Esqueceu sua senha?</a>
-          <button type="button" className="btn-criar-conta">Criar nova conta</button>
-        </div>
+          <Link to="/criar-conta" className="btn-criar-conta">Criar nova conta</Link>
+            </div>
       </form>
     </div>
   );

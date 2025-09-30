@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import './CriarContaUsuario.css';
-
+import { FaUser, FaIdCard, FaHome, FaHashtag, FaMapMarkerAlt, FaFlag, FaMapPin, FaPhone, FaEnvelope, FaVenusMars, FaLock } from 'react-icons/fa';
 
 const CriarContaUsuario = () => {
   const [formData, setFormData] = useState({
     nome: '',
     cpf: '',
+    endereco: '',
+    numeroCasa: '',
+    bairro: '',
+    estado: '',
+    cep: '',
     celular: '',
     email: '',
     genero: '',
@@ -30,31 +35,52 @@ const CriarContaUsuario = () => {
       return;
     }
 
-    // Aqui você pode fazer envio para backend
     console.log('Cadastro realizado com sucesso:', formData);
     setErro('');
     alert('Conta criada com sucesso!');
   };
+
+  const renderInput = (Icon, type, name, placeholder) => (
+    <div className="input-group">
+      <Icon className="input-icon" />
+      <input
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        value={formData[name]}
+        onChange={handleChange}
+        required
+      />
+    </div>
+  );
 
   return (
     <div className="form-container">
       <h2>Criar Nova Conta</h2>
       {erro && <p className="erro">{erro}</p>}
       <form onSubmit={handleSubmit}>
-        <input type="text" name="nome" placeholder="Nome completo" value={formData.nome} onChange={handleChange} required />
-        <input type="text" name="cpf" placeholder="CPF" value={formData.cpf} onChange={handleChange} required />
-        <input type="tel" name="celular" placeholder="Celular" value={formData.celular} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="E-mail" value={formData.email} onChange={handleChange} required />
-        
-        <select name="genero" value={formData.genero} onChange={handleChange} required>
-          <option value="">Selecione o Gênero</option>
-          <option value="masculino">Masculino</option>
-          <option value="feminino">Feminino</option>
-          <option value="outro">Outro</option>
-        </select>
+        {renderInput(FaUser, 'text', 'nome', 'Nome completo')}
+        {renderInput(FaIdCard, 'text', 'cpf', 'CPF')}
+        {renderInput(FaHome, 'text', 'endereco', 'Endereço')}
+        {renderInput(FaHashtag, 'text', 'numeroCasa', 'Número da Casa')}
+        {renderInput(FaMapMarkerAlt, 'text', 'bairro', 'Bairro')}
+        {renderInput(FaFlag, 'text', 'estado', 'Estado')}
+        {renderInput(FaMapPin, 'text', 'cep', 'CEP')}
+        {renderInput(FaPhone, 'tel', 'celular', 'Celular')}
+        {renderInput(FaEnvelope, 'email', 'email', 'E-mail')}
 
-        <input type="password" name="senha" placeholder="Senha" value={formData.senha} onChange={handleChange} required />
-        <input type="password" name="confirmarSenha" placeholder="Confirme a senha" value={formData.confirmarSenha} onChange={handleChange} required />
+        <div className="input-group">
+          <FaVenusMars className="input-icon" />
+          <select name="genero" value={formData.genero} onChange={handleChange} required>
+            <option value="">Selecione o Gênero</option>
+            <option value="masculino">Masculino</option>
+            <option value="feminino">Feminino</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+
+        {renderInput(FaLock, 'password', 'senha', 'Senha')}
+        {renderInput(FaLock, 'password', 'confirmarSenha', 'Confirme a senha')}
 
         <button type="submit">Cadastrar</button>
       </form>

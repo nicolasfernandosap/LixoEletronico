@@ -1,13 +1,8 @@
 const Contato = () => {
   return (
     <div>
-      <h2>Entre em Contato</h2>
-      <form>
-        <input type="text" placeholder="Nome" /><br />
-        <input type="email" placeholder="Email" /><br />
-        <textarea placeholder="Mensagem"></textarea><br />
-        <button type="submit">Enviar</button>
-      </form>
+      <h2>Pagina Contato </h2>
+      <p>Pagina contato e informações sobre a instituição</p>
     </div>
   );
 };

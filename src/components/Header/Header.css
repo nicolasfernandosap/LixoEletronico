@@ -3,10 +3,13 @@
 /* HEADER */
 .header {
   background-color: #10395C;
-  padding: 1rem;
+  padding-top: 2rem;
+  padding-bottom: 0.5rem;
+  padding-right: 1rem ;
   box-shadow: 0 2px 4px #0000001a;
   width: 100vw; /* Garante largura total da viewport */
   box-sizing: border-box;
+  margin-bottom: 50px;
 }
 
 /* NAV WRAPPER */
@@ -15,7 +18,8 @@
   border-radius: 28px;
   border: 2px solid black;
 
-  padding: 0.1rem 1rem;
+  padding: 0.1rem 1rem ;
+  padding-left: 5px;
   width: 89%;
   max-width:850px;
   height: auto;

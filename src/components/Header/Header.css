@@ -1,73 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap' );
 
-/* HEADER */
+/* Estilos Globais do Header */
 .header {
   background-color: #10395C;
-  padding-top: 2rem;
-  padding-bottom: 0.5rem;
-  padding-right: 1rem ;
+  padding: 1rem; /* Simplificado para um padding mais consistente */
   box-shadow: 0 2px 4px #0000001a;
-  width: 100vw; /* Garante largura total da viewport */
-  box-sizing: border-box;
+  width: 100%; /* Garante que o header ocupe toda a largura */
+  box-sizing: border-box; /* Essencial para que o padding não aumente a largura total */
   margin-bottom: 20px;
-  
+  display: flex;
+  justify-content: flex-end; /* Alinha o conteúdo (nav-wrapper) à direita */
 }
 
-/* NAV WRAPPER */
+/* Contêiner da Navegação */
 .nav-wrapper {
   background-color: #95C122;
   border-radius: 28px;
   border: 2px solid black;
-
-  padding: 0.1rem 1rem ;
-  padding-left: 5px;
-  width: 89%;
-  max-width:850px;
-  height: auto;
-
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  margin-left: auto; /*  empurra a nav-wrapper para o canto direito */
-  margin-right: 0;   /*  garante que fique encostada à direita */
+  padding: 0.5rem 1.5rem;
+  width: auto; /* A largura será determinada pelo conteúdo */
+  max-width: 850px; /* Mantém um limite máximo em telas grandes */
 }
 
-/* NAVBAR */
-.navbar {
-  
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.4rem;
-  flex-wrap: wrap;          /* Permite quebrar linha em telas pequenas */
-  
-}
-
-/* RESPONSIVIDADE PARA TELAS */
-@media (max-width: 768px) {
-  .nav-wrapper {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .navbar {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-}
-
-/* LINKS DE NAVEGAÇÃO */
+/* Links de Navegação */
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 1.5rem;
-  padding: 0;
-  margin: 0;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Permite que os links quebrem a linha se não houver espaço */
   justify-content: center;
   align-items: center;
+  gap: 1.5rem; /* Espaçamento entre os links */
+  padding: 0;
+  margin: 0;
 }
 
 .nav-links a {
@@ -75,7 +39,7 @@
   color: #ffffff;
   font-weight: bold;
   transition: color 0.3s;
-  white-space: nowrap;
+  white-space: nowrap; /* Impede que o texto de um link quebre em duas linhas */
   font-size: 1rem;
 }
 
@@ -83,15 +47,21 @@
   color: #c8e6c9;
 }
 
-/* RESPONSIVO */
+/* --- Media Query para Responsividade --- */
+/* Aplica estes estilos em telas com largura máxima de 768px (tablets e smartphones) */
 @media (max-width: 768px) {
-  .nav-links {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.8rem;
+  .header {
+    padding: 1rem;
+    justify-content: center; /* Centraliza o nav-wrapper na tela */
   }
 
   .nav-wrapper {
+    width: 90%; /* Ocupa 90% da largura da tela */
     padding: 1rem;
+  }
+
+  .nav-links {
+    flex-direction: column; /* Empilha os links verticalmente */
+    gap: 1rem; /* Ajusta o espaçamento para a visualização vertical */
   }
 }

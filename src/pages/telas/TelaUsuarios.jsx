@@ -7,9 +7,9 @@ import { FaTools } from 'react-icons/fa';
 const TelaUsuarios = () => {
   // Dados do usuário (exemplo fixo por enquanto)
   const [usuario] = useState({
-    nome: 'João da Silva',
-    endereco: 'Rua das Flores, 123, Bairro Jardim, Cidade-UF',
-    celular: '(11) 98765-4321',
+    nome: 'Ola',
+    endereco: 'Endereço',
+    celular: 'Celular Informações',
   });
 
   const [mostrarIcone, setMostrarIcone] = useState(false);

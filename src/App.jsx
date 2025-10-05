@@ -10,6 +10,7 @@ import PontosAutorizados from './pages/PontosAutorizados';
 import Contato from './pages/Contato';
 import Cadastro from './pages/FormUsuarioLogin.jsx';
 import CriarContaUsuario from './pages/CriarContaUsuario';
+import TelaUsuarios from "./pages/telas/TelaUsuarios.jsx";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/contato" element={<Contato />} />
             <Route path="/cadastro" element={<Cadastro />} />
             <Route path="/criar-conta" element={<CriarContaUsuario />} />
+            <Route path="/tela-usuario" element={<TelaUsuarios />} />
           </Routes>
         </main>
 

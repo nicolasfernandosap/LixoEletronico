@@ -1,76 +1,82 @@
+/* CriarContaUsuario.css */
+
+/* Container geral do formulário */
 .form-container {
-  background-color: #10395C;
-  color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  max-width: 500px;
-  margin: 2rem auto;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  
-}
-
-.form-container h2 {
-  text-align: center;
-  color: #95C122;
-  margin-bottom: 1rem;
-}
-
-form {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.input-group {
-  display: flex;
-  align-items: center;
-  background: white;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.input-icon {
-  background-color: #eee;
-  padding: 0.75rem;
-  color: #333;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  align-items: center;
+  min-height: 100vh;
+  background: #0b2d4b; /* fundo azul escuro */
 }
 
-.input-group input,
-.input-group select {
+/* Caixa do formulário */
+.form-content {
+  background: #083358;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 475px;
+  text-align: center;
+}
+
+/* Título */
+.form-content h2 {
+  margin-bottom: 20px;
+  color: #a9dc34; /* verde claro */
+  font-size: 1.8rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Inputs */
+.form-content input {
+  width: 90%;
+  padding: 12px 15px;
+  margin: 8px 0;
   border: none;
-  padding: 0.75rem;
-  flex: 1;
+  border-radius: 8px;
+  background: #fff;
   font-size: 1rem;
   color: #333;
+  transition: all 0.3s ease-in-out;
 }
 
-.input-group select {
-  appearance: none;
-  background-color: transparent;
+/* Placeholder */
+.form-content input::placeholder {
+  color: #666;
+  font-style: italic;
 }
 
-button {
-  background-color: #95C122;
-  color: #10395C;
-  padding: 0.75rem;
+/* Efeito ao focar */
+.form-content input:focus {
+  outline: none;
+  border: 2px solid #a9dc34;
+  box-shadow: 0px 0px 8px rgba(169, 220, 52, 0.6);
+}
+
+/* Botão */
+.form-content button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
+  background: #a9dc34;
+  color: #083358;
+  font-size: 1.1rem;
   font-weight: bold;
-  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.3s;
 }
 
-button:hover {
-  background-color: #7fa61b;
+.form-content button:hover {
+  background: #8cc028;
 }
 
+/* Mensagens de erro */
 .erro {
-  color: red;
-  text-align: center;
-  margin-bottom: 1rem;
+  color: #ff6b6b;
+  font-weight: bold;
+  margin-bottom: 10px;
 }

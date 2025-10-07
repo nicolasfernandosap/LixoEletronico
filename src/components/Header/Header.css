@@ -1,69 +1,136 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap' );
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap');
 
-/* Estilos Globais do Header */
 .header {
   background-color: #10395C;
-  padding: 1rem; /* Simplificado para um padding mais consistente */
+  padding: 1rem;
   box-shadow: 0 2px 4px #0000001a;
-  width: 100%; /* Garante que o header ocupe toda a largura */
-  box-sizing: border-box; /* Essencial para que o padding não aumente a largura total */
-  margin-bottom: 20px;
+  width: 100%;
   display: flex;
-  justify-content: flex-end; /* Alinha o conteúdo (nav-wrapper) à direita */
+  justify-content: flex-end;
+   align-items: flex-start;
+  position: relative;
+  z-index: 10;
 }
 
-/* Contêiner da Navegação */
 .nav-wrapper {
   background-color: #95C122;
   border-radius: 28px;
-  border: 2px solid black;
-  padding: 0.5rem 1.5rem;
-  width: auto; /* A largura será determinada pelo conteúdo */
-  max-width: 850px; /* Mantém um limite máximo em telas grandes */
+  border: 1px solid black;
+  padding: 0.5rem 1.0rem;
+  width: auto;
+  margin-right: 27px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
-/* Links de Navegação */
+/* Ícone do menu hambúrguer */
+.menu-icon {
+  display: none;
+  font-size: 1.8rem;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.menu-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Links */
 .nav-links {
   list-style: none;
   display: flex;
-  flex-wrap: wrap; /* Permite que os links quebrem a linha se não houver espaço */
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem; /* Espaçamento entre os links */
-  padding: 0;
+  gap: 1.5rem;
   margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  position: relative;
 }
 
 .nav-links a {
   text-decoration: none;
-  color: #ffffff;
+  color: white;
   font-weight: bold;
-  transition: color 0.3s;
-  white-space: nowrap; /* Impede que o texto de um link quebre em duas linhas */
   font-size: 1rem;
+  transition: color 0.3s;
 }
 
 .nav-links a:hover {
-  color: #c8e6c9;
+  color: #10395C;
 }
 
-/* --- Media Query para Responsividade --- */
-/* Aplica estes estilos em telas com largura máxima de 768px (tablets e smartphones) */
+/* Linha decorativa sob cada item */
+.nav-links li::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 0%;
+  background-color: #10395C;
+  transition: width 0.3s ease-in-out;
+  margin-top: 5px;
+}
+
+.nav-links li:hover::after {
+  width: 100%;
+}
+
+/* ======== Responsividade ======== */
 @media (max-width: 768px) {
-  .header {
-    padding: 1rem;
-    justify-content: center; /* Centraliza o nav-wrapper na tela */
+  .nav-wrapper {
+    width: 30%;
+    border-radius: 15px;
+    padding: 0.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 40px; 
   }
 
-  .nav-wrapper {
-    width: 90%; /* Ocupa 90% da largura da tela */
-    padding: 1rem;
+  .menu-icon {
+    display: block;
+    align-self: flex-end;
+    color: #10395C;
+  }
+
+  .navbar {
+    width: 95%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out;
+  }
+
+  .navbar.active {
+    max-height: 500px;
+    margin-top: 0.5rem;
   }
 
   .nav-links {
-    flex-direction: column; /* Empilha os links verticalmente */
-    gap: 1rem; /* Ajusta o espaçamento para a visualização vertical */
+    flex-direction: column;
+    width: 100%;
+    gap: 0.8rem;
+  }
+
+  .nav-links li {
+    width: 100%;
+    text-align: left;
+    border-bottom: 1px solid rgba(16, 57, 92, 0.2);
+    padding-bottom: 0.5rem;
+  }
+
+  .nav-links li:last-child {
+    border-bottom: none;
+  }
+
+  .nav-links a {
+    color: #10395C;
+    display: block;
+    width: 100%;
+  }
+
+  .nav-links a:hover {
+    color: white;
   }
 }
-
-

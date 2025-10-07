@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import './Header.css';
 
+// CAMINHO CORRIGIDO PARA A IMAGEM
+import logoImage from '../../assets/LixoRecicle.jpg'; 
+
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -12,11 +15,15 @@ const Header = () => {
 
   return (
     <header className="header">
+      <Link to="/" className="logo-container">
+        {/* A imagem importada do logo*/}
+        <img src={logoImage} alt="Logo Lixo Eletrônico" className="logo-image" />
+      </Link>
+
       <div className="nav-wrapper">
         <div className="menu-icon" onClick={toggleMenu}>
           {menuOpen ? <FaTimes /> : <FaBars />}
         </div>
-
         <nav className={`navbar ${menuOpen ? 'active' : ''}`}>
           <ul className="nav-links">
             <li><Link to="/" onClick={() => setMenuOpen(false)}>Página Inicial</Link></li>
@@ -32,3 +39,4 @@ const Header = () => {
 };
 
 export default Header;
+

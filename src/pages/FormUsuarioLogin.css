@@ -10,7 +10,7 @@
 
 .cadastro-form {
   background-color: #10395C;
-  padding: 70px 40px;  
+  padding: 90px 40px;  
   border-radius: 8px;
   width: 100%;
   max-width: 400px;
@@ -76,6 +76,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: 0.3s;
+  margin-top: 40px;
 }
 
 .btn-criar-conta:hover {

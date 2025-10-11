@@ -80,3 +80,17 @@
   font-weight: bold;
   margin-bottom: 10px;
 }
+/*
+  Este estilo se aplica às mensagens de erro que aparecem
+  imediatamente abaixo de um campo de input quando uma
+  regra de validação (como o limite de caracteres) é quebrada.
+*/
+.erro-campo {
+  color: #e53e3e; /* Um tom de vermelho vivo, mas não tão alarmante quanto o erro geral. */
+  font-size: 0.875rem; /* Um pouco menor que o texto normal para ser mais sutil. */
+  text-align: left; /* Alinha a mensagem à esquerda, abaixo do campo. */
+  width: 100%; /* Garante que a mensagem ocupe o espaço disponível. */
+  margin-top: -8px; /* Puxa a mensagem para mais perto do input acima dela. */
+  margin-bottom: 10px; /* Dá um respiro antes do próximo campo. */
+  padding-left: 5px; /* Adiciona um pequeno recuo para alinhar com o texto do input. */
+}

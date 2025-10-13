@@ -1,81 +1,110 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
-import { supabase } from '/supabaseClient.js'; 
-import './TelaUsuarios.css';
-import { FaTools } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../../../supabaseClient'; // Caminho corrigido baseado na estrutura de pastas
+import { useNavigate } from 'react-router-dom';
+import './TelaUsuarios.css'; 
+import { FaHome, FaClipboardList, FaSignOutAlt } from 'react-icons/fa'; // Ícones para o menu
 
 const TelaUsuarios = () => {
-  const [usuario] = useState({
-    nome: 'Ola',
-    endereco: 'Endereço',
-    celular: 'Celular Informações',
-  });
+  const [nomeUsuario, setNomeUsuario] = useState('');
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  const [mostrarIcone, setMostrarIcone] = useState(false);
-  const navigate = useNavigate(); // 3. Inicializando o hook de navegação
+  useEffect(() => {
+    const buscarNomeUsuario = async () => {
+      setLoading(true);
+      
+      // 1. Obter a sessão atual do usuário
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-  const handleAbrirOrdem = () => {
-    setMostrarIcone(!mostrarIcone);
-    console.log('Botão de ordem de serviço clicado!');
-  };
+      if (sessionError || !session) {
+        console.error('Erro ao obter sessão ou usuário não logado:', sessionError);
+        // Redireciona para a tela de login/cadastro se não houver sessão
+        navigate('/cadastro'); 
+        return;
+      }
 
-  // 4. Criando a função de logout
+      const userId = session.user.id;
+
+      // 2. Buscar o nome completo na tabela 'usuarios' usando o ID do usuário
+      const { data, error } = await supabase
+        .from('usuarios')
+        .select('nome_completo')
+        .eq('id_usuario', userId)
+        .single(); // Espera apenas um resultado
+
+      if (error) {
+        console.error('Erro ao buscar nome do usuário:', error);
+        setNomeUsuario('Erro ao carregar nome');
+      } else if (data) {
+        // Pegando o nome completo do cadastro Usuarios e Imprimindo na Dashboard do usuario logado
+        setNomeUsuario(data.nome_completo);
+      } else {
+        setNomeUsuario('Usuário');
+      }
+
+      setLoading(false);
+    };
+
+    buscarNomeUsuario();
+  }, [navigate]);
+
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut(); // Efetua o logout no Supabase
-    if (error) {
-      console.error('Erro ao sair:', error);
-    } else {
-      navigate('/cadastro'); // Redireciona para a página de login após sair
-    }
+    await supabase.auth.signOut();
+    navigate('/'); // Redireciona para a página inicial após o logout
   };
+
+  // Estrutura de carregamento (Loading)
+  const LoadingProfile = () => (
+    <div className="user-info">
+      <div className="foto-placeholder loading"></div>
+      <p className="nome-usuario loading"></p>
+      <p className="user-info-detail loading"></p>
+    </div>
+  );
+
+  // Estrutura do Perfil do Usuário
+  const UserProfile = () => (
+    <div className="user-info">
+      {/* Placeholder para a foto do usuário. Reutiliza a classe .avatar */}
+      <div className="avatar">
+        {/* Você pode colocar as iniciais do nome aqui se quiser */}
+        {nomeUsuario.charAt(0)}
+      </div>
+      {/* O nome do usuário é exibido logo abaixo da foto */}
+      <h2>{nomeUsuario}</h2>
+      <p>Área do Cliente</p>
+    </div>
+  );
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        {/* 5. Cria um contêiner para o título e o botão */}
-        <div className="header-content">
-          <div>
-            <h1>Minha Conta</h1>
-            <p>Bem-vindo de volta, {usuario.nome.split(' ')[0]}!</p>
-          </div>
-         
-          <button onClick={handleLogout} className="btn-sair">
-            Sair
-          </button>
-        </div>
-      </header>
+    <div className="dashboard-wrapper">
+      {/* SIDEBAR */}
+      <div className="sidebar">
+        <div>
+          {loading ? <LoadingProfile /> : <UserProfile />}
 
-      <div className="dashboard-content">
+          <nav className="sidebar-menu">
+            <ul>
+              <li><FaHome /> Início</li>
+              <li><FaClipboardList /> Minhas Ordens</li>
+            </ul>
+          </nav>
+        </div>
         
-        <div className="user-info-card">
-          <h2>Meus Dados</h2>
-          <div className="info-item">
-            <strong>Nome:</strong>
-            <p>{usuario.nome}</p>
-          </div>
-          <div className="info-item">
-            <strong>Endereço:</strong>
-            <p>{usuario.endereco}</p>
-          </div>
-          <div className="info-item">
-            <strong>Celular:</strong>
-            <p>{usuario.celular}</p>
-          </div>
-        </div>
+        <button className="logout-btn" onClick={handleLogout}>
+          <FaSignOutAlt /> Sair
+        </button>
+      </div>
 
-        <div className="actions-card">
-          <h2>Ações</h2>
-          <button onClick={handleAbrirOrdem} className="btn-ordem-servico">
-            Abrir Ordem de Serviço
-          </button>
-          
-          {mostrarIcone && (
-            <div className="icone-container">
-              <FaTools size={50} color="#007bff" />
-              <p>Ordem de serviço aberta!</p>
-            </div>
-          )}
-        </div>
+      {/* CONTEÚDO PRINCIPAL */}
+      <div className="dashboard-content">
+        <h1>Dashboard do Cliente</h1>
+
+        {/* Exemplo de conteúdo principal */}
+        <section className="ordens-section">
+          <h2>Minhas Ordens de Serviço</h2>
+          <p className="sem-ordens">Nenhuma ordem de serviço encontrada.</p>
+        </section>
       </div>
     </div>
   );

@@ -1,126 +1,192 @@
-.dashboard-container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-family: sans-serif;
-  background-color: rgb(221, 206, 177);
+.dashboard-wrapper {
+  display: flex;
+  min-height: 100vh;
+  font-family: "Nunito Sans", sans-serif;
+  background: #f4f7fb;
 }
 
-.dashboard-header {
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 1rem;
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  background-color: #10395c;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem 1rem;
+}
+
+/* 
+ * ADAPTAÇÃO: 
+ * O bloco .user-info será usado para envolver o perfil.
+ * O bloco .perfil-usuario (novo no JSX) será mapeado para .user-info.
+ */
+.user-info {
+  text-align: center;
   margin-bottom: 2rem;
 }
 
-.dashboard-header h1 {
-  color: #333;
-  margin: 0;
-}
-
-.dashboard-header p {
-  color: #666;
-  font-size: 1.1rem;
-}
-
-.dashboard-content {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-}
-
-/* Em telas maiores, divide em duas colunas */
-@media (min-width: 768px) {
-  .dashboard-content {
-    grid-template-columns: 2fr 1fr;
-  }
-}
-
-.user-info-card, .actions-card {
-  background-color: #fff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.user-info-card h2, .actions-card h2 {
-  margin-top: 0;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 0.5rem;
+/* 
+ * ADAPTAÇÃO: 
+ * O .avatar original é usado para a foto. 
+ * Vamos adicionar a classe .foto-usuario para a imagem real.
+ */
+.avatar, .foto-usuario {
+  width: 70px;
+  height: 70px;
+  background: #95c122;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
   margin-bottom: 1rem;
-  color: #0056b3;
+  /* Garante que a imagem se ajuste */
+  object-fit: cover; 
 }
 
-.info-item {
-  margin-bottom: 1rem;
+/* 
+ * ADAPTAÇÃO: 
+ * O nome do usuário será exibido em um <h2>.
+ */
+.user-info h2 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
 }
 
-.info-item strong {
-  display: block;
-  color: #555;
+.user-info p {
   font-size: 0.9rem;
-  margin-bottom: 0.25rem;
+  color: #d3d9e2;
 }
 
-.info-item p {
-  margin: 0;
-  color: #333;
-  font-size: 1rem;
+.sidebar-menu ul {
+  list-style: none;
+  padding: 0;
 }
 
-.btn-ordem-servico {
-  width: 100%;
-  padding: 0.8rem;
-  font-size: 1rem;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn-ordem-servico:hover {
-  background-color: #0056b3;
-}
-
-.icone-container {
-  margin-top: 1.5rem;
-  text-align: center;
-  padding: 1rem;
-  background-color: #e9f5ff;
-  border-radius: 8px;
-}
-
-.icone-container p {
-  margin-top: 0.5rem;
-  color: #0056b3;
-  font-weight: bold;
-}
-/* Botao sair logout*/
-.header-content {
+.sidebar-menu li {
   display: flex;
-  justify-content: space-between; /* Coloca um item no início e outro no fim */
-  align-items: center; /* Alinha verticalmente ao centro */
-  width: 100%;
-}
-
-.btn-sair {
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: #dc3545; /* Cor vermelha para indicar uma ação de "saída" ou "perigo" */
-  background-color: #fff;
-  border: 2px solid #dc3545;
-  border-radius: 5px;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  border-radius: 8px;
+  transition: background 0.3s;
 }
 
-.btn-sair:hover {
-  background-color: #dc3545; /* Fundo vermelho ao passar o mouse */
-  color: #fff; /* Texto branco */
+.sidebar-menu li:hover {
+  background-color: #1a4e82;
 }
 
+.logout-btn {
+  background-color: #95c122;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #7fa31c;
+}
+
+/* CONTEÚDO PRINCIPAL */
+.dashboard-content {
+  flex: 1;
+  padding: 2rem 3rem;
+}
+
+.dashboard-content h1 {
+  color: #10395c;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+/* --- SEÇÃO DE ORDENS DE SERVIÇO --- */
+.ordens-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ordens-section h2 {
+  color: #10395c;
+  margin-bottom: 1.5rem;
+}
+
+.ordens-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.ordens-table th,
+.ordens-table td {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.8rem;
+}
+
+.ordens-table th {
+  background-color: #f5f8fa;
+  color: #10395c;
+  font-weight: 700;
+}
+
+.status {
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
+.status.pendente {
+  background-color: #ffcc00;
+  color: #10395c;
+}
+
+.status.concluido {
+  background-color: #95c122;
+  color: white;
+}
+
+.sem-ordens {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+/* --- NOVOS ESTILOS PARA O EFEITO DE CARREGAMENTO (LOADING) --- */
+
+/* Simula o carregamento da foto */
+.foto-placeholder.loading {
+    /* Reutiliza as dimensões do .avatar */
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: #4a6d8c; /* Um cinza mais escuro para contraste no sidebar */
+    margin-bottom: 1rem;
+    /* Efeito de pulsação */
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Simula o carregamento do nome */
+.nome-usuario.loading {
+    width: 100px; /* Largura para simular o texto do nome */
+    height: 18px;
+    background-color: #4a6d8c;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    /* Efeito de pulsação */
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Efeito de pulsação para o loading */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}

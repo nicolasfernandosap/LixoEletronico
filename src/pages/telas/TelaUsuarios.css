@@ -1,8 +1,10 @@
+
 .dashboard-wrapper {
   display: flex;
   min-height: 100vh;
   font-family: "Nunito Sans", sans-serif;
   background: #f4f7fb;
+  transition: margin-left 0.3s ease;
 }
 
 /* SIDEBAR */
@@ -14,23 +16,121 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 1.5rem 1rem;
+  transition: width 0.3s ease, transform 0.3s ease; /* Adicionado transform para responsividade */
+  position: relative;
+  z-index: 1000; /* Garante que fique por cima do conteúdo */
 }
 
-/* 
- * ADAPTAÇÃO: 
- * O bloco .user-info será usado para envolver o perfil.
- * O bloco .perfil-usuario (novo no JSX) será mapeado para .user-info.
- */
+/* ESTADO RECOLHIDO (COLLAPSED) */
+.dashboard-wrapper.collapsed .sidebar {
+  width: 80px;
+  align-items: center;
+  padding: 1.5rem 0.5rem;
+}
+
+/* Oculta o texto quando recolhido */
+.dashboard-wrapper.collapsed .user-info,
+.dashboard-wrapper.collapsed .sidebar-menu span,
+.dashboard-wrapper.collapsed .logout-btn span {
+  display: none;
+}
+
+/* Centraliza os ícones quando recolhido */
+.dashboard-wrapper.collapsed .sidebar-menu li {
+  justify-content: center;
+  padding: 1.2rem 0.5rem; /* Aumenta o espaçamento vertical */
+}
+
+/* Garante que o botão de logout fique centralizado e menor */
+.dashboard-wrapper.collapsed .logout-btn {
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Garante que o botão Sair seja visível no mobile quando a sidebar está aberta */
+@media (max-width: 768px) {
+    .logout-btn {
+        display: flex !important; /* Sobrescreve qualquer display: none */
+        width: 100%;
+        border-radius: 8px;
+        padding: 0.8rem 1rem;
+    }
+}
+
+/* Botão de Toggle (Hambúrguer) */
+/* Botão de Toggle (Hambúrguer) - Escondido por padrão no Desktop */
+/* Botão de Toggle (Hambúrguer) - Estilo Base */
+.sidebar-toggle-btn {
+  display: none; /* Esconde o botão por padrão (Desktop) */
+  cursor: pointer;
+  background-color: #95c122;
+  color: white;
+  border: none;
+  width: 40px; 
+  height: 40px; 
+  border-radius: 8px; 
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Estilização do botão de fechar (close-btn) na sidebar para o desktop */
+/* No desktop, o botão de toggle (se existisse) ficaria no topo. Vamos estilizar o botão de fechar para o mobile. */
+.sidebar .sidebar-toggle-btn.close-btn {
+    display: flex;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin: 0;
+    z-index: 1002;
+}
+
+/* Garante que o botão de fechar na sidebar apareça no mobile */
+.sidebar .sidebar-toggle-btn.close-btn {
+    display: flex;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin: 0;
+    z-index: 1002;
+}
+
+/* Garante que o ícone FaBars preencha o botão */
+.sidebar-toggle-btn svg {
+    width: 60%; 
+    height: 60%; 
+    color: white; 
+}
+
+/* Garante que o botão de toggle fique centralizado na largura menor */
+/* Removido o estilo de centralização do botão de toggle no desktop/collapsed, pois ele deve estar escondido */
+
+/* Oculta o perfil quando recolhido */
+.dashboard-wrapper.collapsed .user-info {
+  margin-bottom: 1rem;
+}
+
+/* Garante que o avatar permaneça visível */
+.dashboard-wrapper.collapsed .avatar {
+  margin-bottom: 0;
+}
+
+
+/* ESTILOS ORIGINAIS */
+
 .user-info {
   text-align: center;
   margin-bottom: 2rem;
+  transition: opacity 0.3s ease;
 }
 
-/* 
- * ADAPTAÇÃO: 
- * O .avatar original é usado para a foto. 
- * Vamos adicionar a classe .foto-usuario para a imagem real.
- */
 .avatar, .foto-usuario {
   width: 70px;
   height: 70px;
@@ -41,14 +141,9 @@
   align-items: center;
   font-size: 2rem;
   margin-bottom: 1rem;
-  /* Garante que a imagem se ajuste */
   object-fit: cover; 
 }
 
-/* 
- * ADAPTAÇÃO: 
- * O nome do usuário será exibido em um <h2>.
- */
 .user-info h2 {
   font-size: 1.3rem;
   margin-bottom: 0.5rem;
@@ -87,6 +182,10 @@
   cursor: pointer;
   font-weight: 600;
   transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .logout-btn:hover {
@@ -159,34 +258,116 @@
   font-style: italic;
 }
 
-/* --- NOVOS ESTILOS PARA O EFEITO DE CARREGAMENTO (LOADING) --- */
+/* --- ESTILOS DE CARREGAMENTO (MANTIDOS) --- */
 
-/* Simula o carregamento da foto */
 .foto-placeholder.loading {
-    /* Reutiliza as dimensões do .avatar */
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background-color: #4a6d8c; /* Um cinza mais escuro para contraste no sidebar */
+    background-color: #4a6d8c;
     margin-bottom: 1rem;
-    /* Efeito de pulsação */
     animation: pulse 1.5s infinite ease-in-out;
 }
 
-/* Simula o carregamento do nome */
 .nome-usuario.loading {
-    width: 100px; /* Largura para simular o texto do nome */
+    width: 100px;
     height: 18px;
     background-color: #4a6d8c;
     border-radius: 4px;
     margin-bottom: 0.5rem;
-    /* Efeito de pulsação */
     animation: pulse 1.5s infinite ease-in-out;
 }
 
-/* Efeito de pulsação para o loading */
 @keyframes pulse {
     0% { opacity: 0.6; }
     50% { opacity: 1; }
     100% { opacity: 0.6; }
 }
+
+/* ================================================= */
+/* MEDIA QUERIES PARA RESPONSIVIDADE (SMARTPHONES) */
+/* ================================================= */
+
+@media (max-width: 748px) {
+    
+    /* 1. Oculta a sidebar por padrão */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 250px;
+        transform: translateX(-250px); /* Esconde a sidebar */
+        transition: transform 0.3s ease;
+        padding: 1.5rem 1rem;
+    }
+
+    /* 2. Mostra a sidebar quando não está recolhida (no mobile, 'collapsed' significa 'escondida') */
+    .dashboard-wrapper:not(.collapsed) .sidebar {
+        transform: translateX(0); /* Mostra a sidebar */
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 3. Ajusta o conteúdo principal */
+    .dashboard-content {
+        padding: 1rem;
+        width: 100%;
+        margin-left: 0;
+    }
+
+    /* 4. Posiciona o botão de toggle no topo do conteúdo principal */
+    .sidebar-toggle-btn.open-btn {
+        position: fixed;
+        top: 10px;
+        right: 10px; /* Canto superior direito */
+        left: auto;
+        margin: 0;
+        z-index: 1001;
+        background-color: #10395c;
+        color: white;
+        display: flex !important; /* Força a exibição no mobile */
+    }
+
+    /* 5. Oculta o botão de toggle quando a sidebar está aberta (para usar o botão de fechar dentro da sidebar) */
+    .dashboard-wrapper:not(.collapsed) .sidebar-toggle-btn {
+        display: none;
+    }
+
+    /* 6. Adiciona um botão de fechar dentro da sidebar (no topo) */
+    /* O botão de fechar já está definido no bloco .sidebar-toggle-btn acima */
+
+    /* Garante que o botão de abrir (FaBars) apareça no conteúdo principal */
+    /* A lógica de visibilidade do botão de abrir/fechar foi consolidada */
+    .dashboard-wrapper.collapsed .sidebar-toggle-btn.open-btn {
+        display: flex; /* Mostra o botão de abrir quando o menu está fechado */
+    }
+
+    .dashboard-wrapper:not(.collapsed) .sidebar-toggle-btn.open-btn {
+        display: none; /* Esconde o botão de abrir quando o menu está aberto */
+    }
+
+    .dashboard-wrapper.collapsed .sidebar .sidebar-toggle-btn.close-btn {
+        display: none; /* Esconde o botão de fechar quando o menu está fechado */
+    }
+
+    .dashboard-wrapper:not(.collapsed) .sidebar .sidebar-toggle-btn.close-btn {
+        display: flex; /* Mostra o botão de fechar quando o menu está aberto */
+    }
+
+    /* 7. Garante que o conteúdo do menu apareça no mobile */
+    .dashboard-wrapper .sidebar-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    
+    /* 8. Ajusta o padding do conteúdo */
+    .ordens-section {
+        padding: 1rem;
+    }
+    
+    .dashboard-content h1 {
+        margin-top: 50px; /* Espaço para o botão de toggle fixo */
+    }
+}
+

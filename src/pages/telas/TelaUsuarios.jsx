@@ -1,59 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../../supabaseClient'; // Caminho corrigido baseado na estrutura de pastas
+import { supabase } from '../../../supabaseClient';
 import { useNavigate } from 'react-router-dom';
-import './TelaUsuarios.css'; 
-import { FaHome, FaClipboardList, FaSignOutAlt } from 'react-icons/fa'; // Ícones para o menu
+import './TelaUsuarios.css';
+import { 
+  FaHome, 
+  FaClipboardList, 
+  FaSignOutAlt, 
+  FaBars, 
+  FaTimes, 
+  FaMapMarkerAlt 
+} from 'react-icons/fa'; // Novo ícone adicionado
 
 const TelaUsuarios = () => {
   const [nomeUsuario, setNomeUsuario] = useState('');
+  const [enderecoUsuario, setEnderecoUsuario] = useState(null); // Novo estado
   const [loading, setLoading] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [abaSelecionada, setAbaSelecionada] = useState('inicio'); // Controle da aba
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const buscarNomeUsuario = async () => {
-      setLoading(true);
-      
-      // 1. Obter a sessão atual do usuário
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+  const toggleSidebar = () => {
+    setIsCollapsed(!isCollapsed);
+  };
 
+  useEffect(() => {
+    const buscarDadosUsuario = async () => {
+      setLoading(true);
+
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       if (sessionError || !session) {
         console.error('Erro ao obter sessão ou usuário não logado:', sessionError);
-        // Redireciona para a tela de login/cadastro se não houver sessão
-        navigate('/cadastro'); 
+        navigate('/cadastro');
         return;
       }
 
       const userId = session.user.id;
 
-      // 2. Buscar o nome completo na tabela 'usuarios' usando o ID do usuário
       const { data, error } = await supabase
         .from('usuarios')
-        .select('nome_completo')
+        .select('nome_completo, endereco, numero_casa, bairro, cidade, estado, cep')
         .eq('id_usuario', userId)
-        .single(); // Espera apenas um resultado
+        .single();
 
       if (error) {
-        console.error('Erro ao buscar nome do usuário:', error);
-        setNomeUsuario('Erro ao carregar nome');
-      } else if (data) {
-        // Pegando o nome completo do cadastro Usuarios e Imprimindo na Dashboard do usuario logado
-        setNomeUsuario(data.nome_completo);
-      } else {
+        console.error('Erro ao buscar dados do usuário:', error);
         setNomeUsuario('Usuário');
+      } else if (data) {
+        setNomeUsuario(data.nome_completo);
+        setEnderecoUsuario({
+          endereco: data.endereco,
+          numero: data.numero_casa,
+          bairro: data.bairro,
+          cidade: data.cidade,
+          estado: data.estado,
+          cep: data.cep
+        });
       }
 
       setLoading(false);
     };
 
-    buscarNomeUsuario();
+    buscarDadosUsuario();
   }, [navigate]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate('/'); // Redireciona para a página inicial após o logout
+    navigate('/');
   };
 
-  // Estrutura de carregamento (Loading)
   const LoadingProfile = () => (
     <div className="user-info">
       <div className="foto-placeholder loading"></div>
@@ -62,49 +76,87 @@ const TelaUsuarios = () => {
     </div>
   );
 
-  // Estrutura do Perfil do Usuário
   const UserProfile = () => (
     <div className="user-info">
-      {/* Placeholder para a foto do usuário. Reutiliza a classe .avatar */}
-      <div className="avatar">
-        {/* Você pode colocar as iniciais do nome aqui se quiser */}
-        {nomeUsuario.charAt(0)}
-      </div>
-      {/* O nome do usuário é exibido logo abaixo da foto */}
+      <div className="avatar">{nomeUsuario.charAt(0)}</div>
       <h2>{nomeUsuario}</h2>
       <p>Área do Cliente</p>
     </div>
   );
 
   return (
-    <div className="dashboard-wrapper">
+    <div className={`dashboard-wrapper ${isCollapsed ? 'collapsed' : ''}`}>
       {/* SIDEBAR */}
       <div className="sidebar">
-        <div>
+        <button className="sidebar-toggle-btn close-btn" onClick={toggleSidebar}>
+          <FaTimes />
+        </button>
+
+        <div className="sidebar-content-wrapper">
           {loading ? <LoadingProfile /> : <UserProfile />}
 
           <nav className="sidebar-menu">
             <ul>
-              <li><FaHome /> Início</li>
-              <li><FaClipboardList /> Minhas Ordens</li>
+              <li onClick={() => setAbaSelecionada('inicio')}>
+                <FaHome /> <span>Início</span>
+              </li>
+              <li onClick={() => setAbaSelecionada('ordens')}>
+                <FaClipboardList /> <span>Ordem de Serviço</span>
+              </li>
+              <li onClick={() => setAbaSelecionada('endereco')}>
+                <FaMapMarkerAlt /> <span>Endereço</span>
+              </li>
             </ul>
           </nav>
         </div>
-        
+
         <button className="logout-btn" onClick={handleLogout}>
-          <FaSignOutAlt /> Sair
+          <FaSignOutAlt /> <span>Sair</span>
         </button>
       </div>
 
       {/* CONTEÚDO PRINCIPAL */}
       <div className="dashboard-content">
-        <h1>Dashboard do Cliente</h1>
+        <button className="sidebar-toggle-btn open-btn" onClick={toggleSidebar}>
+          <FaBars />
+        </button>
 
-        {/* Exemplo de conteúdo principal */}
-        <section className="ordens-section">
-          <h2>Minhas Ordens de Serviço</h2>
-          <p className="sem-ordens">Nenhuma ordem de serviço encontrada.</p>
-        </section>
+        {abaSelecionada === 'inicio' && (
+          <>
+            <h1>Painel do Cliente</h1>
+            <section className="ordens-section">
+              <h2>Minhas Ordens de Serviço</h2>
+              <p className="sem-ordens">Nenhuma ordem de serviço encontrada.</p>
+            </section>
+          </>
+        )}
+
+        {abaSelecionada === 'ordens' && (
+          <>
+            <h1>Ordens de Serviço</h1>
+            <section className="ordens-section">
+              <p className="sem-ordens">Nenhuma ordem cadastrada.</p>
+            </section>
+          </>
+        )}
+
+        {abaSelecionada === 'endereco' && (
+          <>
+            <h1>Meu Endereço</h1>
+            <section className="ordens-section">
+              {enderecoUsuario ? (
+                <div className="endereco-info">
+                  <p><strong>Endereço:</strong> {enderecoUsuario.endereco}, {enderecoUsuario.numero}</p>
+                  <p><strong>Bairro:</strong> {enderecoUsuario.bairro}</p>
+                  <p><strong>Cidade:</strong> {enderecoUsuario.cidade} - {enderecoUsuario.estado}</p>
+                  <p><strong>CEP:</strong> {enderecoUsuario.cep}</p>
+                </div>
+              ) : (
+                <p className="sem-ordens">Endereço não encontrado.</p>
+              )}
+            </section>
+          </>
+        )}
       </div>
     </div>
   );

@@ -18,6 +18,23 @@ const TelaUsuarios = () => {
   const [abaSelecionada, setAbaSelecionada] = useState('inicio');
   const navigate = useNavigate();
 
+  
+  // Este useEffect controla o scroll da página
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      // Adiciona a classe ao body para travar o scroll
+      document.body.classList.add('no-scroll');
+    } else {
+      // Remove a classe para liberar o scroll
+      document.body.classList.remove('no-scroll');
+    }
+
+    // Função de limpeza para garantir que a classe seja removida se o componente for desmontado
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, [isMobileMenuOpen]); // Roda toda vez que o estado do menu muda
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -92,7 +109,7 @@ const TelaUsuarios = () => {
 
   return (
     <div className={`dashboard-wrapper ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
-      {/* --- SIDEBAR LATERAL (DESKTOP) --- */}
+      {/* O resto do JSX permanece igual */}
       <div className="sidebar">
         <div className="sidebar-content-wrapper">
           {loading ? <LoadingProfile /> : <UserProfile />}
@@ -104,8 +121,6 @@ const TelaUsuarios = () => {
           <FaSignOutAlt /> <span>Sair</span>
         </button>
       </div>
-
-      {/* --- MENU DE PERFIL (MOBILE) --- */}
       <div className="mobile-profile-menu">
         <div className="sidebar-content-wrapper">
           {loading ? <LoadingProfile /> : <UserProfile />}
@@ -114,10 +129,7 @@ const TelaUsuarios = () => {
           <FaSignOutAlt /> <span>Sair</span>
         </button>
       </div>
-      
       {isMobileMenuOpen && <div className="overlay" onClick={toggleMobileMenu}></div>}
-
-      {/* --- CONTEÚDO PRINCIPAL --- */}
       <div className="dashboard-content">
         {abaSelecionada === 'inicio' && (
           <>
@@ -154,8 +166,6 @@ const TelaUsuarios = () => {
           </>
         )}
       </div>
-
-      {/* --- MENU DE NAVEGAÇÃO INFERIOR (MOBILE) --- */}
       <nav className="bottom-nav">
         <ul>
           {navItems}

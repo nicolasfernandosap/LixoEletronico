@@ -8,8 +8,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 1rem 2rem;
-  min-height: 100vh; /* Garante que o gradiente ocupe a tela toda */
+  padding: 2rem;
+  flex: 1;
   width: 100%;
   box-sizing: border-box; /* Evita problemas com padding */
   text-align: center;
@@ -60,11 +60,13 @@
   justify-content: center;
   gap: 2rem;
   flex-wrap: wrap; /* Permite que as caixas quebrem a linha em telas menores */
+  margin-top: 2rem; /* Adiciona um espaço acima das caixas */
 }
 
 /* Estilo individual de cada caixa */
 .box {
-  width: 300px;
+  width: 100%;
+  max-width: 320px;
   height: 250px;
   border-radius: 15px;
   overflow: hidden; /* Garante que a imagem não saia das bordas arredondadas */

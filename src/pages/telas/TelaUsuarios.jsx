@@ -7,35 +7,30 @@ import {
   FaClipboardList, 
   FaSignOutAlt, 
   FaBars, 
-  FaTimes, 
   FaMapMarkerAlt 
-} from 'react-icons/fa'; // Novo ícone adicionado
+} from 'react-icons/fa';
 
 const TelaUsuarios = () => {
   const [nomeUsuario, setNomeUsuario] = useState('');
-  const [enderecoUsuario, setEnderecoUsuario] = useState(null); // Novo estado
+  const [enderecoUsuario, setEnderecoUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const [abaSelecionada, setAbaSelecionada] = useState('inicio'); // Controle da aba
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [abaSelecionada, setAbaSelecionada] = useState('inicio');
   const navigate = useNavigate();
 
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   useEffect(() => {
     const buscarDadosUsuario = async () => {
       setLoading(true);
-
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError || !session) {
-        console.error('Erro ao obter sessão ou usuário não logado:', sessionError);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
         navigate('/cadastro');
         return;
       }
-
       const userId = session.user.id;
-
       const { data, error } = await supabase
         .from('usuarios')
         .select('nome_completo, endereco, numero_casa, bairro, cidade, estado, cep')
@@ -56,10 +51,8 @@ const TelaUsuarios = () => {
           cep: data.cep
         });
       }
-
       setLoading(false);
     };
-
     buscarDadosUsuario();
   }, [navigate]);
 
@@ -72,7 +65,6 @@ const TelaUsuarios = () => {
     <div className="user-info">
       <div className="foto-placeholder loading"></div>
       <p className="nome-usuario loading"></p>
-      <p className="user-info-detail loading"></p>
     </div>
   );
 
@@ -84,66 +76,70 @@ const TelaUsuarios = () => {
     </div>
   );
 
-  return (
-    <div className={`dashboard-wrapper ${isCollapsed ? 'collapsed' : ''}`}>
-      {/* SIDEBAR */}
-      <div className="sidebar">
-        <button className="sidebar-toggle-btn close-btn" onClick={toggleSidebar}>
-          <FaTimes />
-        </button>
+  const navItems = (
+    <>
+      <li onClick={() => { setAbaSelecionada('inicio'); setIsMobileMenuOpen(false); }} className={abaSelecionada === 'inicio' ? 'active' : ''}>
+        <FaHome /> <span>Início</span>
+      </li>
+      <li onClick={() => { setAbaSelecionada('ordens'); setIsMobileMenuOpen(false); }} className={abaSelecionada === 'ordens' ? 'active' : ''}>
+        <FaClipboardList /> <span>Ordens</span>
+      </li>
+      <li onClick={() => { setAbaSelecionada('endereco'); setIsMobileMenuOpen(false); }} className={abaSelecionada === 'endereco' ? 'active' : ''}>
+        <FaMapMarkerAlt /> <span>Endereço</span>
+      </li>
+    </>
+  );
 
+  return (
+    <div className={`dashboard-wrapper ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
+      {/* --- SIDEBAR LATERAL (DESKTOP) --- */}
+      <div className="sidebar">
         <div className="sidebar-content-wrapper">
           {loading ? <LoadingProfile /> : <UserProfile />}
-
           <nav className="sidebar-menu">
-            <ul>
-              <li onClick={() => setAbaSelecionada('inicio')}>
-                <FaHome /> <span>Início</span>
-              </li>
-              <li onClick={() => setAbaSelecionada('ordens')}>
-                <FaClipboardList /> <span>Ordem de Serviço</span>
-              </li>
-              <li onClick={() => setAbaSelecionada('endereco')}>
-                <FaMapMarkerAlt /> <span>Endereço</span>
-              </li>
-            </ul>
+            <ul>{navItems}</ul>
           </nav>
         </div>
-
         <button className="logout-btn" onClick={handleLogout}>
           <FaSignOutAlt /> <span>Sair</span>
         </button>
       </div>
 
-      {/* CONTEÚDO PRINCIPAL */}
-      <div className="dashboard-content">
-        <button className="sidebar-toggle-btn open-btn" onClick={toggleSidebar}>
-          <FaBars />
+      {/* --- MENU DE PERFIL (MOBILE) --- */}
+      <div className="mobile-profile-menu">
+        <div className="sidebar-content-wrapper">
+          {loading ? <LoadingProfile /> : <UserProfile />}
+        </div>
+        <button className="logout-btn" onClick={handleLogout}>
+          <FaSignOutAlt /> <span>Sair</span>
         </button>
+      </div>
+      
+      {isMobileMenuOpen && <div className="overlay" onClick={toggleMobileMenu}></div>}
 
+      {/* --- CONTEÚDO PRINCIPAL --- */}
+      <div className="dashboard-content">
         {abaSelecionada === 'inicio' && (
           <>
             <h1>Painel do Cliente</h1>
-            <section className="ordens-section">
+            <section className="content-section">
               <h2>Minhas Ordens de Serviço</h2>
               <p className="sem-ordens">Nenhuma ordem de serviço encontrada.</p>
             </section>
           </>
         )}
-
         {abaSelecionada === 'ordens' && (
           <>
             <h1>Ordens de Serviço</h1>
-            <section className="ordens-section">
+            <section className="content-section">
               <p className="sem-ordens">Nenhuma ordem cadastrada.</p>
             </section>
           </>
         )}
-
         {abaSelecionada === 'endereco' && (
           <>
             <h1>Meu Endereço</h1>
-            <section className="ordens-section">
+            <section className="content-section">
               {enderecoUsuario ? (
                 <div className="endereco-info">
                   <p><strong>Endereço:</strong> {enderecoUsuario.endereco}, {enderecoUsuario.numero}</p>
@@ -158,6 +154,16 @@ const TelaUsuarios = () => {
           </>
         )}
       </div>
+
+      {/* --- MENU DE NAVEGAÇÃO INFERIOR (MOBILE) --- */}
+      <nav className="bottom-nav">
+        <ul>
+          {navItems}
+          <li onClick={toggleMobileMenu}>
+            <FaBars /> <span>Menu</span>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 };

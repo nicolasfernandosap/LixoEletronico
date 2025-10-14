@@ -181,7 +181,8 @@ body.no-scroll {
     position: fixed;
     top: 0;
     left: 0;
-    height: 100vh;
+    height: 100dvh; /* Usa a altura dinâmica da janela de visualização */
+    width: 250px;
     width: 250px;
     background-color: #10395c;
     color: #fff;

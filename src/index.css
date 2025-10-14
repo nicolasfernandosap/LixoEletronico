@@ -1,59 +1,36 @@
-/* Layout principal */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Nunito Sans', sans-serif; /* Sua fonte personalizada */
-  overflow-x: hidden; /* Impede a barra de rolagem horizontal */
-}
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light dark;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* ================================================== */
+/* RESET GLOBAL E CONFIGURAÇÃO DA ESTRUTURA DA PÁGINA  */
+/* ================================================== */
+
+/* 
+  1. Garante que padding e bordas não aumentem o tamanho dos elementos.
+  Isso previne que elementos com "width: 100%" e padding transbordem.
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-body {
+/* 
+  2. Remove margens e paddings padrão do navegador e define a fonte principal.
+  Também impede a rolagem horizontal (a causa do espaço em branco na lateral).
+*/
+html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  font-family: 'Nunito Sans', sans-serif; /* Sua fonte personalizada */
+  overflow-x: hidden; /* Impede a barra de rolagem horizontal */
+  background-color: #f4f7fb; /* Cor de fundo padrão para a aplicação */
+  
   
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+/* 
+  3. Garante que a div #root (onde o React renderiza a aplicação) 
+  ocupe toda a altura disponível.
+*/
 #root {
   height: 100%;
 }

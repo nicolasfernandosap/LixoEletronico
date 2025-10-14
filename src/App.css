@@ -1,17 +1,36 @@
+/* ================================================== */
+/* ESTILOS DO CONTAINER PRINCIPAL DA APLICAÇÃO        */
+/* ================================================== */
 
+/* 
+  1. Configura o container principal da aplicação para usar Flexbox
+  e ocupar, no mínimo, toda a altura da tela.
+*/
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100%; /* Usa 100% da altura do #root, que é 100% da tela */
 }
 
-/* Parte principal da página */
+/* 
+  2. Configura a área de conteúdo principal para ser flexível.
+  O alinhamento do conteúdo (centralizado, à esquerda, etc.)
+  agora é responsabilidade do CSS de cada página individual.
+*/
 .main-content {
+  /* Faz este elemento crescer e ocupar o espaço, empurrando o Footer para baixo */
   flex: 1;
-  text-align: center;
+
+  /* Permite que o conteúdo interno (as páginas) também use flexbox para se expandir */
+  display: flex;
+  flex-direction: column;
 }
 
-/* Área das notificações */
+
+/* ================================================== */
+/* ESTILOS ESPECÍFICOS (EX: PÁGINA DE NOTIFICAÇÕES)   */
+/* ================================================== */
+
 .notificacoes {
   display: flex;
   justify-content: center;
@@ -27,11 +46,9 @@
   padding: 1rem;
   width: 200px;
   height: 120px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   font-weight: bold;
   color: #10395C;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);

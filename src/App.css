@@ -9,7 +9,7 @@
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100%; /* Usa 100% da altura do #root, que é 100% da tela */
+  min-height: 100dvh; 
 }
 
 /* 

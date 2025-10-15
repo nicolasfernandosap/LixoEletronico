@@ -9,6 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+
+  "//": "--- Configuração de Deploy (Vercel) ---",
+  "_comment_vercel_json": "Arquivo 'vercel.json' na raiz do projeto. Contendo regras de 'rewrite' que direcionam todas as requisições para o 'index.html'. ",
+
   "dependencies": {
     "@supabase/supabase-js": "^2.58.0",
     "react": "^19.1.1",

@@ -106,7 +106,7 @@
 /* ======== RESPONSIVIDADE (TELAS MENORES) ======== */
 @media (max-width: 768px) {
   .header {
-    padding: 0.5rem;
+    padding: 0.6rem;
     position: relative;
     z-index: 10; /* garante que o logo fique acima */
   }
@@ -121,7 +121,7 @@
 
   .nav-wrapper {
     width: 40;
-    border-radius: 18px;
+    border-radius: 6px;
     padding: 0.4rem;
     flex-direction: column;
     align-items: flex-end;
@@ -134,9 +134,13 @@
   .menu-icon {
     display: block;
     align-self: flex-end;
-    color: #10395C;
+    color: #10395c;
     z-index: 20;
     position: relative;
+    font-size: 1.1rem;
+    padding: 0.0rem 0.0rem; /* Espaçamento interno */
+    margin-top: 1px;
+    
   }
 
   .navbar {
@@ -148,7 +152,7 @@
     border-radius: 10px 0 0 10px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     position: absolute;
-    top: 60px; /* começa abaixo do logo */
+    top: 75px; /* começa abaixo do logo */
     right: 0;
   }
 

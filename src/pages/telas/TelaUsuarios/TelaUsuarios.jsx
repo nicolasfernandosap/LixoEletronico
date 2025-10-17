@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import './TelaUsuarios.css';
+import FormularioOrdensServico from './FormularioOrdensServico';
+import FormularioDoacaoEquipamento from './FormularioDoacaoEquipamento';
 import { 
   FaHome, 
   FaClipboardList, 
@@ -100,14 +102,14 @@ const TelaUsuarios = () => {
         <FaHome /> <span>Início</span>
       </li>
       <li onClick={() => { setAbaSelecionada('ordens'); setIsMobileMenuOpen(false); }} className={abaSelecionada === 'ordens' ? 'active' : ''}>
-        <FaClipboardList /> <span>Ordens</span>
+        <FaClipboardList /> <span>Ordens de Serviço</span>
       </li>
       <li onClick={() => { setAbaSelecionada('endereco'); setIsMobileMenuOpen(false); }} className={abaSelecionada === 'endereco' ? 'active' : ''}>
         <FaMapMarkerAlt /> <span>Endereço</span>
       </li>
       <li onClick={() => { setAbaSelecionada('doacao'); setIsMobileMenuOpen(false); }} className={abaSelecionada === 'doacao' ? 'active' : ''}>
-      <FaHeart /> <span>Doar Equipamento</span>
-    </li>
+        <FaHeart /> <span>Doar Equipamento</span>
+      </li>
     </>
   );
 
@@ -139,17 +141,41 @@ const TelaUsuarios = () => {
           <>
             <h1>Painel do Cliente</h1>
             <section className="content-section">
-              <h2>Minhas Ordens de Serviço</h2>
-              <p className="sem-ordens">Nenhuma ordem de serviço encontrada.</p>
+              <h2>Bem-vindo ao seu Painel</h2>
+              <p>Aqui você pode gerenciar suas ordens de serviço, atualizar seu endereço e fazer doações de equipamentos.</p>
+              
+              <div className="dashboard-stats">
+                <div className="stat-card">
+                  <FaClipboardList className="stat-icon" />
+                  <div className="stat-info">
+                    <h3>Ordens de Serviço</h3>
+                    <p>Gerencie suas solicitações</p>
+                  </div>
+                </div>
+                
+                <div className="stat-card">
+                  <FaHeart className="stat-icon" />
+                  <div className="stat-info">
+                    <h3>Doações</h3>
+                    <p>Doe equipamentos eletrônicos</p>
+                  </div>
+                </div>
+                
+                <div className="stat-card">
+                  <FaMapMarkerAlt className="stat-icon" />
+                  <div className="stat-info">
+                    <h3>Endereço</h3>
+                    <p>Mantenha seus dados atualizados</p>
+                  </div>
+                </div>
+              </div>
             </section>
           </>
         )}
         {abaSelecionada === 'ordens' && (
           <>
             <h1>Ordens de Serviço</h1>
-            <section className="content-section">
-              <p className="sem-ordens">Nenhuma ordem cadastrada.</p>
-            </section>
+            <FormularioOrdensServico />
           </>
         )}
         {abaSelecionada === 'endereco' && (
@@ -169,18 +195,13 @@ const TelaUsuarios = () => {
             </section>
           </>
         )}
-      {/* NOVO BLOCO: Conteúdo da aba Doação de Equipamento */}
-{abaSelecionada === 'doacao' && (
-  <>
-    <h1>Doação de Equipamento</h1>
-    <section className="content-section">
-      <h2>Faça sua Doação</h2>
-      <p>Aqui você pode iniciar o processo de doação de equipamentos eletrônicos. Preencha o formulário abaixo para agendar a coleta ou encontrar um ponto de entrega.</p>
-    </section>
-  </>
-)}
-
-</div>
+        {abaSelecionada === 'doacao' && (
+          <>
+            <h1>Doação de Equipamento</h1>
+            <FormularioDoacaoEquipamento />
+          </>
+        )}
+      </div>
       <nav className="bottom-nav">
         <ul>
           {navItems}

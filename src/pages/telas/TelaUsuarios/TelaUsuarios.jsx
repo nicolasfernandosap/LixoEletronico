@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../../supabaseClient';
+import { supabase } from '../../../../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import './TelaUsuarios.css';
 import { 
@@ -7,7 +7,8 @@ import {
   FaClipboardList, 
   FaSignOutAlt, 
   FaBars, 
-  FaMapMarkerAlt 
+  FaMapMarkerAlt,
+  FaHeart
 } from 'react-icons/fa';
 
 const TelaUsuarios = () => {
@@ -104,6 +105,9 @@ const TelaUsuarios = () => {
       <li onClick={() => { setAbaSelecionada('endereco'); setIsMobileMenuOpen(false); }} className={abaSelecionada === 'endereco' ? 'active' : ''}>
         <FaMapMarkerAlt /> <span>Endereço</span>
       </li>
+      <li onClick={() => { setAbaSelecionada('doacao'); setIsMobileMenuOpen(false); }} className={abaSelecionada === 'doacao' ? 'active' : ''}>
+      <FaHeart /> <span>Doar Equipamento</span>
+    </li>
     </>
   );
 
@@ -165,7 +169,18 @@ const TelaUsuarios = () => {
             </section>
           </>
         )}
-      </div>
+      {/* NOVO BLOCO: Conteúdo da aba Doação de Equipamento */}
+{abaSelecionada === 'doacao' && (
+  <>
+    <h1>Doação de Equipamento</h1>
+    <section className="content-section">
+      <h2>Faça sua Doação</h2>
+      <p>Aqui você pode iniciar o processo de doação de equipamentos eletrônicos. Preencha o formulário abaixo para agendar a coleta ou encontrar um ponto de entrega.</p>
+    </section>
+  </>
+)}
+
+</div>
       <nav className="bottom-nav">
         <ul>
           {navItems}

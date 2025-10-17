@@ -13,7 +13,7 @@ import PontosAutorizados from './pages/PontosAutorizados';
 import Contato from './pages/Contato';
 import Cadastro from './pages/FormUsuarioLogin.jsx';
 import CriarContaUsuario from './pages/CriarContaUsuario';
-import TelaUsuarios from "./pages/telas/TelaUsuarios.jsx";
+import TelaUsuarios from "./pages/telas/TelaUsuarios/TelaUsuarios.jsx";
 
 // 2. Crie um componente de Layout que vai gerenciar o que é exibido
 const AppLayout = () => {

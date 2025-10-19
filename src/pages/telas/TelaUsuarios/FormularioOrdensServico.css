@@ -337,3 +337,24 @@
     padding: 12px 20px;
   }
 }
+
+
+
+/* Estilos para a linha de informações da OS */
+.ordem-info-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.ordem-numero {
+  font-weight: bold;
+  color: #555;
+}
+
+.ordem-tipo {
+  font-size: 0.9em;
+  color: #777;
+  margin-top: 5px;
+}

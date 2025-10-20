@@ -61,8 +61,8 @@ const FormularioOrdensServico = () => {
 
     const { data, error } = await supabase
       .from('ordens_servico')
-      // CORREÇÃO: Usa o nome EXATO do ID da Ordem de Serviço: 'id_ref_ordem_servico'
-      .select('id_ref_ordem_servico,descricao,data_criacao,url_foto,mensagem,tipos_servicos(tipo_servico),equipamentos_tipos(equipamento_tipo),status_da_os(status_os)')
+      // Novo campo numero_os que sera gerada
+      .select('id_ref_ordem_servico, numero_os, descricao, data_criacao, url_foto, mensagem, tipos_servicos(tipo_servico), equipamentos_tipos(equipamento_tipo), status_da_os(status_os)')
       .eq('id_usuario', userId)
       .order('data_criacao', { ascending: false });
 
@@ -121,7 +121,6 @@ const FormularioOrdensServico = () => {
             id_usuario: userId,
             descricao: formData.descricao,
             tipo_servico: parseInt(formData.id_ref_tipo_servico),
-            // Nome da coluna no DB 'ordens_servico' para o FK do equipamento
             equipamento_tipo: parseInt(formData.id_equipamento_tipo), 
             url_foto: formData.url_foto || null,
             mensagem: formData.mensagem || null,
@@ -147,9 +146,9 @@ const FormularioOrdensServico = () => {
       
       let errorMessage = `Erro ao criar ordem de serviço: ${err.message}`;
       if (err.code === '23503') { 
-          errorMessage = 'Erro de Chave Estrangeira: O tipo de serviço ou equipamento selecionado não existe no banco de dados, ou a FK não foi configurada. Verifique suas FKs.';
+          errorMessage = 'Erro de Chave Estrangeira: O tipo de serviço ou equipamento selecionado não existe no banco de dados.';
       } else if (err.message.includes('Could not find')) {
-          errorMessage = 'Erro de Conexão: Um nome de coluna ou Chave Estrangeira está incorreto no seu banco de dados.';
+          errorMessage = 'Erro de Conexão: Um nome de coluna ou Chave Estrangeira está incorreto.';
       }
       setMensagemErro(errorMessage);
     } finally {
@@ -283,16 +282,15 @@ const FormularioOrdensServico = () => {
         ) : (
           <div className="ordens-grid">
             {ordens.map(ordem => (
-              // CORREÇÃO: Usa o nome EXATO do ID da Ordem de Serviço
               <div key={ordem.id_ref_ordem_servico} className="ordem-card">
                 <div className="ordem-header">
                   <div className="ordem-info-linha">
                     <span className={`status-badge ${getStatusClass(ordem.status_da_os?.status_os)}`}>
                       {ordem.status_da_os?.status_os || 'Sem status'}
                     </span>
+                    {/* 🟢 Agora mostra o número sequencial formatado */}
                     <span className="ordem-numero">
-                      {/* CORREÇÃO: Usa o nome EXATO do ID da Ordem de Serviço */}
-                      OS: {String(ordem.id_ref_ordem_servico).slice(0, 6)}
+                      OS: {ordem.numero_os ? ordem.numero_os.toString().padStart(4, '0') : '—'}
                     </span>
                   </div>
                   <span className="ordem-tipo">

@@ -2,7 +2,6 @@
 /* ESTILOS GERAIS E LAYOUT DESKTOP    */
 /* ================================== */
 
-/* --- CORREÇÃO APLICADA AQUI --- */
 /* Classe para travar o scroll do corpo da página */
 body.no-scroll {
   overflow: hidden;

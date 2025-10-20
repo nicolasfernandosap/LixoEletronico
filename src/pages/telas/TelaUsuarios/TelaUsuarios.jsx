@@ -6,6 +6,8 @@ import './TelaUsuarios.css';
 // Importação dos formulários usados em diferentes abas
 import FormularioOrdensServico from './FormularioOrdensServico';
 import FormularioDoacaoEquipamento from './FormularioDoacaoEquipamento';
+import StatusOS from './StatusOS'; // Novo componente para Status OS
+
 
 // Importação dos ícones usados na interface
 import { 
@@ -242,15 +244,12 @@ const TelaUsuarios = () => {
         )}
 
         {/* 🆕 ABA ACOMPANHAMENTO DE OS */}
-        {abaSelecionada === 'acompanhamento' && (
-          <>
-            <h1>Acompanhamento de Ordens de Serviço</h1>
-            <section className="content-section">
-              <p>Acompanhe aqui o andamento das suas ordens de serviço abertas.</p>
-              {/* ⚙️ Aqui futuramente pode ser exibida a listagem real das OS */}
-            </section>
-          </>
-        )}
+	        {abaSelecionada === 'acompanhamento' && (
+	          <>
+	            <h1>Acompanhamento de Ordens de Serviço</h1>
+	            <StatusOS /> {/* Usando o novo componente */}
+	          </>
+	        )}
 
         {/* ABA ENDEREÇO */}
         {abaSelecionada === 'endereco' && (

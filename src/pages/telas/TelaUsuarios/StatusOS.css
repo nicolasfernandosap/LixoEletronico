@@ -1,0 +1,197 @@
+/* Estilos para a seção de listagem de Ordens de Serviço */
+.ordens-lista-section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  /* Ajuste para garantir que o componente StatusOS.jsx seja bem exibido
+     como o único conteúdo da aba, replicando o estilo do FormularioOrdensServico.jsx */
+  max-width: 1200px;
+  margin: 0 auto 30px auto;
+}
+
+.ordens-lista-section h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+
+.loading-ordens {
+  text-align: center;
+  padding: 40px;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.sem-ordens {
+  text-align: center;
+  padding: 40px;
+  color: #95a5a6;
+  font-size: 1.1rem;
+}
+
+/* Grid de Ordens */
+.ordens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.ordem-card {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ordem-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  border-color: #3498db;
+}
+
+.ordem-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ordem-info-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  width: 100%; /* Garante que a linha ocupe todo o espaço */
+}
+
+.ordem-numero {
+  font-weight: bold;
+  color: #555;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Estilos de Status */
+.status-pendente {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-analise {
+  background: #cfe2ff;
+  color: #084298;
+}
+
+.status-agendado {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-andamento {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.status-concluido {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-cancelado {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-default {
+  background: #e2e3e5;
+  color: #383d41;
+}
+
+.ordem-tipo {
+  background: #e9ecef;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #495057;
+  font-weight: 500;
+  margin-top: 5px; /* Adicionado para separar do item anterior */
+}
+
+.ordem-body {
+  flex: 1;
+}
+
+.ordem-descricao {
+  color: #2c3e50;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.ordem-mensagem {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding: 10px;
+  background: #ffffff;
+  border-radius: 6px;
+  border-left: 3px solid #3498db;
+}
+
+.ordem-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 10px;
+  border-top: 1px solid #dee2e6;
+}
+
+.ordem-footer small {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+.ordem-foto img {
+    max-width: 100%; 
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .ordens-lista-section {
+    padding: 20px;
+    margin: 0 auto 20px auto;
+  }
+
+  .ordens-lista-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .ordens-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ordem-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .ordens-lista-section h2 {
+    font-size: 1.3rem;
+  }
+}

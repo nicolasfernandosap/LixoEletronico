@@ -144,151 +144,7 @@
   box-shadow: none;
 }
 
-/* Lista de Ordens */
-.ordens-lista-section {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
 
-.ordens-lista-section h2 {
-  color: #2c3e50;
-  margin-bottom: 20px;
-  font-size: 1.8rem;
-}
-
-.loading-ordens {
-  text-align: center;
-  padding: 40px;
-  color: #7f8c8d;
-  font-size: 1.1rem;
-}
-
-.sem-ordens {
-  text-align: center;
-  padding: 40px;
-  color: #95a5a6;
-  font-size: 1.1rem;
-}
-
-/* Grid de Ordens */
-.ordens-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.ordem-card {
-  background: #f8f9fa;
-  border: 2px solid #e9ecef;
-  border-radius: 10px;
-  padding: 20px;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.ordem-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  border-color: #3498db;
-}
-
-.ordem-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.status-pendente {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.status-analise {
-  background: #cfe2ff;
-  color: #084298;
-}
-
-.status-agendado {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-
-.status-andamento {
-  background: #d1e7dd;
-  color: #0f5132;
-}
-
-.status-concluido {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status-cancelado {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.status-default {
-  background: #e2e3e5;
-  color: #383d41;
-}
-
-.ordem-tipo {
-  background: #e9ecef;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  color: #495057;
-  font-weight: 500;
-}
-
-.ordem-body {
-  flex: 1;
-}
-
-.ordem-descricao {
-  color: #2c3e50;
-  line-height: 1.6;
-  margin-bottom: 10px;
-}
-
-.ordem-mensagem {
-  color: #7f8c8d;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  padding: 10px;
-  background: #ffffff;
-  border-radius: 6px;
-  border-left: 3px solid #3498db;
-}
-
-.ordem-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding-top: 10px;
-  border-top: 1px solid #dee2e6;
-}
-
-.ordem-footer small {
-  color: #6c757d;
-  font-size: 0.85rem;
-}
 
 /* Responsividade */
 @media (max-width: 768px) {
@@ -296,23 +152,12 @@
     padding: 15px;
   }
 
-  .formulario-section,
-  .ordens-lista-section {
+  .formulario-section {
     padding: 20px;
   }
 
-  .formulario-section h2,
-  .ordens-lista-section h2 {
+  .formulario-section h2 {
     font-size: 1.5rem;
-  }
-
-  .ordens-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .ordem-header {
-    flex-direction: column;
-    align-items: flex-start;
   }
 
   .btn-submit {
@@ -321,8 +166,7 @@
 }
 
 @media (max-width: 480px) {
-  .formulario-section h2,
-  .ordens-lista-section h2 {
+  .formulario-section h2 {
     font-size: 1.3rem;
   }
 
@@ -338,25 +182,5 @@
   }
 }
 
-
-
-/* Estilos para a linha de informações da OS */
-.ordem-info-linha {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-.ordem-numero {
-  font-weight: bold;
-  color: #555;
-}
-
-.ordem-tipo {
-  font-size: 0.9em;
-  color: #777;
-  margin-top: 5px;
-}
 
 

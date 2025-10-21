@@ -156,10 +156,10 @@ body.no-scroll {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     color: #d3d9e2;
     transition: color 0.2s;
-    margin-left: 8px;
+    
   }
 
   .bottom-nav li svg {
@@ -167,7 +167,7 @@ body.no-scroll {
   }
 
   .bottom-nav li span {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
   }
 
   .bottom-nav li.active {
@@ -182,7 +182,6 @@ body.no-scroll {
     top: 0;
     left: 0;
     height: 100dvh; /* Usa a altura dinâmica da janela de visualização */
-    width: 250px;
     width: 250px;
     background-color: #10395c;
     color: #fff;

@@ -147,7 +147,7 @@ const TelaUsuarios = () => {
 
       
       <li onClick={() => { setAbaSelecionada('acompanhamento'); setIsMobileMenuOpen(false); }} className={abaSelecionada === 'acompanhamento' ? 'active' : ''}>
-        <FaClipboardCheck /> <span>OS Status</span>
+        <FaClipboardCheck /> <span>OS Análise</span>
       </li>
 
    

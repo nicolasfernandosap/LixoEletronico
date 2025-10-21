@@ -142,12 +142,12 @@ const TelaUsuarios = () => {
       </li>
 
       <li onClick={() => { setAbaSelecionada('ordens'); setIsMobileMenuOpen(false); }} className={abaSelecionada === 'ordens' ? 'active' : ''}>
-        <FaClipboardList /> <span>Ordem de Serviço</span>
+        <FaClipboardList /> <span>Solicitação Coleta</span>
       </li>
 
-      {/* Acompanhamento de OS sigla orden de serviço*/}
+      
       <li onClick={() => { setAbaSelecionada('acompanhamento'); setIsMobileMenuOpen(false); }} className={abaSelecionada === 'acompanhamento' ? 'active' : ''}>
-        <FaClipboardCheck /> <span>Status OS</span>
+        <FaClipboardCheck /> <span>OS Acompanhamento</span>
       </li>
 
    
@@ -243,11 +243,11 @@ const TelaUsuarios = () => {
           </>
         )}
 
-        {/* 🆕 ABA ACOMPANHAMENTO DE OS */}
+        {/* ABA ACOMPANHAMENTO DE OS */}
 	        {abaSelecionada === 'acompanhamento' && (
 	          <>
 	            <h1>Acompanhamento de Ordens de Serviço</h1>
-	            <StatusOS /> {/* Usando o novo componente */}
+	            <StatusOS /> 
 	          </>
 	        )}
 

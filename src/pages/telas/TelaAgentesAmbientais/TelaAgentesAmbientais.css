@@ -1,0 +1,72 @@
+/* ===================================== */
+/* ESTILOS TELA AGENTE COM HEADER/ABAS   */
+/* ===================================== */
+:root { --cor-primaria: #10395c; --cor-secundaria: #95c122; --cor-fundo: #f4f7fb; --cor-texto: #34495e; --cor-borda: #e9ecef; --cor-texto-header: #ffffff; }
+.agente-page-wrapper { font-family: "Nunito Sans", sans-serif; background-color: var(--cor-fundo); min-height: 100vh; }
+
+/* --- HEADER (sem alterações) --- */
+.agente-header-nav { background-color: var(--cor-primaria); color: var(--cor-texto-header); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 65px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+.header-logo-area { display: flex; align-items: center; gap: 0.75rem; font-weight: 700; color: var(--cor-texto-header); }
+.header-logo { width: 35px; height: 35px; background: var(--cor-secundaria); color: var(--cor-primaria); border-radius: 8px; display: grid; place-content: center; font-size: 1.2rem; }
+.header-tabs-nav ul { list-style: none; padding: 0; margin: 0; display: flex; height: 100%; }
+.header-tabs-nav li { padding: 0 1.5rem; cursor: pointer; color: rgba(255, 255, 255, 0.7); font-weight: 600; border-bottom: 3px solid transparent; transition: all 0.2s ease-in-out; display: flex; align-items: center; height: 65px; white-space: nowrap; }
+.header-tabs-nav li:hover { color: var(--cor-texto-header); }
+.header-tabs-nav li.active { color: var(--cor-texto-header); border-bottom-color: var(--cor-secundaria); }
+.header-user-area { display: flex; align-items: center; gap: 1rem; }
+.header-user-area span { color: rgba(255, 255, 255, 0.9); }
+.header-logout-btn { background: none; border: none; font-size: 1.2rem; color: rgba(255, 255, 255, 0.7); cursor: pointer; transition: color 0.2s; }
+.header-logout-btn:hover { color: var(--cor-texto-header); }
+
+/* --- CONTEÚDO PRINCIPAL --- */
+.agente-main-content { padding: 2rem; max-width: 1600px; margin: 0 auto; }
+.welcome-screen { text-align: center; padding: 5rem 2rem; }
+.welcome-screen h1 { color: var(--cor-primaria); }
+.welcome-screen p { color: #7f8c8d; font-size: 1.2rem; }
+.content-title-bar { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--cor-borda); }
+.loading-spinner { width: 48px; height: 48px; border: 5px solid var(--cor-borda); border-bottom-color: var(--cor-primaria); border-radius: 50%; display: block; box-sizing: border-box; animation: rotation 1s linear infinite; margin: 4rem auto; }
+@keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* --- NOVO: Layout de Duas Colunas para "Solicitações" --- */
+.solicitacoes-layout { display: grid; grid-template-columns: 350px 1fr; gap: 2rem; height: calc(100vh - 65px - 4rem); }
+.lista-solicitacoes { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow-y: auto; }
+.lista-header { padding: 1.5rem; border-bottom: 1px solid var(--cor-borda); }
+.lista-header h3 { margin: 0; color: var(--cor-primaria); }
+.lista-header p { margin: 0.25rem 0 0; color: #7f8c8d; font-size: 0.9rem; }
+.solicitacao-card { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--cor-borda); cursor: pointer; transition: background-color 0.2s; }
+.solicitacao-card:hover { background-color: var(--cor-fundo); }
+.solicitacao-card.active { background-color: #eaf2f8; border-left: 4px solid var(--cor-primaria); padding-left: calc(1.5rem - 4px); }
+.solicitacao-card-info { display: flex; flex-direction: column; gap: 0.25rem; }
+.solicitacao-os-number { font-weight: 700; color: var(--cor-primaria); }
+.solicitacao-cliente-nome { color: var(--cor-texto); }
+.sem-ordens-lista { padding: 2rem; text-align: center; color: #7f8c8d; }
+
+/* --- NOVO: Painel de Detalhes --- */
+.detalhe-solicitacao { display: flex; align-items: center; justify-content: center; }
+.detalhe-placeholder { color: #9aa5b1; font-size: 1.2rem; text-align: center; }
+.detalhe-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 2rem; width: 100%; }
+.detalhe-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.detalhe-header h2 { margin: 0; color: var(--cor-primaria); }
+.detalhe-status { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; background-color: #fff3cd; color: #856404; }
+.detalhe-bloco { margin-bottom: 1rem; }
+.detalhe-bloco h4 { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.75rem; color: var(--cor-primaria); }
+.detalhe-bloco p { margin: 0.25rem 0; color: var(--cor-texto); }
+.detalhe-card hr { border: 0; border-top: 1px solid var(--cor-borda); margin: 1.5rem 0; }
+.detalhe-acao label { font-weight: 600; color: var(--cor-texto); display: block; margin-bottom: 0.5rem; }
+.detalhe-acao select { width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; }
+
+/* --- Layout de Grid para outras abas (mesmo de antes) --- */
+.agente-ordens-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+.sem-ordens { text-align: center; padding: 3rem; color: #7f8c8d; font-size: 1.1rem; grid-column: 1 / -1; }
+.card-os { background: #fff; border: 1px solid var(--cor-borda); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; padding: 1.5rem; gap: 1rem; }
+.card-os-header { display: flex; justify-content: space-between; align-items: center; }
+.card-os-status { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+.card-os-number { font-weight: 700; color: #555; font-size: 1.1rem; }
+.card-os-body { display: flex; flex-direction: column; gap: 0.75rem; }
+.card-os-info-block { background-color: var(--cor-fundo); padding: 0.75rem 1rem; border-radius: 6px; color: var(--cor-texto); font-size: 0.95rem; }
+.card-os-description { font-size: 1.1rem; color: var(--cor-texto); font-weight: 500; margin: 0.5rem 0; }
+.card-os-notes { background: #eaf2f8; border-left: 4px solid #3498db; padding: 0.75rem 1rem; border-radius: 0 4px 4px 0; font-size: 0.9rem; color: #2c3e50; }
+.card-os-footer { border-top: 1px solid var(--cor-borda); padding-top: 1rem; margin-top: 0.5rem; }
+.card-os-footer small { color: #7f8c8d; font-size: 0.85rem; }
+
+/* Cores dos Status Tags */
+.status-concluído { background-color: #d4edda; color: #155724; } .status-aguardando-análise { background-color: #fff3cd; color: #856404; } .status-em-atendimento { background-color: #cfe2ff; color: #084298; } .status-agendado { background-color: #d1ecf1; color: #0c5460; } .status-cancelado { background-color: #f8d7da; color: #721c24; }

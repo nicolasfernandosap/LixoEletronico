@@ -14,6 +14,7 @@ import Contato from './pages/Contato';
 import Cadastro from './pages/FormUsuarioLogin.jsx';
 import CriarContaUsuario from './pages/CriarContaUsuario';
 import TelaUsuarios from "./pages/telas/TelaUsuarios/TelaUsuarios.jsx";
+import TelaAgentesAmbientais from './pages/telas/TelaAgentesAmbientais/TelaAgentesAmbientais.jsx';
 
 // 2. Crie um componente de Layout que vai gerenciar o que é exibido
 const AppLayout = () => {
@@ -21,7 +22,7 @@ const AppLayout = () => {
   const { pathname } = location; // Extrai o caminho da URL 
 
   //Definindo em quais rotas o Header NÃO deve aparecer
-  const rotasSemHeader = ['/tela-usuario','/criar-conta'];
+  const rotasSemHeader = ['/tela-usuario','/criar-conta','/agentes'];
   
 
   //Verificando se a rota atual está na lista de exceções
@@ -41,6 +42,7 @@ const AppLayout = () => {
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/criar-conta" element={<CriarContaUsuario />} />
           <Route path="/tela-usuario" element={<TelaUsuarios />} />
+          <Route path="/agentes" element={<TelaAgentesAmbientais />} />
         </Routes>
       </main>
 

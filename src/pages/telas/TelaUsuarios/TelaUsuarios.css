@@ -159,6 +159,7 @@ body.no-scroll {
     gap: 4px;
     color: #d3d9e2;
     transition: color 0.2s;
+    margin-left: 8px;
   }
 
   .bottom-nav li svg {

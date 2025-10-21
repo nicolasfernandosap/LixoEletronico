@@ -90,7 +90,7 @@ const StatusOS = () => {
                     {ordem.status_da_os?.status_os || 'Sem status'}
                   </span>
                   <span className="ordem-numero">
-                    OS: {ordem.numero_os ? ordem.numero_os.toString().padStart(4, '0') : '—'}
+                    Ordem Serviço: {ordem.numero_os ? ordem.numero_os.toString().padStart(4, '0') : '—'}
                   </span>
                 </div>
                 <span className="ordem-tipo">

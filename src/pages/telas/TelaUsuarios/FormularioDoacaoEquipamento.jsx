@@ -8,7 +8,7 @@ const FormularioDoacaoEquipamento = () => {
     id_equipamento_tipo: '',
     descricao: '',
     mensagem: '',
-    url_foto: ''
+    foto_arquivo: null
   });
 
   const [tiposEquipamento, setTiposEquipamento] = useState([]);
@@ -22,7 +22,7 @@ const FormularioDoacaoEquipamento = () => {
     const carregarEquipamentos = async () => {
       const { data, error } = await supabase
         .from('equipamentos_tipos')
-        .select('id_ref_equipamento_tipo, equipamento_tipo') // ✅ nome correto das colunas
+        .select('id_ref_equipamento_tipo, equipamento_tipo')
         .order('equipamento_tipo', { ascending: true });
 
       if (error) {
@@ -44,8 +44,33 @@ const FormularioDoacaoEquipamento = () => {
 
   // Manipular campos
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, files } = e.target;
+    if (name === 'foto_arquivo') {
+      setFormData(prev => ({ ...prev, foto_arquivo: files[0] }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  // Upload da foto no Supabase Storage
+  const uploadFoto = async (arquivo) => {
+    if (!arquivo) return null;
+
+    const nomeArquivo = `${Date.now()}_${arquivo.name}`;
+    const { data, error } = await supabase.storage
+      .from('fotos_equipamentos') // 🗂️ nome do bucket (certifique-se que existe no Supabase)
+      .upload(nomeArquivo, arquivo);
+
+    if (error) {
+      console.error('Erro no upload da foto:', error);
+      throw new Error('Falha ao enviar a foto.');
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from('fotos_equipamentos')
+      .getPublicUrl(nomeArquivo);
+
+    return publicUrlData.publicUrl;
   };
 
   // Envio do formulário
@@ -74,6 +99,12 @@ const FormularioDoacaoEquipamento = () => {
     }
 
     try {
+      // Faz upload da imagem se houver
+      let fotoUrl = null;
+      if (formData.foto_arquivo) {
+        fotoUrl = await uploadFoto(formData.foto_arquivo);
+      }
+
       const { error } = await supabase
         .from('ordens_servico')
         .insert([
@@ -81,10 +112,10 @@ const FormularioDoacaoEquipamento = () => {
             id_usuario: userId,
             descricao: formData.descricao,
             mensagem: formData.mensagem || null,
-            url_foto: formData.url_foto || null,
-            tipo_servico: 3, // ✅ ID fixo referente à "Doação de Equipamentos"
+            url_foto: fotoUrl,
+            tipo_servico: 3, // Doação de Equipamentos
             equipamento_tipo: parseInt(formData.id_equipamento_tipo),
-            status_os: 1 // status inicial
+            status_os: 1
           }
         ]);
 
@@ -95,7 +126,7 @@ const FormularioDoacaoEquipamento = () => {
         id_equipamento_tipo: '',
         descricao: '',
         mensagem: '',
-        url_foto: ''
+        foto_arquivo: null
       });
 
       setTimeout(() => setMensagemSucesso(''), 5000);
@@ -166,19 +197,18 @@ const FormularioDoacaoEquipamento = () => {
             />
           </div>
 
-          {/* URL da Foto */}
+          {/* Upload de Foto */}
           <div className="form-group">
-            <label htmlFor="url_foto">URL da Foto (opcional)</label>
+            <label htmlFor="foto_arquivo">Foto do Equipamento (opcional)</label>
             <input
-              type="url"
-              id="url_foto"
-              name="url_foto"
-              value={formData.url_foto}
+              type="file"
+              id="foto_arquivo"
+              name="foto_arquivo"
+              accept="image/*"
               onChange={handleChange}
-              placeholder="https://exemplo.com/foto.jpg"
             />
             <small className="form-help">
-              <FaCamera /> Adicione uma foto do equipamento, se desejar.
+              <FaCamera /> Escolha uma foto do seu dispositivo.
             </small>
           </div>
 

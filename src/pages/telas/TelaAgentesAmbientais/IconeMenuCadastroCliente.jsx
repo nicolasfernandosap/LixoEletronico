@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../../../../supabaseClient";
 import "./IconeMenuCadastroCliente.css";
-import { FaEye } from "react-icons/fa"; // 👁️ ícone de visualizar
+import { FaEye, FaSearch } from "react-icons/fa";
 
 const IconeMenuCadastroCliente = () => {
   const [clientes, setClientes] = useState([]);
+  const [clientesFiltrados, setClientesFiltrados] = useState([]);
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
+  const [busca, setBusca] = useState("");
 
+  // Buscar dados do Supabase
   const buscarClientes = async () => {
     try {
       const { data, error } = await supabase
@@ -17,6 +20,7 @@ const IconeMenuCadastroCliente = () => {
 
       if (error) throw error;
       setClientes(data);
+      setClientesFiltrados(data);
     } catch (error) {
       console.error("❌ Erro ao buscar clientes:", error.message);
     }
@@ -26,17 +30,39 @@ const IconeMenuCadastroCliente = () => {
     buscarClientes();
   }, []);
 
+  // Filtrar clientes ao digitar
+  useEffect(() => {
+    const termo = busca.toLowerCase();
+    const filtrados = clientes.filter(
+      (c) =>
+        c.nome_completo?.toLowerCase().includes(termo) ||
+        c.cpf?.toLowerCase().includes(termo)
+    );
+    setClientesFiltrados(filtrados);
+  }, [busca, clientes]);
+
   return (
     <div className="clientes-container">
       <div className="clientes-card">
         <h2>Clientes Cadastrados</h2>
         <div className="linha"></div>
 
-        {clientes.length === 0 ? (
+        {/* Campo de busca */}
+        <div className="campo-busca">
+          <FaSearch className="icone-busca" />
+          <input
+            type="text"
+            placeholder="Buscar por nome ou CPF..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
+        </div>
+
+        {clientesFiltrados.length === 0 ? (
           <p className="nenhum-cliente">Nenhum cliente encontrado.</p>
         ) : (
           <ul className="lista-clientes">
-            {clientes.map((cliente) => (
+            {clientesFiltrados.map((cliente) => (
               <li key={cliente.id_usuario} className="cliente-item">
                 <span className="cliente-nome">{cliente.nome_completo}</span>
                 <FaEye

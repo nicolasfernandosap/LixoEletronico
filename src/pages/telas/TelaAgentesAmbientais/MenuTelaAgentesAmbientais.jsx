@@ -10,8 +10,7 @@ import {
   FaTimesCircle,
   FaMapMarkerAlt,
   FaSignOutAlt,
-  FaPlusCircle,
-  FaBars // Ícone para menu mobile
+  FaPlusCircle
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,10 +27,8 @@ const AbaConfiguracoes = () => <div>Conteúdo das Configurações (A ser impleme
 // Componente Home (Visão Geral/Dashboard)
 const AbaHome = () => <div>Conteúdo da Home do Agente Ambiental (Visão Geral)</div>;
 
-
 const MenuTelaAgentesAmbientais = () => {
   const [abaAtiva, setAbaAtiva] = useState('home');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Estado para menu mobile
   const navigate = useNavigate();
 
   // Mapeamento dos itens do menu lateral
@@ -50,21 +47,15 @@ const MenuTelaAgentesAmbientais = () => {
   ];
 
   const handleLogout = () => {
-    // Lógica de logout do Supabase (a ser implementada ou movida)
-    // const { error } = await supabase.auth.signOut();
-    // if (!error) {
-      navigate('/'); // Redireciona para a tela de login/home
-    // }
+    // Redireciona para a tela de cadastro
+    navigate('/cadastro');
   };
 
-  const ComponenteAba = [...sidebarItems, ...topMenuItems].find(item => item.id === abaAtiva)?.component || AbaHome;
+  const ComponenteAba =
+    [...sidebarItems, ...topMenuItems].find(item => item.id === abaAtiva)?.component || AbaHome;
 
   const handleItemClick = (id) => {
     setAbaAtiva(id);
-    // Fecha o menu lateral no mobile após a seleção
-    if (window.innerWidth <= 768) {
-      setIsSidebarOpen(false);
-    }
   };
 
   return (
@@ -74,12 +65,8 @@ const MenuTelaAgentesAmbientais = () => {
         <div className="navegacaoBarra-header">
           <h2>Agente Ambiental</h2>
         </div>
-        
-        {/* Botão de menu mobile */}
-        <button className="menu-toggle" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-            <FaBars />
-        </button>
 
+        {/* Menu Superior (apenas Configurações) */}
         <nav className="top-menu-nav">
           <ul className="menus-list top-menu-list">
             {topMenuItems.map(item => (
@@ -93,16 +80,12 @@ const MenuTelaAgentesAmbientais = () => {
                 <span className="menus-label">{item.label}</span>
               </li>
             ))}
-            <li className="menus-item logout-item" onClick={handleLogout} title="Sair">
-              <FaSignOutAlt className="menus-icon" />
-              <span className="menus-label">Sair</span>
-            </li>
           </ul>
         </nav>
       </header>
 
       {/* === MENU LATERAL (Sidebar) === */}
-      <nav className={`navegacaoBarra ${isSidebarOpen ? 'open' : ''}`}>
+      <nav className="navegacaoBarra">
         <ul className="menus-list sidebar-menu-list">
           {sidebarItems.map(item => (
             <li
@@ -115,11 +98,14 @@ const MenuTelaAgentesAmbientais = () => {
               <span className="menus-label">{item.label}</span>
             </li>
           ))}
+
+          {/* === BOTÃO SAIR (aparece no mobile) === */}
+          <li className="menus-item logout-item mobile-logout" onClick={handleLogout} title="Sair">
+            <FaSignOutAlt className="menus-icon" />
+            <span className="menus-label">Sair</span>
+          </li>
         </ul>
       </nav>
-      
-      {/* Overlay para fechar menu no mobile */}
-      {isSidebarOpen && <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>}
 
       {/* === CONTEÚDO PRINCIPAL === */}
       <main className="content-area">

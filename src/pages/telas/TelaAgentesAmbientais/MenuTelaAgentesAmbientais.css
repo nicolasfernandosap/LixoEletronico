@@ -32,13 +32,7 @@
     margin: 0;
 }
 
-/* === BOTÃO MENU (MOBILE) === */
-/* Esconde o botão no desktop */
-.menu-toggle {
-    display: none;
-}
-
-/* 3. Menu Superior (Configurações e Sair) */
+/* 3. Menu Superior (Configurações) */
 .top-menu-nav {
     display: block;
 }
@@ -48,6 +42,17 @@
     list-style: none;
     padding: 0;
     margin: 0;
+}
+
+.top-menu-list .menus-item {
+    padding: 8px 12px;
+    color: #95c122; /* Cor fixa para configurações */
+}
+
+.top-menu-list .menus-item:hover,
+.top-menu-list .menus-item.active {
+    background: none;
+    color: #95c122; /* Mantém a mesma cor no hover e ativo */
 }
 
 /* 4. Menu Lateral (Sidebar) */
@@ -82,36 +87,13 @@
     color: #ffffff;
 }
 
-.top-menu-list .menus-item:hover {
-    background-color: #1a4d79;
-    color: #ffffff;
-}
-
-.top-menu-list .menus-item[title="Configurações"] {
-    color: #95c122;
-}
-
-.top-menu-list .menus-item[title="Configurações"]:hover {
-    color: #ffc107;
-}
-
-.top-menu-list .menus-item.active {
-    background-color: transparent;
-    color: #ffc107;
-}
-
 .menus-icon {
     margin-right: 10px;
     font-size: 1.2rem;
 }
 
-.top-menu-list .menus-label {
-    display: none;
-}
-
-.top-menu-list .menus-item {
-    padding: 8px 12px;
-    color: #95c122;
+.menus-label {
+    display: inline;
 }
 
 /* Estilização específica para o item Sair */
@@ -120,15 +102,6 @@
 }
 
 .logout-item:hover {
-    background-color: #c0392b;
-    color: #ffffff;
-}
-
-.top-menu-list .logout-item {
-    color: #e74c3c;
-}
-
-.top-menu-list .logout-item:hover {
     background-color: #c0392b;
     color: #ffffff;
 }
@@ -157,21 +130,6 @@
         grid-template-areas:
             "header"
             "content";
-    }
-
-    /* Cabeçalho Superior */
-    .top-header {
-        padding: 10px 15px;
-    }
-
-    /* Mostra o botão menu no mobile */
-    .menu-toggle {
-        display: block;
-        background: none;
-        border: none;
-        color: #ffffff;
-        font-size: 1.5rem;
-        cursor: pointer;
     }
 
     /* Oculta o menu superior no mobile */
@@ -232,14 +190,19 @@
         display: none;
     }
 
+    /* === BOTÃO SAIR NO MOBILE === */
+    .sidebar-menu-list .mobile-logout {
+        color: #e74c3c;
+    }
+
+    .sidebar-menu-list .mobile-logout:hover {
+        background-color: #c0392b;
+        color: #ffffff;
+    }
+
     /* Conteúdo principal ajustado */
     .content-area {
         padding: 15px;
         padding-bottom: 80px; /* Evita sobreposição da barra inferior */
-    }
-
-    /* Remove overlay no mobile */
-    .sidebar-overlay {
-        display: none;
     }
 }

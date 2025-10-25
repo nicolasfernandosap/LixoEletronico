@@ -14,7 +14,7 @@ import Contato from './pages/Contato';
 import Cadastro from './pages/FormUsuarioLogin.jsx';
 import CriarContaUsuario from './pages/CriarContaUsuario';
 import TelaUsuarios from "./pages/telas/TelaUsuarios/TelaUsuarios.jsx";
-import TelaAgentesAmbientais from './pages/telas/TelaAgentesAmbientais/TelaAgentesAmbientais.jsx';
+import TelaAgentesAmbientais from './pages/telas/TelaAgentesAmbientais/MenuTelaAgentesAmbientais.jsx';
 
 // 2. Crie um componente de Layout que vai gerenciar o que é exibido
 const AppLayout = () => {
@@ -41,7 +41,7 @@ const AppLayout = () => {
           <Route path="/contato" element={<Contato />} />
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/criar-conta" element={<CriarContaUsuario />} />
-          <Route path="/tela-usuario" element={<TelaUsuarios />} />
+          <Route path="/tela-usuario" element={<TelaUsuarios />} /> 
           <Route path="/agentes" element={<TelaAgentesAmbientais />} />
         </Routes>
       </main>

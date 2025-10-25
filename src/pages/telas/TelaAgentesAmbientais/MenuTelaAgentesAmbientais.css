@@ -1,0 +1,245 @@
+/* ==========================================================================
+   ESTILIZAÇÃO GERAL E LAYOUT PRINCIPAL
+   ========================================================================== */
+
+/* 1. Layout Principal - Desktop First */
+.agente-ambiental-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "header header"
+        "sidebar content";
+    min-height: 100vh;
+    background-color: #f4f7f6;
+}
+
+/* 2. Cabeçalho Superior (Top Menu) */
+.top-header {
+    grid-area: header;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #10395c;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+}
+
+.navegacaoBarra-header h2 {
+    font-size: 1.5rem;
+    color: #95c122;
+    margin: 0;
+}
+
+/* === BOTÃO MENU (MOBILE) === */
+/* Esconde o botão no desktop */
+.menu-toggle {
+    display: none;
+}
+
+/* 3. Menu Superior (Configurações e Sair) */
+.top-menu-nav {
+    display: block;
+}
+
+.top-menu-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 4. Menu Lateral (Sidebar) */
+.navegacaoBarra {
+    grid-area: sidebar;
+    background-color: #10395c;
+    color: #ecf0f1;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 5. Estilização dos Itens de Menu (Comum para Superior e Lateral) */
+.menus-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    font-size: 1rem;
+}
+
+.menus-item:hover,
+.menus-item.active {
+    background-color: #1a4d79;
+    color: #ffffff;
+}
+
+.top-menu-list .menus-item:hover {
+    background-color: #1a4d79;
+    color: #ffffff;
+}
+
+.top-menu-list .menus-item[title="Configurações"] {
+    color: #95c122;
+}
+
+.top-menu-list .menus-item[title="Configurações"]:hover {
+    color: #ffc107;
+}
+
+.top-menu-list .menus-item.active {
+    background-color: transparent;
+    color: #ffc107;
+}
+
+.menus-icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.top-menu-list .menus-label {
+    display: none;
+}
+
+.top-menu-list .menus-item {
+    padding: 8px 12px;
+    color: #95c122;
+}
+
+/* Estilização específica para o item Sair */
+.logout-item {
+    color: #e74c3c;
+}
+
+.logout-item:hover {
+    background-color: #c0392b;
+    color: #ffffff;
+}
+
+.top-menu-list .logout-item {
+    color: #e74c3c;
+}
+
+.top-menu-list .logout-item:hover {
+    background-color: #c0392b;
+    color: #ffffff;
+}
+
+/* 6. Área de Conteúdo Principal */
+.content-area {
+    grid-area: content;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.aba-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ==========================================================================
+   MODO MOBILE (TELAS ATÉ 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Layout Principal - Mobile */
+    .agente-ambiental-layout {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "header"
+            "content";
+    }
+
+    /* Cabeçalho Superior */
+    .top-header {
+        padding: 10px 15px;
+    }
+
+    /* Mostra o botão menu no mobile */
+    .menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        color: #ffffff;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    /* Oculta o menu superior no mobile */
+    .top-menu-nav {
+        display: none;
+    }
+
+    /* Barra Inferior (Sidebar adaptada) */
+    .navegacaoBarra {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 65px;
+        background-color: #10395c;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1001;
+        padding: 0;
+        transform: none;
+    }
+
+    /* Itens do menu na barra inferior */
+    .sidebar-menu-list {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar-menu-list .menus-item {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+        flex: 1;
+        text-align: center;
+        color: #ecf0f1;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .sidebar-menu-list .menus-item.active {
+        background-color: #1a4d79;
+        color: #95c122;
+        border-top: 3px solid #95c122;
+    }
+
+    .sidebar-menu-list .menus-item .menus-icon {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .sidebar-menu-list .menus-label {
+        display: none;
+    }
+
+    /* Conteúdo principal ajustado */
+    .content-area {
+        padding: 15px;
+        padding-bottom: 80px; /* Evita sobreposição da barra inferior */
+    }
+
+    /* Remove overlay no mobile */
+    .sidebar-overlay {
+        display: none;
+    }
+}

@@ -1,0 +1,231 @@
+/* Baseado nos estilos de StatusOS.css e IconeMenuCadastroCliente.css */
+
+.chamados-pendentes-container {
+    padding: 20px;
+    background-color: #f8f9fa; /* Cor de fundo suave */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+}
+
+.chamados-pendentes-container h2 {
+    color: #343a40;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.linha-separadora {
+    height: 2px;
+    background-color: #e9ecef;
+    margin-bottom: 20px;
+}
+
+/* Estados de Carregamento e Erro */
+.loading-state, .error-state {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.spinner-icon {
+    font-size: 30px;
+    color: #007bff; /* Azul primário */
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+.error-state h2 {
+    color: #dc3545; /* Vermelho de erro */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Sem Chamados */
+.sem-chamados {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #e9f7ef; /* Fundo verde claro para sucesso */
+    border: 1px solid #c3e6cb;
+    border-radius: 6px;
+    color: #155724; /* Texto verde escuro */
+}
+
+.check-icon {
+    font-size: 40px;
+    color: #28a745; /* Verde de sucesso */
+    margin-bottom: 10px;
+}
+
+/* Grid de Ordens */
+.ordens-pendentes-grid {
+    display: grid;
+    /* Colunas ajustáveis: 1 coluna em telas menores, 2 em telas médias, 3 em telas grandes */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.ordem-card-pendente {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-left: 5px solid #ffc107; /* Borda amarela para indicar pendente */
+    border-radius: 6px;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ordem-card-pendente:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ordem-header-pendente {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #e9ecef;
+}
+
+.status-badge-pendente {
+    background-color: #ffc107; /* Amarelo para pendente */
+    color: #343a40;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.ordem-numero-pendente {
+    font-weight: bold;
+    color: #495057;
+}
+
+.ordem-body-pendente p {
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.ordem-body-pendente strong {
+    color: #495057;
+}
+
+.ordem-footer-pendente {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #e9ecef;
+}
+
+.usuario-info p {
+    margin: 3px 0;
+    font-size: 0.85em;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.data-criacao-pendente {
+    display: block;
+    text-align: right;
+    margin-top: 10px;
+    font-size: 0.75em;
+    color: #adb5bd;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .ordens-pendentes-grid {
+        grid-template-columns: 1fr; /* Uma coluna em telas menores */
+    }
+}
+
+
+
+/* Estilo para a Observação Adicional */
+.ordem-observacoes {
+    margin-top: 10px !important;
+    padding: 8px;
+    background-color: #fff3cd; /* Amarelo claro para destaque */
+    border: 1px solid #ffeeba;
+    border-radius: 4px;
+    font-size: 0.85em !important;
+    color: #856404 !important; /* Texto mais escuro */
+}
+
+.ordem-observacoes strong {
+    color: #856404;
+}
+
+/* Estilo para o Card e o Ícone de Visualização */
+.ordem-card-pendente {
+    /* Adiciona posicionamento relativo para o ícone absoluto */
+    position: relative; 
+}
+
+.icone-visualizar-foto {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.2em; /* Pequeno */
+    color: #007bff; /* Cor de destaque */
+    cursor: pointer;
+    transition: color 0.2s;
+    z-index: 10; /* Garante que fique acima de outros elementos */
+}
+
+.icone-visualizar-foto:hover {
+    color: #0056b3;
+}
+
+
+
+/* Estilos para o Campo de Busca (Baseado em IconeMenuCadastroCliente.css) */
+.campo-busca {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background-color: #ffffff;
+}
+
+.campo-busca .icone-busca {
+    color: #495057;
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.campo-busca input[type="text"] {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 5px 0;
+    font-size: 1em;
+}
+
+.campo-busca input[type="text"]::placeholder {
+    color: #adb5bd;
+}
+
+/* Estilo para a mensagem de Nenhum Resultado */
+.nenhum-resultado {
+    text-align: center;
+    padding: 30px 20px;
+    background-color: #f8d7da; /* Fundo vermelho claro para alerta */
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    color: #721c24; /* Texto vermelho escuro */
+    font-weight: bold;
+}

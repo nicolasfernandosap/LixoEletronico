@@ -1,0 +1,239 @@
+/* Baseado nos estilos de FormularioOrdensServico.css e IconeMenuChamadosPendentes.css */
+
+.agendamento-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+}
+
+.agendamento-container h2 {
+    color: #343a40;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.linha-separadora {
+    height: 2px;
+    background-color: #e9ecef;
+    margin-bottom: 20px;
+}
+
+/* Estilos de Mensagens */
+.mensagem-sucesso {
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mensagem-erro {
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Estilos de Formulário */
+.agendamento-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #495057;
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-group select option[disabled] {
+    color: #adb5bd;
+}
+
+.btn-submit {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.btn-submit:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.btn-submit:disabled {
+    background-color: #adb5bd;
+    cursor: not-allowed;
+}
+
+/* Estilos de Busca */
+.input-busca-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0 10px;
+    background-color: white;
+}
+
+.input-busca-wrapper input {
+    border: none;
+    padding: 10px 0;
+    flex-grow: 1;
+}
+
+.input-busca-wrapper .icone-busca {
+    color: #495057;
+    margin-right: 10px;
+}
+
+.loading-busca {
+    text-align: center;
+    padding: 15px;
+    color: #007bff;
+}
+
+.loading-busca .spinner-icon {
+    animation: spin 1s linear infinite;
+    margin-right: 5px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.nenhum-resultado-busca {
+    padding: 10px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* Resultados da Busca */
+.resultados-busca {
+    margin-top: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+.resultados-busca p {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #343a40;
+}
+
+.lista-os-busca {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.os-item {
+    padding: 10px;
+    border-bottom: 1px solid #e9ecef;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.os-item:last-child {
+    border-bottom: none;
+}
+
+.os-item:hover {
+    background-color: #f1f3f5;
+}
+
+.os-item.selecionada {
+    background-color: #e9f7ef; /* Verde claro para seleção */
+    border-left: 3px solid #28a745;
+    font-weight: bold;
+}
+
+.os-numero {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.os-usuario {
+    flex-grow: 1;
+    margin: 0 10px;
+}
+
+.os-data {
+    font-size: 0.8em;
+    color: #6c757d;
+}
+
+/* Detalhes da OS Selecionada */
+.os-detalhes-selecionada {
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.os-detalhes-selecionada h3 {
+    margin-top: 0;
+    color: #343a40;
+    font-size: 1.2em;
+}
+
+.os-detalhes-selecionada p {
+    margin: 5px 0;
+    font-size: 0.9em;
+}
+
+.os-detalhes-selecionada .status-atual {
+    font-weight: bold;
+    color: #dc3545; /* Cor de destaque para o status */
+}

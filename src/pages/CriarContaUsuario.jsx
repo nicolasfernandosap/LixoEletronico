@@ -96,29 +96,15 @@ const CriarContaUsuario = () => {
 
     try {
       // 🔍 Verifica se o e-mail já existe na tabela 'usuarios'
-      const { data: existingUser, error: selectError } = await supabase
+      const { data: existingUser } = await supabase
         .from('usuarios')
         .select('email')
-        .ilike('email', email) // busca insensível a maiúsculas/minúsculas
+        .ilike('email', email)
         .single();
 
       if (existingUser) {
         setErros({ geral: 'Este e-mail já está cadastrado. Por favor, use outro.' });
         return;
-      }
-
-      // 🔍 Verifica se o e-mail já existe no Supabase Auth (tabela interna)
-      const { data: authUsers, error: authFetchError } = await supabase.auth.admin.listUsers();
-      if (authFetchError) {
-        console.error('Erro ao verificar Auth:', authFetchError.message);
-      } else {
-        const emailExistsInAuth = authUsers.users.some(
-          (user) => user.email?.toLowerCase() === email.toLowerCase()
-        );
-        if (emailExistsInAuth) {
-          setErros({ geral: 'Este e-mail já possui uma conta. Tente outro.' });
-          return;
-        }
       }
 
       // 🟢 Cria o usuário no Supabase Auth
@@ -128,7 +114,11 @@ const CriarContaUsuario = () => {
       });
 
       if (authError) {
-        setErros({ geral: `Erro ao criar autenticação: ${authError.message}` });
+        if (authError.message.includes('registered')) {
+          setErros({ geral: 'Este e-mail já possui uma conta.' });
+        } else {
+          setErros({ geral: `Erro ao criar autenticação: ${authError.message}` });
+        }
         return;
       }
 
@@ -151,7 +141,6 @@ const CriarContaUsuario = () => {
 
       if (insertError) {
         setErros({ geral: `Erro ao salvar dados do perfil: ${insertError.message}` });
-        await supabase.auth.admin.deleteUser(authData.user.id);
         return;
       }
 
@@ -190,4 +179,3 @@ const CriarContaUsuario = () => {
 };
 
 export default CriarContaUsuario;
-

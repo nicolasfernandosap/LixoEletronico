@@ -161,13 +161,18 @@ const FormularioOrdensServico = () => {
               required
             >
               <option value="">Selecione o tipo de serviço</option>
-              {tiposServico.map(tipo => (
-                <option key={tipo.id_ref_tipo_servico} value={tipo.id_ref_tipo_servico}>
-                  {tipo.tipo_servico}
-                </option>
-              ))}
-            </select>
+
+            {tiposServico
+          // 🔹 Oculta a opção "Doação de Equipamentos"
+          .filter(tipo => tipo.tipo_servico !== 'Doação de Equipamentos')
+          .map(tipo => (
+            <option key={tipo.id_ref_tipo_servico} value={tipo.id_ref_tipo_servico}>
+              {tipo.tipo_servico}
+            </option>
+          ))}
+          </select>
           </div>
+
 
           <div className="form-group">
             <label htmlFor="id_equipamento_tipo">Tipo de Equipamento *</label>

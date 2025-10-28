@@ -1,5 +1,12 @@
 /* Baseado nos estilos de FormularioOrdensServico.css e IconeMenuChamadosPendentes.css */
 
+/* Estilo para remover a lupa no menu lateral (Ajuste o seletor se necessário) */
+/* Assumindo que a lupa está dentro de um elemento com a classe 'menu-lateral' ou similar */
+/* Se a lupa for um ícone SVG/componente, você pode precisar de um seletor mais específico ou remover o componente no HTML/JSX */
+.menu-lateral .lupa-menu { 
+    display: none !important;
+}
+
 .agendamento-container {
     padding: 20px;
     background-color: #f8f9fa;

@@ -1,31 +1,42 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../../../supabaseClient';
-import './StatusOS.css'; // Importa o novo CSS
-import { FaCheckCircle } from 'react-icons/fa'; 
+import './StatusOS.css';
+import { FaEye } from 'react-icons/fa';
 
 const StatusOS = () => {
   const [ordens, setOrdens] = useState([]);
   const [userId, setUserId] = useState(null);
   const [loadingOrdens, setLoadingOrdens] = useState(true);
+  const [ordemVisualizar, setOrdemVisualizar] = useState(null);
 
-  // 1. Buscar usuário atual
   useEffect(() => {
     const buscarUsuarioAtual = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) setUserId(session.user.id);
-      else setLoadingOrdens(false); // Se não houver usuário, para o loading
+      else setLoadingOrdens(false);
     };
     buscarUsuarioAtual();
   }, []);
 
-  // 2. Buscar ordens do usuário
   const buscarOrdensServico = useCallback(async () => {
     if (!userId) return;
     setLoadingOrdens(true);
 
     const { data, error } = await supabase
       .from('ordens_servico')
-      .select('id_ref_ordem_servico, numero_os, descricao, data_criacao, url_foto, mensagem, tipos_servicos(tipo_servico), equipamentos_tipos(equipamento_tipo), status_da_os(status_os)')
+      .select(`
+        id_ref_ordem_servico,
+        numero_os,
+        descricao,
+        data_criacao,
+        url_foto,
+        mensagem,
+        observacao_agente_ambiental,
+        dia_agendamento_coleta,
+        tipos_servicos(tipo_servico),
+        equipamentos_tipos(equipamento_tipo),
+        status_da_os(status_os)
+      `)
       .eq('id_usuario', userId)
       .order('data_criacao', { ascending: false });
 
@@ -40,11 +51,9 @@ const StatusOS = () => {
   }, [userId]);
 
   useEffect(() => {
-    // Esta dependência garante que a busca seja refeita quando o userId for definido
     buscarOrdensServico();
   }, [buscarOrdensServico]);
 
-  // Funções de formatação e estilo (extraídas de FormularioOrdensServico.jsx)
   const formatarData = (dataString) => {
     if (!dataString) return 'Não definida';
     const data = new Date(dataString);
@@ -65,9 +74,8 @@ const StatusOS = () => {
       'Concluído': 'status-concluido',
       'Cancelado': 'status-cancelado'
     };
-    // Mapeamento para o status que aparece na imagem
     if (status && status.toUpperCase() === 'AGUARDANDO ANÁLISE') {
-        return 'status-pendente';
+      return 'status-pendente';
     }
     return statusMap[status] || 'status-default';
   };
@@ -80,10 +88,18 @@ const StatusOS = () => {
       ) : ordens.length === 0 ? (
         <p className="sem-ordens">Nenhuma ordem de serviço encontrada.</p>
       ) : (
-        
         <div className="ordens-grid">
           {ordens.map(ordem => (
             <div key={ordem.id_ref_ordem_servico} className="ordem-card">
+              {/* Ícone de olho que abre modal */}
+              <div
+                className="visualizacao-icone"
+                title="Visualizar detalhes da ordem"
+                onClick={() => setOrdemVisualizar(ordem)}
+              >
+                <FaEye />
+              </div>
+
               <div className="ordem-header">
                 <div className="ordem-info-linha">
                   <span className={`status-badge ${getStatusClass(ordem.status_da_os?.status_os)}`}>
@@ -120,6 +136,19 @@ const StatusOS = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Modal com a mensagem quando o olho é clicado */}
+      {ordemVisualizar && (
+        <div className="modal-fundo" onClick={() => setOrdemVisualizar(null)}>
+          <div className="modal-conteudo" onClick={e => e.stopPropagation()}>
+            <h3>Retorno Agente Ambiental Número OS {ordemVisualizar.numero_os.toString().padStart(4, '0')}</h3>
+            <p><strong>Observação do Agente Ambiental:</strong></p>
+            <p>{ordemVisualizar.observacao_agente_ambiental || 'Aguarde pela análise da central! Em breve retornaremos sobre análise da tratativa.'}</p>
+            <p><strong>Data de Agendamento:</strong> {ordemVisualizar.dia_agendamento_coleta ? new Date(ordemVisualizar.dia_agendamento_coleta).toLocaleDateString('pt-BR') : 'Não agendado'}</p>
+            <button className="btn-fechar" onClick={() => setOrdemVisualizar(null)}>Fechar</button>
+          </div>
         </div>
       )}
     </div>

@@ -1,42 +1,37 @@
-/* Estilos para a seção de listagem de Ordens de Serviço */
+/* Estilo da seção geral */
 .ordens-lista-section {
   background: #ffffff;
   border-radius: 12px;
   padding: 30px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  /* Ajuste para garantir que o componente StatusOS.jsx seja bem exibido
-     como o único conteúdo da aba, replicando o estilo do FormularioOrdensServico.jsx */
   max-width: 1200px;
   margin: 0 auto 30px auto;
 }
 
+/* Título da seção */
 .ordens-lista-section h2 {
   color: #2c3e50;
   margin-bottom: 20px;
   font-size: 1.8rem;
 }
 
-.loading-ordens {
-  text-align: center;
-  padding: 40px;
-  color: #7f8c8d;
-  font-size: 1.1rem;
-}
-
+/* Carregando e sem ordens */
+.loading-ordens,
 .sem-ordens {
   text-align: center;
   padding: 40px;
-  color: #95a5a6;
   font-size: 1.1rem;
+  color: #7f8c8d;
 }
 
-/* Grid de Ordens */
+/* Grid de ordens */
 .ordens-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
+/* Cartão da ordem */
 .ordem-card {
   background: #f8f9fa;
   border: 2px solid #e9ecef;
@@ -46,14 +41,45 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  position: relative; /* Para posicionamento do ícone de visualização */
 }
 
-.ordem-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  border-color: #3498db;
+/* Ícone de visualização sempre visível na parte superior esquerda */
+.visualizacao-icone {
+  font-size: 1.5rem;
+  color: #3498db;
+  cursor: pointer;
+  margin: 10px 10px 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  transition: color 0.2s ease-in-out;
 }
 
+/* Cor do ícone ao passar o mouse */
+.visualizacao-icone:hover {
+  color: #1d6fa5;
+}
+
+/* Notificação padrão para aguardando análise */
+.notificacao-analise {
+  font-size: 0.9rem;
+  color: #856404;
+  padding: 6px 10px;
+  background-color: #fff3cd;
+  border-radius: 6px;
+  text-align: center;
+  cursor: default;
+  user-select: none;
+  line-height: 1.2;
+  white-space: normal;
+  max-width: 180px;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+/* Cabeçalho da ordem */
 .ordem-header {
   display: flex;
   justify-content: space-between;
@@ -62,64 +88,59 @@
   gap: 10px;
 }
 
+/* Linha de informações */
 .ordem-info-linha {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 5px;
-  width: 100%; /* Garante que a linha ocupe todo o espaço */
+  width: 100%;
 }
 
+/* Número da ordem */
 .ordem-numero {
   font-weight: bold;
   color: #555;
 }
 
+/* Badge do status */
 .status-badge {
-  padding: 6px 12px;
+  padding: 10px 13px;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  margin-top: 12px;
 }
 
-/* Estilos de Status */
+/* Estilos das classes de status */
 .status-pendente {
   background: #fff3cd;
   color: #856404;
 }
-
-.status-analise {
-  background: #cfe2ff;
-  color: #084298;
-}
-
-.status-agendado {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-
 .status-andamento {
   background: #d1e7dd;
   color: #0f5132;
 }
-
+.status-agendado {
+  background: #d1ecf1;
+  color: #0c5460;
+}
 .status-concluido {
   background: #d4edda;
   color: #155724;
 }
-
 .status-cancelado {
   background: #f8d7da;
   color: #721c24;
 }
-
 .status-default {
   background: #e2e3e5;
   color: #383d41;
 }
 
+/* Tipos de ordem */
 .ordem-tipo {
   background: #e9ecef;
   padding: 6px 12px;
@@ -127,19 +148,22 @@
   font-size: 0.85rem;
   color: #495057;
   font-weight: 500;
-  margin-top: 5px; /* Adicionado para separar do item anterior */
+  margin-top: 5px;
 }
 
+/* Corpo da ordem */
 .ordem-body {
   flex: 1;
 }
 
+/* Descrição da ordem */
 .ordem-descricao {
   color: #2c3e50;
   line-height: 1.6;
   margin-bottom: 10px;
 }
 
+/* Mensagem */
 .ordem-mensagem {
   color: #7f8c8d;
   font-size: 0.9rem;
@@ -150,6 +174,7 @@
   border-left: 3px solid #3498db;
 }
 
+/* Rodapé da ordem */
 .ordem-footer {
   display: flex;
   flex-direction: column;
@@ -158,40 +183,52 @@
   border-top: 1px solid #dee2e6;
 }
 
+/* Data no rodapé */
 .ordem-footer small {
-  color: #6c757d;
   font-size: 0.85rem;
+  color: #6c757d;
 }
 
+/* Imagem do problema */
 .ordem-foto img {
-    max-width: 100%; 
-    border-radius: 6px;
-    margin-top: 10px;
+  max-width: 100%;
+  border-radius: 6px;
+  margin-top: 10px;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  .ordens-lista-section {
-    padding: 20px;
-    margin: 0 auto 20px auto;
-  }
-
-  .ordens-lista-section h2 {
-    font-size: 1.5rem;
-  }
-
-  .ordens-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .ordem-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+/* Modal estilizado */
+.modal-fundo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
 }
-
-@media (max-width: 480px) {
-  .ordens-lista-section h2 {
-    font-size: 1.3rem;
-  }
+.modal-conteudo {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
 }
+.btn-fechar {
+  background-color: #3498db;
+  border: none;
+  padding: 8px 14px;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+.btn-fechar:hover {
+  background-color: #1d6fa5;
+}
+/* Responsividade geral ainda mantém os ajustes anteriores */

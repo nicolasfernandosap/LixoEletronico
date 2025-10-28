@@ -1,12 +1,3 @@
-/* Baseado nos estilos de FormularioOrdensServico.css e IconeMenuChamadosPendentes.css */
-
-/* Estilo para remover a lupa no menu lateral (Ajuste o seletor se necessário) */
-/* Assumindo que a lupa está dentro de um elemento com a classe 'menu-lateral' ou similar */
-/* Se a lupa for um ícone SVG/componente, você pode precisar de um seletor mais específico ou remover o componente no HTML/JSX */
-.menu-lateral .lupa-menu { 
-    display: none !important;
-}
-
 .agendamento-container {
     padding: 20px;
     background-color: #f8f9fa;
@@ -29,32 +20,28 @@
     margin-bottom: 20px;
 }
 
-/* Estilos de Mensagens */
-.mensagem-sucesso {
-    padding: 10px;
-    margin-bottom: 15px;
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
+.mensagem-sucesso,
 .mensagem-erro {
     padding: 10px;
     margin-bottom: 15px;
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
     border-radius: 4px;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-/* Estilos de Formulário */
+.mensagem-sucesso {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.mensagem-erro {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
 .agendamento-form {
     display: flex;
     flex-direction: column;
@@ -70,7 +57,8 @@
 
 .form-group input[type="text"],
 .form-group select,
-.form-group textarea {
+.form-group textarea,
+.form-group input[type="date"] {
     width: 100%;
     padding: 10px;
     border: 1px solid #ced4da;
@@ -113,25 +101,38 @@
     cursor: not-allowed;
 }
 
-/* Estilos de Busca */
+/* Corrige lupa apenas dentro do campo de busca, NÃO na lateral */
 .input-busca-wrapper {
+    position: relative;
     display: flex;
     align-items: center;
+    background: white;
     border: 1px solid #ced4da;
     border-radius: 4px;
     padding: 0 10px;
-    background-color: white;
+    margin-bottom: 8px;
+    width: 100%;
+    max-width: 400px;
 }
 
 .input-busca-wrapper input {
     border: none;
-    padding: 10px 0;
+    padding: 10px 0 10px 0;
     flex-grow: 1;
+    background: transparent;
+    font-size: 1em;
 }
 
 .input-busca-wrapper .icone-busca {
+    position: absolute;
+    left: 16px;
     color: #495057;
-    margin-right: 10px;
+    font-size: 1.2em;
+    pointer-events: none;
+}
+
+.input-busca-wrapper input {
+    padding-left: 35px;
 }
 
 .loading-busca {
@@ -159,7 +160,6 @@
     text-align: center;
 }
 
-/* Resultados da Busca */
 .resultados-busca {
     margin-top: 10px;
     border: 1px solid #e9ecef;
@@ -201,7 +201,7 @@
 }
 
 .os-item.selecionada {
-    background-color: #e9f7ef; /* Verde claro para seleção */
+    background-color: #e9f7ef;
     border-left: 3px solid #28a745;
     font-weight: bold;
 }
@@ -221,7 +221,6 @@
     color: #6c757d;
 }
 
-/* Detalhes da OS Selecionada */
 .os-detalhes-selecionada {
     padding: 15px;
     background-color: #e9ecef;
@@ -242,5 +241,10 @@
 
 .os-detalhes-selecionada .status-atual {
     font-weight: bold;
-    color: #dc3545; /* Cor de destaque para o status */
+    color: #dc3545;
+}
+
+/* Corrige para nunca aparecer em menu lateral! */
+.menu-lateral .lupa-menu, .sidebar-menu-list .icone-busca {
+    display: none !important;
 }

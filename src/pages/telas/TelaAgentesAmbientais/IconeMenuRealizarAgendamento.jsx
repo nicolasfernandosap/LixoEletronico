@@ -3,7 +3,7 @@ import { supabase } from '../../../../supabaseClient';
 import './IconeMenuRealizarAgendamento.css';
 import { FaCalendarAlt, FaSearch, FaCheckCircle, FaExclamationTriangle, FaSpinner } from 'react-icons/fa';
 
-const VALOR_DESTINO_TRANSPORTE = 'Destino transporte Coleta'; // Fluxo que exige data
+const VALOR_DESTINO_TRANSPORTE = 'Destino transporte Coleta';
 
 const IconeMenuRealizarAgendamento = () => {
   const [busca, setBusca] = useState('');
@@ -19,7 +19,6 @@ const IconeMenuRealizarAgendamento = () => {
   const [mensagemSucesso, setMensagemSucesso] = useState('');
   const [mensagemErro, setMensagemErro] = useState('');
 
-  // === Carregar opções de fluxo ===
   useEffect(() => {
     const fetchOpcoesFluxo = async () => {
       setLoadingFluxo(true);
@@ -30,7 +29,6 @@ const IconeMenuRealizarAgendamento = () => {
           .order('id_ref_status_os', { ascending: true });
 
         if (error) throw error;
-
         const opcoesExcluidas = ['Aguardando Análise', 'Coleta Concluída', 'Cliente Ausente'];
         const opcoesFiltradas = (data || [])
           .filter(item => !opcoesExcluidas.includes(item.status_os))
@@ -39,23 +37,21 @@ const IconeMenuRealizarAgendamento = () => {
             label: item.status_os,
             valor: item.status_os,
           }));
-
         const opcoes = [{ id: '', label: 'Selecione o Fluxo de Ação' }, ...opcoesFiltradas];
         setOpcoesFluxo(opcoes);
       } catch (err) {
-        console.error('Erro ao carregar opções de fluxo:', err);
         setMensagemErro('Erro ao carregar opções de fluxo. Tente recarregar a página.');
       } finally {
         setLoadingFluxo(false);
       }
     };
-
     fetchOpcoesFluxo();
   }, []);
 
-  // === Função de busca ===
+  // Busca agora faz JOIN real para mostrar status_os corretamente
   const handleBusca = useCallback(async (termo) => {
-    if (termo.trim().length < 3) {
+    const termoNumerico = termo.replace(/\D/g, '');
+    if (termoNumerico.length < 3) {
       setOrdensEncontradas([]);
       return;
     }
@@ -65,35 +61,67 @@ const IconeMenuRealizarAgendamento = () => {
     setOsSelecionada(null);
 
     try {
-      const termoNormalizado = termo.replace(/\D/g, '');
-      let query = supabase
-        .from('ordens_servico')
-        .select(`
-          id_ref_ordem_servico, 
-          numero_os, 
-          descricao, 
-          data_criacao,
-          status_os,
-          usuarios (nome_completo, cpf)
-        `);
+      let query = null;
+      // CPF tem 11 dígitos
+      if (termoNumerico.length === 11) {
+        // Buscar id_usuario pelo CPF
+        const { data: usuariosData, error: usuariosError } = await supabase
+          .from('usuarios')
+          .select('id_usuario, nome_completo, cpf')
+          .eq('cpf', termoNumerico);
 
-      if (termoNormalizado.length >= 11) {
-        query = query.in(
-          'id_usuario',
-          supabase.from('usuarios').select('id_usuario').eq('cpf', termoNormalizado)
-        );
-      } else if (!isNaN(termoNormalizado) && termoNormalizado.length > 0) {
-        query = query.eq('numero_os', parseInt(termoNormalizado));
-      } else {
-        query = query.ilike('usuarios.nome_completo', `%${termo}%`);
+        if (usuariosError) throw usuariosError;
+
+        const idsUsuario = usuariosData.map(u => u.id_usuario);
+
+        // JOIN mostrando status_os
+        query = supabase
+          .from('ordens_servico')
+          .select(`
+            id_ref_ordem_servico,
+            numero_os,
+            descricao,
+            data_criacao,
+            id_usuario,
+            status_os:status_da_os!inner (
+              id_ref_status_os,
+              status_os
+            ),
+            usuarios:usuarios!id_usuario (
+              nome_completo,
+              cpf
+            )
+          `)
+          .in('id_usuario', idsUsuario);
+      } else if (!isNaN(termoNumerico) && termoNumerico.length > 0) {
+        query = supabase
+          .from('ordens_servico')
+          .select(`
+            id_ref_ordem_servico,
+            numero_os,
+            descricao,
+            data_criacao,
+            id_usuario,
+            status_os:status_da_os!inner (
+              id_ref_status_os,
+              status_os
+            ),
+            usuarios:usuarios!id_usuario (
+              nome_completo,
+              cpf
+            )
+          `)
+          .eq('numero_os', parseInt(termoNumerico, 10));
       }
 
-      const { data, error } = await query;
-      if (error) throw error;
-
-      setOrdensEncontradas(data || []);
-    } catch (err) {
-      console.error('Erro ao buscar ordens:', err);
+      if (query) {
+        const { data, error } = await query;
+        if (error) throw error;
+        setOrdensEncontradas(data || []);
+      } else {
+        setOrdensEncontradas([]);
+      }
+    } catch {
       setMensagemErro('Erro ao buscar ordens de serviço. Tente simplificar o termo de busca.');
       setOrdensEncontradas([]);
     } finally {
@@ -108,12 +136,10 @@ const IconeMenuRealizarAgendamento = () => {
     return () => clearTimeout(handler);
   }, [busca, handleBusca]);
 
-  // === Submissão ===
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensagemSucesso('');
     setMensagemErro('');
-
     if (!osSelecionada) {
       setMensagemErro('Por favor, selecione uma Ordem de Serviço.');
       return;
@@ -139,35 +165,28 @@ const IconeMenuRealizarAgendamento = () => {
 
     try {
       const novoStatus = parseInt(fluxoSelecionado);
-
       const updateData = {
         status_os: novoStatus,
         observacao_agente_ambiental: observacaoAgente,
       };
-
       if (isDestinoTransporte) {
         updateData.dia_agendamento_coleta = dataAgendamento;
       }
-
       const { error } = await supabase
         .from('ordens_servico')
         .update(updateData)
         .eq('id_ref_ordem_servico', osSelecionada.id_ref_ordem_servico);
-
       if (error) throw error;
-
       setMensagemSucesso(
         `Ordem de Serviço OS-${osSelecionada.numero_os} atualizada para o fluxo: ${fluxoObj.label}.`
       );
-
       setBusca('');
       setOrdensEncontradas([]);
       setOsSelecionada(null);
       setFluxoSelecionado('');
       setObservacaoAgente('');
       setDataAgendamento('');
-    } catch (err) {
-      console.error('Erro ao atualizar OS:', err);
+    } catch {
       setMensagemErro('Erro ao processar o fluxo da Ordem de Serviço. Verifique a conexão e tente novamente.');
     } finally {
       setLoadingSubmit(false);
@@ -180,6 +199,14 @@ const IconeMenuRealizarAgendamento = () => {
     return data.toLocaleDateString('pt-BR');
   };
 
+  // Nova extração do nome do status
+  const getStatusLabel = (os) => {
+    // status_os será objeto da relação, pode ser null ou array
+    if (os.status_os && os.status_os.status_os) return os.status_os.status_os;
+    // fallback
+    return 'Desconhecido';
+  };
+
   return (
     <div className="agendamento-container">
       <h2><FaCalendarAlt /> Realizar Agendamento/Gerenciamento de OS</h2>
@@ -189,23 +216,20 @@ const IconeMenuRealizarAgendamento = () => {
       {mensagemErro && <div className="mensagem-erro"><FaExclamationTriangle /> {mensagemErro}</div>}
 
       <form onSubmit={handleSubmit} className="agendamento-form">
-        
-        {/* === CAMPO DE BUSCA === */}
         <div className="form-group busca-os">
-          <label htmlFor="busca">Buscar Ordem de Serviço (Nome, CPF ou Nº OS):</label>
+          <label htmlFor="busca">Buscar Ordem de Serviço (CPF ou Nº OS):</label>
           <div className="input-busca-wrapper">
             <FaSearch className="icone-busca" />
             <input
               type="text"
               id="busca"
               value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              placeholder="Digite o nome, CPF ou número da OS..."
+              onChange={e => setBusca(e.target.value.replace(/\D/g, ''))}
+              placeholder="Digite o CPF ou número da OS (apenas números)..."
             />
           </div>
         </div>
 
-        {/* === RESULTADOS DA BUSCA === */}
         {loadingBusca ? (
           <div className="loading-busca"><FaSpinner className="spinner-icon" /> Buscando ordens...</div>
         ) : (
@@ -214,8 +238,8 @@ const IconeMenuRealizarAgendamento = () => {
               <p>Selecione a OS:</p>
               <ul className="lista-os-busca">
                 {ordensEncontradas.map(os => (
-                  <li 
-                    key={os.id_ref_ordem_servico} 
+                  <li
+                    key={os.id_ref_ordem_servico}
                     className={`os-item ${osSelecionada?.id_ref_ordem_servico === os.id_ref_ordem_servico ? 'selecionada' : ''}`}
                     onClick={() => setOsSelecionada(os)}
                   >
@@ -233,17 +257,15 @@ const IconeMenuRealizarAgendamento = () => {
           )
         )}
 
-        {/* === DETALHES DA OS === */}
         {osSelecionada && (
           <div className="os-detalhes-selecionada">
             <h3>OS Selecionada: OS-{osSelecionada.numero_os.toString().padStart(4, '0')}</h3>
             <p><strong>Usuário:</strong> {osSelecionada.usuarios?.nome_completo} (CPF: {osSelecionada.usuarios?.cpf})</p>
             <p><strong>Descrição:</strong> {osSelecionada.descricao}</p>
-            <p className="status-atual">Status Atual: {osSelecionada.status_os}</p>
+            <p className="status-atual">Status Atual: {getStatusLabel(osSelecionada)}</p>
           </div>
         )}
 
-        {/* === SELETOR DE FLUXO === */}
         <div className="form-group">
           <label htmlFor="fluxo">Fluxo de Ação *</label>
           <select
@@ -265,7 +287,6 @@ const IconeMenuRealizarAgendamento = () => {
           </select>
         </div>
 
-        {/* === CAMPO CONDICIONAL DE DATA === */}
         {opcoesFluxo.find(f => f.id.toString() === fluxoSelecionado)?.valor === VALOR_DESTINO_TRANSPORTE && (
           <div className="form-group">
             <label htmlFor="dataAgendamento">Dia de agendamento residencial *</label>
@@ -280,7 +301,6 @@ const IconeMenuRealizarAgendamento = () => {
           </div>
         )}
 
-        {/* === OBSERVAÇÃO === */}
         <div className="form-group">
           <label htmlFor="observacao">Observação do Agente Ambiental *</label>
           <textarea
@@ -293,7 +313,6 @@ const IconeMenuRealizarAgendamento = () => {
             disabled={!osSelecionada || loadingSubmit}
           />
         </div>
-
         <button type="submit" className="btn-submit" disabled={!osSelecionada || !fluxoSelecionado || loadingSubmit}>
           {loadingSubmit ? 'Processando...' : 'Aplicar Fluxo de Ação'}
         </button>

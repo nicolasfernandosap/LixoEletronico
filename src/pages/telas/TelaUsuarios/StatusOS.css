@@ -23,6 +23,9 @@
   font-size: 1.1rem;
   color: #7f8c8d;
 }
+.sem-ordens {
+  color: #95a5a6;
+}
 
 /* Grid de ordens */
 .ordens-grid {
@@ -41,10 +44,10 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  position: relative; /* Para posicionamento do ícone de visualização */
+  position: relative;
 }
 
-/* Ícone de visualização sempre visível na parte superior esquerda */
+/* Ícone de visualização */
 .visualizacao-icone {
   font-size: 1.5rem;
   color: #3498db;
@@ -56,13 +59,11 @@
   z-index: 10;
   transition: color 0.2s ease-in-out;
 }
-
-/* Cor do ícone ao passar o mouse */
 .visualizacao-icone:hover {
   color: #1d6fa5;
 }
 
-/* Notificação padrão para aguardando análise */
+/* Notificação para aguardando análise */
 .notificacao-analise {
   font-size: 0.9rem;
   color: #856404;
@@ -119,25 +120,48 @@
   background: #fff3cd;
   color: #856404;
 }
+
 .status-andamento {
   background: #d1e7dd;
   color: #0f5132;
 }
+
 .status-agendado {
   background: #d1ecf1;
   color: #0c5460;
 }
+
 .status-concluido {
   background: #d4edda;
   color: #155724;
 }
+
 .status-cancelado {
   background: #f8d7da;
   color: #721c24;
 }
+
 .status-default {
   background: #e2e3e5;
   color: #383d41;
+}
+
+/* Nova cor para status Agendamento presencial e Destino transporte Coleta */
+.status-agendamento-confirmado {
+  background-color: #95c122;
+  color: white;
+}
+
+/* Nova cor para status Ordem Cancelada */
+.status-cancelado-especial {
+  background-color: #c0392b;
+  color: white;
+}
+
+/* Nova cor para status Coleta Concluída */
+.status-coleta-concluida {
+  background-color: #af7fe8; /* purple claro */
+  color: white;
 }
 
 /* Tipos de ordem */
@@ -209,6 +233,7 @@
   align-items: center;
   z-index: 10000;
 }
+
 .modal-conteudo {
   background: #fff;
   padding: 25px 30px;
@@ -217,6 +242,7 @@
   width: 90%;
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
 }
+
 .btn-fechar {
   background-color: #3498db;
   border: none;
@@ -228,7 +254,34 @@
   margin-top: 10px;
   transition: background-color 0.2s;
 }
+
 .btn-fechar:hover {
   background-color: #1d6fa5;
 }
-/* Responsividade geral ainda mantém os ajustes anteriores */
+
+/* Responsividade geral */
+@media (max-width: 768px) {
+  .ordens-lista-section {
+    padding: 20px;
+    margin: 0 auto 20px auto;
+  }
+
+  .ordens-lista-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .ordens-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ordem-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .ordens-lista-section h2 {
+    font-size: 1.3rem;
+  }
+}

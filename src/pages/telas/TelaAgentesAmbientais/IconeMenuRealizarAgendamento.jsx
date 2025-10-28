@@ -4,6 +4,7 @@ import './IconeMenuRealizarAgendamento.css';
 import { FaCalendarAlt, FaSearch, FaCheckCircle, FaExclamationTriangle, FaSpinner } from 'react-icons/fa';
 
 const VALOR_DESTINO_TRANSPORTE = 'Destino transporte Coleta';
+const VALOR_AGENDAMENTO_PRESENCIAL = 'Agendamento presencial';
 
 const IconeMenuRealizarAgendamento = () => {
   const [busca, setBusca] = useState('');
@@ -48,7 +49,6 @@ const IconeMenuRealizarAgendamento = () => {
     fetchOpcoesFluxo();
   }, []);
 
-  // Busca agora faz JOIN real para mostrar status_os corretamente
   const handleBusca = useCallback(async (termo) => {
     const termoNumerico = termo.replace(/\D/g, '');
     if (termoNumerico.length < 3) {
@@ -62,9 +62,7 @@ const IconeMenuRealizarAgendamento = () => {
 
     try {
       let query = null;
-      // CPF tem 11 dígitos
       if (termoNumerico.length === 11) {
-        // Buscar id_usuario pelo CPF
         const { data: usuariosData, error: usuariosError } = await supabase
           .from('usuarios')
           .select('id_usuario, nome_completo, cpf')
@@ -74,7 +72,6 @@ const IconeMenuRealizarAgendamento = () => {
 
         const idsUsuario = usuariosData.map(u => u.id_usuario);
 
-        // JOIN mostrando status_os
         query = supabase
           .from('ordens_servico')
           .select(`
@@ -155,8 +152,9 @@ const IconeMenuRealizarAgendamento = () => {
 
     const fluxoObj = opcoesFluxo.find(f => f.id.toString() === fluxoSelecionado);
     const isDestinoTransporte = fluxoObj && fluxoObj.valor === VALOR_DESTINO_TRANSPORTE;
+    const isAgendamentoPresencial = fluxoObj && fluxoObj.valor === VALOR_AGENDAMENTO_PRESENCIAL;
 
-    if (isDestinoTransporte && !dataAgendamento) {
+    if ((isDestinoTransporte || isAgendamentoPresencial) && !dataAgendamento) {
       setMensagemErro('Por favor, informe o Dia de agendamento residencial.');
       return;
     }
@@ -169,7 +167,7 @@ const IconeMenuRealizarAgendamento = () => {
         status_os: novoStatus,
         observacao_agente_ambiental: observacaoAgente,
       };
-      if (isDestinoTransporte) {
+      if (isDestinoTransporte || isAgendamentoPresencial) {
         updateData.dia_agendamento_coleta = dataAgendamento;
       }
       const { error } = await supabase
@@ -199,11 +197,8 @@ const IconeMenuRealizarAgendamento = () => {
     return data.toLocaleDateString('pt-BR');
   };
 
-  // Nova extração do nome do status
   const getStatusLabel = (os) => {
-    // status_os será objeto da relação, pode ser null ou array
     if (os.status_os && os.status_os.status_os) return os.status_os.status_os;
-    // fallback
     return 'Desconhecido';
   };
 
@@ -287,14 +282,15 @@ const IconeMenuRealizarAgendamento = () => {
           </select>
         </div>
 
-        {opcoesFluxo.find(f => f.id.toString() === fluxoSelecionado)?.valor === VALOR_DESTINO_TRANSPORTE && (
+        {(opcoesFluxo.find(f => f.id.toString() === fluxoSelecionado)?.valor === VALOR_DESTINO_TRANSPORTE
+          || opcoesFluxo.find(f => f.id.toString() === fluxoSelecionado)?.valor === VALOR_AGENDAMENTO_PRESENCIAL) && (
           <div className="form-group">
             <label htmlFor="dataAgendamento">Dia de agendamento residencial *</label>
             <input
               type="date"
               id="dataAgendamento"
               value={dataAgendamento}
-              onChange={(e) => setDataAgendamento(e.target.value)}
+              onChange={e => setDataAgendamento(e.target.value)}
               required
               disabled={loadingSubmit}
             />
@@ -306,14 +302,18 @@ const IconeMenuRealizarAgendamento = () => {
           <textarea
             id="observacao"
             value={observacaoAgente}
-            onChange={(e) => setObservacaoAgente(e.target.value)}
+            onChange={e => setObservacaoAgente(e.target.value)}
             placeholder="Relato e observações sobre o fluxo de ação escolhido..."
             rows="5"
             required
             disabled={!osSelecionada || loadingSubmit}
           />
         </div>
-        <button type="submit" className="btn-submit" disabled={!osSelecionada || !fluxoSelecionado || loadingSubmit}>
+        <button
+          type="submit"
+          className="btn-submit"
+          disabled={!osSelecionada || !fluxoSelecionado || loadingSubmit}
+        >
           {loadingSubmit ? 'Processando...' : 'Aplicar Fluxo de Ação'}
         </button>
       </form>

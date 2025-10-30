@@ -5,6 +5,7 @@ import { FaCalendarAlt, FaSearch, FaCheckCircle, FaExclamationTriangle, FaSpinne
 
 const VALOR_DESTINO_TRANSPORTE = 'Destino transporte Coleta';
 const VALOR_AGENDAMENTO_PRESENCIAL = 'Agendamento presencial';
+const VALOR_ORDEM_CANCELADA = 'Ordem Cancelada'; 
 
 const IconeMenuRealizarAgendamento = () => {
   const [busca, setBusca] = useState('');
@@ -13,6 +14,7 @@ const IconeMenuRealizarAgendamento = () => {
   const [fluxoSelecionado, setFluxoSelecionado] = useState('');
   const [observacaoAgente, setObservacaoAgente] = useState('');
   const [dataAgendamento, setDataAgendamento] = useState('');
+  const [turnoSelecionado, setTurnoSelecionado] = useState('');
   const [opcoesFluxo, setOpcoesFluxo] = useState([]);
   const [loadingBusca, setLoadingBusca] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -28,8 +30,8 @@ const IconeMenuRealizarAgendamento = () => {
           .from('status_da_os')
           .select('id_ref_status_os, status_os')
           .order('id_ref_status_os', { ascending: true });
-
         if (error) throw error;
+
         const opcoesExcluidas = ['Aguardando Análise', 'Coleta Concluída', 'Cliente Ausente'];
         const opcoesFiltradas = (data || [])
           .filter(item => !opcoesExcluidas.includes(item.status_os))
@@ -59,6 +61,10 @@ const IconeMenuRealizarAgendamento = () => {
     setLoadingBusca(true);
     setMensagemErro('');
     setOsSelecionada(null);
+    setFluxoSelecionado('');
+    setObservacaoAgente('');
+    setDataAgendamento('');
+    setTurnoSelecionado('');
 
     try {
       let query = null;
@@ -67,11 +73,8 @@ const IconeMenuRealizarAgendamento = () => {
           .from('usuarios')
           .select('id_usuario, nome_completo, cpf')
           .eq('cpf', termoNumerico);
-
         if (usuariosError) throw usuariosError;
-
         const idsUsuario = usuariosData.map(u => u.id_usuario);
-
         query = supabase
           .from('ordens_servico')
           .select(`
@@ -80,6 +83,7 @@ const IconeMenuRealizarAgendamento = () => {
             descricao,
             data_criacao,
             id_usuario,
+            turno_opcao_agendamento,
             status_os:status_da_os!inner (
               id_ref_status_os,
               status_os
@@ -99,6 +103,7 @@ const IconeMenuRealizarAgendamento = () => {
             descricao,
             data_criacao,
             id_usuario,
+            turno_opcao_agendamento,
             status_os:status_da_os!inner (
               id_ref_status_os,
               status_os
@@ -153,9 +158,15 @@ const IconeMenuRealizarAgendamento = () => {
     const fluxoObj = opcoesFluxo.find(f => f.id.toString() === fluxoSelecionado);
     const isDestinoTransporte = fluxoObj && fluxoObj.valor === VALOR_DESTINO_TRANSPORTE;
     const isAgendamentoPresencial = fluxoObj && fluxoObj.valor === VALOR_AGENDAMENTO_PRESENCIAL;
+    const isOrdemCancelada = fluxoObj && fluxoObj.valor === VALOR_ORDEM_CANCELADA;
 
     if ((isDestinoTransporte || isAgendamentoPresencial) && !dataAgendamento) {
       setMensagemErro('Por favor, informe o Dia de agendamento residencial.');
+      return;
+    }
+
+    if ((isDestinoTransporte || isAgendamentoPresencial) && !turnoSelecionado) {
+      setMensagemErro('Por favor, selecione o turno (Manhã ou Tarde).');
       return;
     }
 
@@ -169,21 +180,29 @@ const IconeMenuRealizarAgendamento = () => {
       };
       if (isDestinoTransporte || isAgendamentoPresencial) {
         updateData.dia_agendamento_coleta = dataAgendamento;
+        updateData.turno_opcao_agendamento = turnoSelecionado;
       }
       const { error } = await supabase
         .from('ordens_servico')
         .update(updateData)
         .eq('id_ref_ordem_servico', osSelecionada.id_ref_ordem_servico);
       if (error) throw error;
-      setMensagemSucesso(
-        `Ordem de Serviço OS-${osSelecionada.numero_os} atualizada para o fluxo: ${fluxoObj.label}.`
-      );
+      
+      // Monta a mensagem de sucesso condicional para não mostrar data se ordem cancelada
+      let mensagem = `Ordem de Serviço OS-${osSelecionada.numero_os} atualizada para o fluxo: ${fluxoObj.label}.`;
+      if (!isOrdemCancelada && (isDestinoTransporte || isAgendamentoPresencial) && dataAgendamento) {
+        mensagem += ` Dia de agendamento: ${dataAgendamento}.`;
+      }
+      setMensagemSucesso(mensagem);
+
+      // Reset campos
       setBusca('');
       setOrdensEncontradas([]);
       setOsSelecionada(null);
       setFluxoSelecionado('');
       setObservacaoAgente('');
       setDataAgendamento('');
+      setTurnoSelecionado('');
     } catch {
       setMensagemErro('Erro ao processar o fluxo da Ordem de Serviço. Verifique a conexão e tente novamente.');
     } finally {
@@ -236,7 +255,13 @@ const IconeMenuRealizarAgendamento = () => {
                   <li
                     key={os.id_ref_ordem_servico}
                     className={`os-item ${osSelecionada?.id_ref_ordem_servico === os.id_ref_ordem_servico ? 'selecionada' : ''}`}
-                    onClick={() => setOsSelecionada(os)}
+                    onClick={() => {
+                      setOsSelecionada(os);
+                      setFluxoSelecionado(os.status_os?.id_ref_status_os?.toString() || '');
+                      setObservacaoAgente(os.observacao_agente_ambiental || '');
+                      setDataAgendamento(os.dia_agendamento_coleta || '');
+                      setTurnoSelecionado(os.turno_opcao_agendamento || '');
+                    }}
                   >
                     <span className="os-numero">OS-{os.numero_os.toString().padStart(4, '0')}</span>
                     <span className="os-usuario">{os.usuarios?.nome_completo || 'Usuário Desconhecido'}</span>
@@ -258,6 +283,7 @@ const IconeMenuRealizarAgendamento = () => {
             <p><strong>Usuário:</strong> {osSelecionada.usuarios?.nome_completo} (CPF: {osSelecionada.usuarios?.cpf})</p>
             <p><strong>Descrição:</strong> {osSelecionada.descricao}</p>
             <p className="status-atual">Status Atual: {getStatusLabel(osSelecionada)}</p>
+            <p><strong>Turno do Agendamento:</strong> {osSelecionada.turno_opcao_agendamento || '—'}</p>
           </div>
         )}
 
@@ -284,17 +310,34 @@ const IconeMenuRealizarAgendamento = () => {
 
         {(opcoesFluxo.find(f => f.id.toString() === fluxoSelecionado)?.valor === VALOR_DESTINO_TRANSPORTE
           || opcoesFluxo.find(f => f.id.toString() === fluxoSelecionado)?.valor === VALOR_AGENDAMENTO_PRESENCIAL) && (
-          <div className="form-group">
-            <label htmlFor="dataAgendamento">Dia de agendamento residencial *</label>
-            <input
-              type="date"
-              id="dataAgendamento"
-              value={dataAgendamento}
-              onChange={e => setDataAgendamento(e.target.value)}
-              required
-              disabled={loadingSubmit}
-            />
-          </div>
+          <>
+            <div className="form-group">
+              <label htmlFor="dataAgendamento">Dia de agendamento residencial *</label>
+              <input
+                type="date"
+                id="dataAgendamento"
+                value={dataAgendamento}
+                onChange={e => setDataAgendamento(e.target.value)}
+                required
+                disabled={loadingSubmit}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="turno">Selecione o Turno *</label>
+              <select
+                id="turno_opcao"
+                value={turnoSelecionado}
+                onChange={(e) => setTurnoSelecionado(e.target.value)}
+                required
+                disabled={loadingSubmit}
+              >
+                <option value="">Selecione o Turno</option>
+                <option value="manha">Manhã</option>
+                <option value="tarde">Tarde</option>
+              </select>
+            </div>
+          </>
         )}
 
         <div className="form-group">

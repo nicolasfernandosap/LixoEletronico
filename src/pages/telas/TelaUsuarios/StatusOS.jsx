@@ -4,13 +4,16 @@ import './StatusOS.css';
 import { FaEye } from 'react-icons/fa';
 
 const StatusOS = () => {
-  // Estados para as ordens, usuário, loading e ordem selecionada para visualização
+  // Estado que armazena as ordens de serviço carregadas do Supabase
   const [ordens, setOrdens] = useState([]);
+  // Estado para guardar o ID do usuário atual, obtido da sessão Supabase
   const [userId, setUserId] = useState(null);
+  // Estado para controle de loading das ordens (exibir carregando enquanto busca)
   const [loadingOrdens, setLoadingOrdens] = useState(true);
+  // Estado que guarda a ordem selecionada para visualização detalhada no modal
   const [ordemVisualizar, setOrdemVisualizar] = useState(null);
 
-  // Uso do useEffect para pegar o usuário atual do Supabase
+  // useEffect disparado no carregamento do componente para buscar a sessão e usuário atual
   useEffect(() => {
     const buscarUsuarioAtual = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -23,7 +26,7 @@ const StatusOS = () => {
     buscarUsuarioAtual();
   }, []);
 
-  // Busca as ordens do usuário atual com dados extras relacionados
+  // Função para buscar as ordens de serviço do usuário logado, com dados extras relacionados
   const buscarOrdensServico = useCallback(async () => {
     if (!userId) return;
     setLoadingOrdens(true);
@@ -53,12 +56,12 @@ const StatusOS = () => {
     setLoadingOrdens(false);
   }, [userId]);
 
-  // Atualiza a lista de ordens ao mudar o usuário
+  // Atualiza a lista de ordens toda vez que o ID do usuário muda
   useEffect(() => {
     buscarOrdensServico();
   }, [buscarOrdensServico]);
 
-  // Função para formatar datas para padrão Brasileiro
+  // Função para formatar datas para o padrão brasileiro dd/mm/aaaa hh:mm
   const formatarData = (dataString) => {
     if (!dataString) return 'Não definida';
     const data = new Date(dataString);
@@ -71,9 +74,8 @@ const StatusOS = () => {
     });
   };
 
-  // Função que retorna a classe CSS para a cor do status, com base no status e se há observação
+  // Mapeia o status para a classe CSS correspondente e trata casos especiais com observacao
   const getStatusClass = (status, observacao) => {
-    // Cores especiais para status informados e quando o agente já retornou (observacao)
     if (observacao) {
       if (status === 'Agendamento presencial' || status === 'Destino transporte Coleta') {
         return 'status-agendamento-confirmado';
@@ -85,7 +87,6 @@ const StatusOS = () => {
         return 'status-coleta-concluida';
       }
     }
-    // Mapeamento padrão para os demais status
     const statusMap = {
       'Aguardando Análise': 'status-pendente',
       'Em Atendimento': 'status-andamento',
@@ -103,17 +104,17 @@ const StatusOS = () => {
     <div className="ordens-lista-section">
       <h2>Minhas Ordens de Serviço</h2>
       {loadingOrdens ? (
-        // Mostra loading enquanto busca ordens
+        // Exibe mensagem de carregando enquanto busca ordens
         <div className="loading-ordens">Carregando ordens...</div>
       ) : ordens.length === 0 ? (
-        // Mensagem se não houver ordens
+        // Mensagem caso não existam ordens para o usuário
         <p className="sem-ordens">Nenhuma ordem de serviço encontrada.</p>
       ) : (
+        // Exibe grade com as ordens encontradas
         <div className="ordens-grid">
-          {/* Gera os cards para cada ordem */}
           {ordens.map(ordem => (
             <div key={ordem.id_ref_ordem_servico} className="ordem-card">
-              {/* Ícone de visualização que sempre aparece */}
+              {/* Ícone de visualização no canto superior direito, que abre o modal */}
               <div
                 className="visualizacao-icone"
                 title="Visualizar detalhes da ordem"
@@ -122,9 +123,9 @@ const StatusOS = () => {
                 <FaEye />
               </div>
 
-              {/* Cabeçalho: mostra status, número da ordem, tipo de serviço e equipamento */}
+              {/* Cabeçalho da ordem com status e número em coluna */}
               <div className="ordem-header">
-                <div className="ordem-info-linha">
+                <div className="ordem-info-coluna">
                   <span className={`status-badge ${getStatusClass(ordem.status_da_os?.status_os, ordem.observacao_agente_ambiental)}`}>
                     {ordem.status_da_os?.status_os || 'Sem status'}
                   </span>
@@ -132,6 +133,14 @@ const StatusOS = () => {
                     Ordem Serviço: {ordem.numero_os ? ordem.numero_os.toString().padStart(4, '0') : '—'}
                   </span>
                 </div>
+
+                {/* Label explicativa para a descrição do problema/serviço */}
+                <span className="descricao-label">Descrição do Problema/Serviço</span>
+
+                {/* Descrição de texto da ordem */}
+                <p className="ordem-descricao">{ordem.descricao}</p>
+
+                {/* Informações complementares de tipo e equipamento */}
                 <span className="ordem-tipo">
                   Tipo de Serviço: {ordem.tipos_servicos?.tipo_servico || 'Não definido'}
                 </span>
@@ -140,9 +149,8 @@ const StatusOS = () => {
                 </span>
               </div>
 
-              {/* Corpo da ordem: descrição, mensagem e foto */}
+              {/* Corpo da ordem com mensagem e foto */}
               <div className="ordem-body">
-                <p className="ordem-descricao">{ordem.descricao}</p>
                 {ordem.mensagem && (
                   <p className="ordem-mensagem">
                     <strong>Observações:</strong> {ordem.mensagem}
@@ -150,12 +158,16 @@ const StatusOS = () => {
                 )}
                 {ordem.url_foto && (
                   <div className="ordem-foto">
-                    <img src={ordem.url_foto} alt="Foto do problema" style={{ maxWidth: '100%', borderRadius: '6px' }} />
+                    <img 
+                      src={ordem.url_foto} 
+                      alt="Foto do problema" 
+                      style={{ maxWidth: '100%', borderRadius: '6px' }} 
+                    />
                   </div>
                 )}
               </div>
 
-              {/* Rodapé mostra data de criação da ordem */}
+              {/* Rodapé com data de criação formatada */}
               <div className="ordem-footer">
                 <small>Criado em: {formatarData(ordem.data_criacao)}</small>
               </div>
@@ -164,11 +176,14 @@ const StatusOS = () => {
         </div>
       )}
 
-      {/* Modal para mostrar observações e agendamento */}
+      {/* Modal para mostrar observação do agente ambiental e agendamento */}
       {ordemVisualizar && (
         <div className="modal-fundo" onClick={() => setOrdemVisualizar(null)}>
+          {/* Previne fechamento do modal ao clicar no conteúdo */}
           <div className="modal-conteudo" onClick={e => e.stopPropagation()}>
-            <h3>Retorno Agente Ambiental Número OS {ordemVisualizar.numero_os.toString().padStart(4, '0')}</h3>
+            <h3>
+              Retorno Agente Ambiental Número OS {ordemVisualizar.numero_os.toString().padStart(4, '0')}
+            </h3>
             <p><strong>Observação do Agente Ambiental:</strong></p>
             <p>
               {ordemVisualizar.observacao_agente_ambiental || 'Aguarde pela análise da central! Em breve retornaremos sobre análise da tratativa.'}

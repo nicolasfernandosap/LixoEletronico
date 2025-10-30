@@ -1,21 +1,21 @@
-/* Estilo da seção geral */
+/* Estilo da seção geral: fundo branco, cantos arredondados e sombra suave */
 .ordens-lista-section {
   background: #ffffff;
   border-radius: 12px;
   padding: 30px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  max-width: 1200px;
+  max-width: 1200px; /* centraliza o container com largura máxima */
   margin: 0 auto 30px auto;
 }
 
-/* Título da seção */
+/* Título da seção com cor escura e espaçamento inferior */
 .ordens-lista-section h2 {
   color: #2c3e50;
   margin-bottom: 20px;
   font-size: 1.8rem;
 }
 
-/* Carregando e sem ordens */
+/* Estado de carregamento e mensagem para sem ordens */
 .loading-ordens,
 .sem-ordens {
   text-align: center;
@@ -27,14 +27,14 @@
   color: #95a5a6;
 }
 
-/* Grid de ordens */
+/* Grade responsiva para os cartões de ordens */
 .ordens-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
-/* Cartão da ordem */
+/* Cartão da ordem: fundo claro, borda sutil, cantos arredondados e espaçamento interno */
 .ordem-card {
   background: #f8f9fa;
   border: 2px solid #e9ecef;
@@ -44,18 +44,19 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  position: relative;
+  position: relative; /* para o posicionamento absoluto do ícone */
 }
 
-/* Ícone de visualização */
+/* Ícone de visualização no canto superior direito com cursor pointer e hover */
 .visualizacao-icone {
   font-size: 1.5rem;
   color: #3498db;
   cursor: pointer;
-  margin: 10px 10px 0 0;
+  margin: 10px;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 10px;
+  right: 10px;
+  left: auto;
   z-index: 10;
   transition: color 0.2s ease-in-out;
 }
@@ -63,48 +64,29 @@
   color: #1d6fa5;
 }
 
-/* Notificação para aguardando análise */
-.notificacao-analise {
-  font-size: 0.9rem;
-  color: #856404;
-  padding: 6px 10px;
-  background-color: #fff3cd;
-  border-radius: 6px;
-  text-align: center;
-  cursor: default;
-  user-select: none;
-  line-height: 1.2;
-  white-space: normal;
-  max-width: 180px;
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-/* Cabeçalho da ordem */
+/* Cabeçalho da ordem organiza os elementos em coluna com espaçamento */
 .ordem-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 8px;
 }
 
-/* Linha de informações */
-.ordem-info-linha {
+/* Container para status e número da ordem empilhados verticalmente */
+.ordem-info-coluna {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
 }
 
-/* Número da ordem */
+/* Número da ordem em negrito e cor escura */
 .ordem-numero {
   font-weight: bold;
   color: #555;
+  margin-top: 5px;
 }
 
-/* Badge do status */
+/* Badge para status: formato arredondado e texto estilizado */
 .status-badge {
   padding: 10px 13px;
   border-radius: 20px;
@@ -115,56 +97,45 @@
   margin-top: 12px;
 }
 
-/* Estilos das classes de status */
+/* Classes de cor para diferentes status, conferem cores e fundos distintos */
 .status-pendente {
   background: #fff3cd;
   color: #856404;
 }
-
 .status-andamento {
   background: #d1e7dd;
   color: #0f5132;
 }
-
 .status-agendado {
   background: #d1ecf1;
   color: #0c5460;
 }
-
 .status-concluido {
   background: #d4edda;
   color: #155724;
 }
-
 .status-cancelado {
   background: #f8d7da;
   color: #721c24;
 }
-
 .status-default {
   background: #e2e3e5;
   color: #383d41;
 }
-
-/* Nova cor para status Agendamento presencial e Destino transporte Coleta */
 .status-agendamento-confirmado {
   background-color: #95c122;
   color: white;
 }
-
-/* Nova cor para status Ordem Cancelada */
 .status-cancelado-especial {
   background-color: #c0392b;
   color: white;
 }
-
-/* Nova cor para status Coleta Concluída */
 .status-coleta-concluida {
-  background-color: #af7fe8; /* purple claro */
+  background-color: #af7fe8;
   color: white;
 }
 
-/* Tipos de ordem */
+/* Tipos de ordem: fundo cinza claro e bordas arredondadas */
 .ordem-tipo {
   background: #e9ecef;
   padding: 6px 12px;
@@ -175,19 +146,29 @@
   margin-top: 5px;
 }
 
-/* Corpo da ordem */
+/* Label para descrição com cor azul e negrito */
+.descricao-label {
+  display: block;
+  font-size: 0.92rem;
+  color: #3571a6;
+  font-weight: bold;
+  margin-top: 12px;
+  margin-bottom: 3px;
+}
+
+/* Texto da descrição com cor escura e espaçamento */
+.ordem-descricao {
+  color: #2c3e50;
+  line-height: 1.6;
+  margin: 5px 0 15px 0;
+}
+
+/* Corpo da ordem flexível para expandir */
 .ordem-body {
   flex: 1;
 }
 
-/* Descrição da ordem */
-.ordem-descricao {
-  color: #2c3e50;
-  line-height: 1.6;
-  margin-bottom: 10px;
-}
-
-/* Mensagem */
+/* Mensagem com borda azul à esquerda, fundo branco e espaçamento */
 .ordem-mensagem {
   color: #7f8c8d;
   font-size: 0.9rem;
@@ -198,7 +179,7 @@
   border-left: 3px solid #3498db;
 }
 
-/* Rodapé da ordem */
+/* Rodapé da ordem com borda superior e espaçamento interno */
 .ordem-footer {
   display: flex;
   flex-direction: column;
@@ -207,20 +188,20 @@
   border-top: 1px solid #dee2e6;
 }
 
-/* Data no rodapé */
+/* Texto do rodapé em tom cinza escuro */
 .ordem-footer small {
   font-size: 0.85rem;
   color: #6c757d;
 }
 
-/* Imagem do problema */
+/* Imagem do problema com bordas arredondadas e espaçamento superior */
 .ordem-foto img {
   max-width: 100%;
   border-radius: 6px;
   margin-top: 10px;
 }
 
-/* Modal estilizado */
+/* Fundo do modal: translucent dark overlay */
 .modal-fundo {
   position: fixed;
   top: 0;
@@ -234,46 +215,66 @@
   z-index: 10000;
 }
 
+/* Conteúdo do modal com espaçamento, bordas e sombra para destaque */
 .modal-conteudo {
   background: #fff;
-  padding: 25px 30px;
-  border-radius: 10px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  padding: 32px 38px;
+  border-radius: 14px;
+  max-width: 420px;
+  width: 96%;
+  box-shadow: 0 8px 32px rgba(44,62,80,0.12), 0 1.5px 2px rgba(44,62,80,0.12);
+  border: 1px solid #e9ecef;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
 }
 
+/* Título do modal em azul, alinhado à esquerda, com espaçamento inferior */
+.modal-conteudo h3 {
+  color: #3498db;
+  text-align: left;
+  font-size: 1.18rem;
+  margin-bottom: 10px;
+  letter-spacing: .2px;
+}
+
+/* Parágrafos do modal com espaçamento entre eles */
+.modal-conteudo p:not(:last-child) {
+  margin-bottom: 6px;
+}
+
+/* Botão de fechar estilizado com azul, contornos arredondados e sombra */
 .btn-fechar {
   background-color: #3498db;
   border: none;
-  padding: 8px 14px;
+  padding: 10px 18px;
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 15px;
+  align-self: end;
+  font-size: 1rem;
+  box-shadow: 0 2px 10px rgba(52,152,219,0.07);
   transition: background-color 0.2s;
 }
-
 .btn-fechar:hover {
-  background-color: #1d6fa5;
+  background-color: #216595;
 }
 
-/* Responsividade geral */
+/* Responsividade: adaptações para telas menores */
 @media (max-width: 768px) {
   .ordens-lista-section {
     padding: 20px;
     margin: 0 auto 20px auto;
   }
-
   .ordens-lista-section h2 {
     font-size: 1.5rem;
   }
-
   .ordens-grid {
     grid-template-columns: 1fr;
   }
-
   .ordem-header {
     flex-direction: column;
     align-items: flex-start;
@@ -283,5 +284,9 @@
 @media (max-width: 480px) {
   .ordens-lista-section h2 {
     font-size: 1.3rem;
+  }
+  .modal-conteudo {
+    padding: 18px 10px; /* Menor padding em telas muito pequenas */
+    max-width: 97vw;
   }
 }

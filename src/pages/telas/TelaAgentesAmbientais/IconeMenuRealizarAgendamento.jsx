@@ -5,7 +5,7 @@ import { FaCalendarAlt, FaSearch, FaCheckCircle, FaExclamationTriangle, FaSpinne
 
 const VALOR_DESTINO_TRANSPORTE = 'Destino transporte Coleta';
 const VALOR_AGENDAMENTO_PRESENCIAL = 'Agendamento presencial';
-const VALOR_ORDEM_CANCELADA = 'Ordem Cancelada'; 
+const VALOR_ORDEM_CANCELADA = 'Ordem Cancelada';
 
 const IconeMenuRealizarAgendamento = () => {
   const [busca, setBusca] = useState('');
@@ -22,6 +22,7 @@ const IconeMenuRealizarAgendamento = () => {
   const [mensagemSucesso, setMensagemSucesso] = useState('');
   const [mensagemErro, setMensagemErro] = useState('');
 
+  // Busca opções de fluxo e prepara select
   useEffect(() => {
     const fetchOpcoesFluxo = async () => {
       setLoadingFluxo(true);
@@ -51,6 +52,7 @@ const IconeMenuRealizarAgendamento = () => {
     fetchOpcoesFluxo();
   }, []);
 
+  // Busca ordens conforme busca
   const handleBusca = useCallback(async (termo) => {
     const termoNumerico = termo.replace(/\D/g, '');
     if (termoNumerico.length < 3) {
@@ -131,6 +133,7 @@ const IconeMenuRealizarAgendamento = () => {
     }
   }, []);
 
+  // Delay para evitar buscas a cada tecla digitada
   useEffect(() => {
     const handler = setTimeout(() => {
       handleBusca(busca);
@@ -138,6 +141,7 @@ const IconeMenuRealizarAgendamento = () => {
     return () => clearTimeout(handler);
   }, [busca, handleBusca]);
 
+  // Função para processar submissão do formulário
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensagemSucesso('');
@@ -182,20 +186,25 @@ const IconeMenuRealizarAgendamento = () => {
         updateData.dia_agendamento_coleta = dataAgendamento;
         updateData.turno_opcao_agendamento = turnoSelecionado;
       }
+      // Aqui adiciona a data atual caso seja ordem cancelada
+      if (isOrdemCancelada) {
+        updateData.dia_cancelamento_os = new Date().toISOString();
+      }
+
       const { error } = await supabase
         .from('ordens_servico')
         .update(updateData)
         .eq('id_ref_ordem_servico', osSelecionada.id_ref_ordem_servico);
       if (error) throw error;
-      
-      // Monta a mensagem de sucesso condicional para não mostrar data se ordem cancelada
+
+      // Monta mensagem de sucesso, omite data para cancelada
       let mensagem = `Ordem de Serviço OS-${osSelecionada.numero_os} atualizada para o fluxo: ${fluxoObj.label}.`;
       if (!isOrdemCancelada && (isDestinoTransporte || isAgendamentoPresencial) && dataAgendamento) {
         mensagem += ` Dia de agendamento: ${dataAgendamento}.`;
       }
       setMensagemSucesso(mensagem);
 
-      // Reset campos
+      // Reseta todos campos
       setBusca('');
       setOrdensEncontradas([]);
       setOsSelecionada(null);
@@ -210,12 +219,14 @@ const IconeMenuRealizarAgendamento = () => {
     }
   };
 
+  // Formata datas para exibição
   const formatarData = (dataString) => {
     if (!dataString) return '—';
     const data = new Date(dataString);
     return data.toLocaleDateString('pt-BR');
   };
 
+  // Retorna label do status atual da OS
   const getStatusLabel = (os) => {
     if (os.status_os && os.status_os.status_os) return os.status_os.status_os;
     return 'Desconhecido';
@@ -352,6 +363,7 @@ const IconeMenuRealizarAgendamento = () => {
             disabled={!osSelecionada || loadingSubmit}
           />
         </div>
+
         <button
           type="submit"
           className="btn-submit"

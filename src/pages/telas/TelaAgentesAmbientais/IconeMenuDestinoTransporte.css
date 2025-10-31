@@ -1,0 +1,208 @@
+.transporte-container {
+  padding: 32px;
+  max-width: 880px;
+  margin: 36px auto 0 auto;
+  background: linear-gradient(120deg, #e3f2fd 0%, #f1f8e9 100%);
+  border-radius: 18px;
+  box-shadow: 0 8px 28px rgba(57,112,157,0.13), 0 2px 8px rgba(57,112,157,0.09);
+}
+
+.transporte-container h2 {
+  text-align: center;
+  color: #1976d2;
+  letter-spacing: 2px;
+  font-weight: 800;
+  margin-bottom: 2.1rem;
+}
+
+/* Container do filtro e do botão */
+.filtros-container {
+  display: flex;
+  flex-direction: column; /* para o botão ficar abaixo */
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+/* Campo de input para filtro */
+.filtro-input {
+  width: 100%;
+  max-width: 360px;
+  border: 2px solid #b2dfdb;
+  border-radius: 9px;
+  padding: 12px 20px;
+  font-size: 1.08em;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  font-family: inherit;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.filtro-input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.13);
+}
+
+/* Botão do filtro/listar todas */
+.filtro-btn {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 9px;
+  font-weight: bold;
+  font-size: 1.08em;
+  cursor: pointer;
+  transition: background-color 0.18s;
+  box-shadow: 0 2px 6px rgba(25, 118, 210, 0.08);
+}
+
+.filtro-btn:hover,
+.filtro-btn:focus {
+  background-color: #0d47a1;
+}
+
+/* Mensagem para nenhum resultado */
+.nenhum-resultado {
+  text-align: center;
+  color: #666;
+  font-size: 1.17em;
+  margin-top: 32px;
+  padding: 18px 0;
+}
+
+/* Tabelas de ordens */
+.tabela-transporte {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  margin-bottom: 2.2rem;
+}
+
+.tabela-transporte th,
+.tabela-transporte td {
+  padding: 15px 20px;
+  border: 1.5px solid #e0e0e0;
+}
+
+.tabela-transporte th {
+  background: linear-gradient(90deg, #1976d2 68%, #64b5f6 100%);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  font-size: 1.06em;
+  text-align: left;
+}
+
+.tabela-transporte tbody tr {
+  background-color: #fafdff;
+  transition: background 0.2s;
+}
+
+.tabela-transporte tbody tr:hover {
+  background-color: #dcedc8;
+}
+
+/* Botão olhinho para observação */
+.olhinho-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+/* Botão detalhe (exemplo se quiser usar) */
+.detalhes-btn {
+  background-color: #388e3c;
+  color: white;
+  border: none;
+  padding: 9px 22px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.02em;
+  transition: background-color 0.2s;
+}
+
+.detalhes-btn:hover,
+.detalhes-btn:focus {
+  background-color: #1b5e20;
+}
+
+/* Modal para visualizar observação */
+.modal-fundo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(44,62,80,0.33);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-conteudo {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 33px 25px;
+  max-width: 400px;
+  width: 96%;
+  box-shadow: 0 10px 28px rgba(44,62,80,0.18);
+  animation: showModal 0.26s;
+}
+
+@keyframes showModal {
+  from { opacity: 0; transform: scale(0.96);}
+  to { opacity: 1; transform: scale(1);}
+}
+
+.modal-conteudo h3 {
+  color: #1976d2;
+  margin-top: 0;
+  margin-bottom: 19px;
+  font-weight: 700;
+}
+
+.modal-conteudo p {
+  margin: 11px 0;
+  color: #37474f;
+  font-size: 1.06em;
+}
+
+.fechar-btn {
+  margin-top: 18px;
+  width: 100%;
+  background: #c62828;
+  color: #fff;
+  border: none;
+  padding: 11px 0;
+  font-weight: bold;
+  font-size: 1.10em;
+  border-radius: 8px;
+  transition: background 0.18s;
+  cursor: pointer;
+}
+
+.fechar-btn:hover,
+.fechar-btn:focus {
+  background: #b71c1c;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 620px) {
+  .transporte-container {
+    padding: 12px;
+    margin: 12px;
+  }
+  .filtros-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filtro-input,
+  .filtro-btn {
+    width: 100%;
+  }
+}

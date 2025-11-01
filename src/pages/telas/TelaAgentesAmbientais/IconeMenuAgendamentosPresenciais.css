@@ -1,0 +1,84 @@
+.agendamento-presencial-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 28px;
+  background: linear-gradient(120deg, #e8f0fe 0%, #f0fff5 100%);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(57,112,157,0.15);
+  font-family: Arial, sans-serif;
+  color: #1a237e;
+}
+
+.agendamento-presencial-container h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 1.04em;
+}
+
+input[type="text"],
+select {
+  padding: 10px 14px;
+  border: 2px solid #90caf9;
+  border-radius: 10px;
+  font-size: 1.08em;
+  outline: none;
+  transition: 0.2s border-color;
+}
+
+input[type="text"]:focus,
+select:focus {
+  border-color: #1a237e;
+}
+
+button {
+  background-color: #1a237e;
+  color: white;
+  border: none;
+  padding: 14px 0;
+  border-radius: 12px;
+  font-size: 1.1em;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.7px;
+  box-shadow: 0 5px 12px rgba(26, 35, 126, 0.44);
+  transition: background-color 0.25s ease-in-out;
+}
+
+button:disabled {
+  background-color: #9fa8da;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+button:hover:not(:disabled),
+button:focus:not(:disabled) {
+  background-color: #283593;
+}
+
+.form-baixa-os p {
+  margin: 6px 0;
+  font-size: 1em;
+  color: #283593;
+}
+
+@media (max-width: 480px) {
+  .agendamento-presencial-container {
+    padding: 20px 16px;
+  }
+  button {
+    font-size: 1em;
+  }
+}

@@ -20,6 +20,8 @@ import IconeMenuChamadosPendentes from './IconeMenuChamadosPendentes';
 import IconeMenuRealizarAgendamento from './IconeMenuRealizarAgendamento';
 import IconeMenuOrdensCanceladas from './IconeMenuOrdensCanceladas';
 import IconeMenuDestinoTransporte from './IconeMenuDestinoTransporte';
+import IconeMenuAgendamentosPresenciais from './IconeMenuAgendamentosPresenciais';
+
 
 // Componente de Configurações (Mantido aqui conforme solicitação do usuário)
 const AbaConfiguracoes = () => <div>Conteúdo das Configurações (A ser implementado ou migrado)</div>;
@@ -39,6 +41,7 @@ const MenuTelaAgentesAmbientais = () => {
     { id: 'agendamento', icon: FaCalendarAlt, label: 'Realizar Agendamento', component: IconeMenuRealizarAgendamento },
     { id: 'ordensCanceladas', icon: FaTimesCircle, label: 'Ordens Canceladas', component: IconeMenuOrdensCanceladas },
     { id: 'destinoTransporte', icon: FaMapMarkerAlt, label: 'Destino/Transporte', component: IconeMenuDestinoTransporte },
+    { id: 'agendamentosPresenciais', icon: FaCalendarAlt, label: 'Agendamentos Presenciais', component: IconeMenuAgendamentosPresenciais },
   ];
 
   // Mapeamento dos itens do menu superior (Configurações)

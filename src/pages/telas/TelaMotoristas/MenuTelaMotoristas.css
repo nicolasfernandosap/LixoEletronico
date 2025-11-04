@@ -1,0 +1,129 @@
+.mtm-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 60px 1fr;
+  grid-template-areas:
+    "topbar topbar"
+    "sidebar content";
+  min-height: 100vh;
+  background-color: #eef4f2;
+}
+
+.mtm-top-header {
+  grid-area: topbar;
+  background-color: #10395C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.mtm-titulo {
+  color: #ffffff;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.mtm-sidebar {
+  grid-area: sidebar;
+  background-color: #10395C;
+  padding-top: 20px;
+  overflow-y: auto;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.mtm-sidebar-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mtm-menus-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.2s;
+  color: #FFFFFF; /* Letras brancas */
+}
+
+.mtm-menus-item:hover,
+.mtm-active {
+  background-color: #295687;
+  color: #FFFFFF; /* Mantém as letras brancas ao passar o mouse ou ativo */
+}
+
+.mtm-menus-label {
+  margin-left: 10px;
+}
+
+.mtm-logout-item {
+  color: #f44336;
+  margin-top: 20px;
+}
+
+.mtm-logout-item:hover {
+  background-color: #c0392b;
+}
+
+.mtm-content-area {
+  grid-area: content;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.mtm-aba-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Responsividade */
+
+@media(max-width: 768px) {
+  .mtm-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px calc(100vh - 60px);
+    grid-template-areas:
+      "topbar"
+      "content";
+  }
+
+  .mtm-top-header {
+    justify-content: center;
+  }
+
+  .mtm-sidebar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    padding: 0;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    z-index: 1100;
+  }
+
+  .mtm-sidebar-menu-list {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .mtm-menus-item {
+    padding: 10px;
+    font-size: 1rem;
+    color: #FFFFFF; /* Letras brancas mobile */
+  }
+
+  .mtm-content-area {
+    padding: 15px;
+    margin-top: 60px;
+  }
+}
+
+

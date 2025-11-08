@@ -1,0 +1,141 @@
+/* ==========================================================================
+   ESTILOS PARA O PAINEL DO ADMINISTRADOR
+   As classes são prefixadas com "admin-" para evitar conflitos.
+   ========================================================================== */
+
+/* 1. Layout Principal do Painel Admin */
+.admin-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr; /* Sidebar um pouco mais larga */
+    grid-template-rows: 65px 1fr; /* Altura fixa para o header */
+    grid-template-areas:
+        "header header"
+        "sidebar content";
+    min-height: 100vh;
+    background-color: #f0f2f5; /* Um cinza levemente diferente para o fundo */
+}
+
+/* 2. Cabeçalho Superior */
+.admin-header {
+    grid-area: header;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e8e8e8;
+    z-index: 100;
+}
+
+.admin-header-title h2 {
+    font-size: 1.4rem;
+    color: #333;
+    margin: 0;
+}
+
+/* 3. Menu Superior (dentro do header) */
+.admin-top-menu-list {
+    display: flex;
+}
+
+.admin-top-menu-list .admin-menu-item {
+    color: #555;
+}
+
+/* 4. Menu Lateral (Sidebar) */
+.admin-sidebar {
+    grid-area: sidebar;
+    background-color: #001529; /* Um azul escuro para o admin */
+    color: rgba(255, 255, 255, 0.65);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Empurra o logout para o final */
+}
+
+.admin-sidebar-menu-list {
+    padding-top: 20px;
+}
+
+/* 5. Itens de Menu (Estilo Comum para Sidebar e Header) */
+.admin-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 24px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.admin-sidebar .admin-menu-item:hover {
+    background-color: #1890ff; /* Azul no hover */
+    color: #ffffff;
+}
+
+.admin-sidebar .admin-menu-item.active {
+    background-color: #1890ff; /* Azul para o item ativo */
+    color: #ffffff;
+}
+
+.admin-menu-icon {
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+/* 6. Botão de Sair (específico) */
+.admin-sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-logout-item {
+    color: #ff4d4f; /* Vermelho para perigo/sair */
+}
+
+.admin-logout-item:hover {
+    background-color: #cc3d3f;
+    color: #ffffff;
+}
+
+/* 7. Área de Conteúdo Principal */
+.admin-content-area {
+    grid-area: content;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.admin-content-container {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    min-height: 100%;
+}
+
+/* 8. Responsividade (Opcional, mas recomendado) */
+@media (max-width: 768px) {
+    .admin-layout {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "header"
+            "content";
+    }
+
+    .admin-sidebar {
+        /* Em telas pequenas, a sidebar pode se tornar um menu hamburguer ou inferior */
+        display: none; /* Exemplo simples: apenas esconde a sidebar */
+    }
+    
+    .admin-header-title h2 {
+        font-size: 1.2rem;
+    }
+    
+    .admin-content-area {
+        padding: 16px;
+    }
+}

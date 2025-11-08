@@ -1,66 +1,52 @@
 /* ==========================================================================
-   ESTILOS PARA O PAINEL DO ADMINISTRADOR
-   As classes são prefixadas com "admin-" para evitar conflitos.
+   CSS PARA O LAYOUT PRINCIPAL DO ADMINISTRADOR
+   Contém o layout de Grid, a Sidebar e a lógica da Barra Inferior Responsiva.
    ========================================================================== */
 
-/* 1. Layout Principal do Painel Admin */
+/* --- 1. Layout Principal (Desktop) --- */
 .admin-layout {
     display: grid;
-    grid-template-columns: 260px 1fr; /* Sidebar um pouco mais larga */
-    grid-template-rows: 65px 1fr; /* Altura fixa para o header */
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: 65px 1fr;
     grid-template-areas:
         "header header"
         "sidebar content";
     min-height: 100vh;
-    background-color: #f0f2f5; /* Um cinza levemente diferente para o fundo */
+    background-color: #f0f2f5;
 }
 
-/* 2. Cabeçalho Superior */
+/* --- 2. Cabeçalho Superior --- */
 .admin-header {
     grid-area: header;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 30px;
-    background-color: #ffffff;
+    /* --- CORREÇÃO 1: Fundo do header alterado para o azul padrão --- */
+    background-color: #10395c; 
     border-bottom: 1px solid #e8e8e8;
     z-index: 100;
 }
 
 .admin-header-title h2 {
+    /* --- CORREÇÃO 2: Cor do texto do título alterada para o verde-limão --- */
+    color: #95c122; 
     font-size: 1.4rem;
-    color: #333;
     margin: 0;
 }
 
-/* 3. Menu Superior (dentro do header) */
-.admin-top-menu-list {
-    display: flex;
-}
-
-.admin-top-menu-list .admin-menu-item {
-    color: #555;
-}
-
-/* 4. Menu Lateral (Sidebar) */
+/* --- 3. Menu Lateral (Sidebar) no Desktop --- */
 .admin-sidebar {
     grid-area: sidebar;
-    background-color: #001529; /* Um azul escuro para o admin */
-    color: rgba(255, 255, 255, 0.65);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Empurra o logout para o final */
-}
-
-.admin-sidebar-menu-list {
+    background-color: #10395c;
     padding-top: 20px;
+    transition: all 0.3s ease-in-out;
 }
 
-/* 5. Itens de Menu (Estilo Comum para Sidebar e Header) */
-.admin-menu-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.admin-menu-list { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
 }
 
 .admin-menu-item {
@@ -71,38 +57,35 @@
     transition: background-color 0.2s, color 0.2s;
     font-size: 1rem;
     font-weight: 500;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
 }
 
-.admin-sidebar .admin-menu-item:hover {
-    background-color: #1890ff; /* Azul no hover */
-    color: #ffffff;
+.admin-menu-item:hover { 
+    background-color: #1890ff;
+    color: #ffffff; 
 }
 
-.admin-sidebar .admin-menu-item.active {
-    background-color: #1890ff; /* Azul para o item ativo */
-    color: #ffffff;
+.admin-menu-item.active { 
+    background-color: #1890ff; 
+    color: #ffffff; 
+    font-weight: 600; 
 }
 
-.admin-menu-icon {
+.admin-menu-icon { 
     margin-right: 12px;
-    font-size: 1.2rem;
-}
-
-/* 6. Botão de Sair (específico) */
-.admin-sidebar-footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.2rem; 
 }
 
 .admin-logout-item {
-    color: #ff4d4f; /* Vermelho para perigo/sair */
+    color: #ff4d4f;
 }
-
 .admin-logout-item:hover {
-    background-color: #cc3d3f;
-    color: #ffffff;
+    background-color: #cc3d3f !important;
+    color: #ffffff !important;
 }
 
-/* 7. Área de Conteúdo Principal */
+/* --- 4. Área de Conteúdo Principal --- */
 .admin-content-area {
     grid-area: content;
     padding: 24px;
@@ -113,11 +96,12 @@
     background-color: #ffffff;
     padding: 24px;
     border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     min-height: 100%;
 }
 
-/* 8. Responsividade (Opcional, mas recomendado) */
+/* ==========================================================================
+   5. MODO MOBILE - Transforma a Sidebar em Barra de Ícones Inferior
+   ========================================================================== */
 @media (max-width: 768px) {
     .admin-layout {
         grid-template-columns: 1fr;
@@ -126,16 +110,61 @@
             "content";
     }
 
+    .admin-top-menu {
+        display: none;
+    }
+
+    .admin-header {
+        justify-content: center;
+    }
+
     .admin-sidebar {
-        /* Em telas pequenas, a sidebar pode se tornar um menu hamburguer ou inferior */
-        display: none; /* Exemplo simples: apenas esconde a sidebar */
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: stretch;
+        box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        padding: 0;
+        background-color: #001529; /* Mantém a cor da barra inferior */
     }
-    
-    .admin-header-title h2 {
-        font-size: 1.2rem;
+
+    .admin-menu-list {
+        display: flex;
+        width: 100%;
+        padding-top: 0;
     }
-    
+
+    .admin-menu-list li {
+        flex: 1;
+        display: flex;
+    }
+
+    .admin-menu-item {
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+        gap: 4px;
+    }
+
+    .admin-menu-icon { 
+        margin: 0; 
+        font-size: 1.5rem; 
+    }
+
+    .admin-menu-label { 
+        font-size: 0.7rem; 
+        font-weight: 500; 
+    }
+
     .admin-content-area {
         padding: 16px;
+        padding-bottom: 90px;
     }
 }

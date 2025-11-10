@@ -9,21 +9,24 @@ const STATUS_INICIAL = 'Destino transporte Coleta';
 
 const IconeMenuRoteiroColeta = () => {
   // Estados da tela
-  const [buscaOS, setBuscaOS] = useState('');             // Armazena o número digitado da OS
-  const [ordemServico, setOrdemServico] = useState(null); // Dados retornados da OS consultada
-  const [loading, setLoading] = useState(false);          // Desabilita botões/inputs enquanto consulta ou atualiza
-  const [error, setError] = useState(null);               // Mensagem de erro exibida no topo
-  const [success, setSuccess] = useState(null);           // Mensagem de sucesso exibida no topo
-  const [novoStatus, setNovoStatus] = useState('');       // Armazena escolha de status para atualizar
-  const [mostrarEndereco, setMostrarEndereco] = useState(false); // Controla exibição dos campos endereço
-  // IDs de cada status para acesso no banco
+  const [buscaOS, setBuscaOS] = useState('');
+  const [ordemServico, setOrdemServico] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [novoStatus, setNovoStatus] = useState('');
+  const [mostrarEndereco, setMostrarEndereco] = useState(false);
+  const [observacaoMotorista, setObservacaoMotorista] = useState('');
+  
+  const [mostrarObservacao, setMostrarObservacao] = useState(false);
+
   const [statusIds, setStatusIds] = useState({
     inicial: null,
     concluida: null,
     ausente: null,
   });
 
-  // Carrega os IDs dos status da tabela do banco uma única vez (ao abrir componente)
+  // Carrega os IDs dos status (sem alterações)
   useEffect(() => {
     async function fetchStatusIds() {
       const { data, error } = await supabase
@@ -34,7 +37,6 @@ const IconeMenuRoteiroColeta = () => {
         setError('Erro ao carregar status necessários.');
         return;
       }
-      // Armazena os IDs respectivos no estado
       const ids = data.reduce((acc, item) => {
         if (item.status_os === STATUS_INICIAL) acc.inicial = item.id_ref_status_os;
         if (item.status_os === STATUS_COLETA_CONCLUIDA) acc.concluida = item.id_ref_status_os;
@@ -46,20 +48,23 @@ const IconeMenuRoteiroColeta = () => {
     fetchStatusIds();
   }, []);
 
-  // Busca uma OS pelo número digitado, trazendo dados do usuário e valida se está no status inicial
+  // Busca uma OS (limpa os novos estados)
   const buscarOrdemServico = useCallback(async (e) => {
     e.preventDefault();
     setOrdemServico(null);
     setError(null);
     setSuccess(null);
     setNovoStatus('');
+    setObservacaoMotorista('');
+    setMostrarObservacao(false); // Reseta a visibilidade da observação
+    setMostrarEndereco(false);   // Reseta a visibilidade do endereço
+    
     const numOS = parseInt(buscaOS, 10);
     if (isNaN(numOS) || !statusIds.inicial) {
       setError('Número da OS inválido ou status não carregado.');
       return;
     }
     setLoading(true);
-    // Consulta banco e faz JOIN com usuário
     const { data, error: fetchError } = await supabase
       .from('ordens_servico')
       .select(`
@@ -82,12 +87,10 @@ const IconeMenuRoteiroColeta = () => {
       .eq('status_os', statusIds.inicial)
       .single();
     setLoading(false);
-    // Erros técnicos
     if (fetchError && fetchError.code !== 'PGRST116') {
       setError('Erro ao buscar Ordem de Serviço. Tente novamente.');
       return;
     }
-    // Caso não tenha resultado válido
     if (!data) {
       setError("Ordem não encontrada ou já realizada!");
       return;
@@ -95,44 +98,59 @@ const IconeMenuRoteiroColeta = () => {
     setOrdemServico(data);
   }, [buscaOS, statusIds.inicial]);
 
-  // Atualiza o status da OS para o valor escolhido pelo motorista
+  // Atualiza o status e a nova observação da OS
   const aplicarFluxo = useCallback(async () => {
+    
     if (!ordemServico || !novoStatus) {
       setError('Selecione um novo status antes de aplicar o fluxo.');
       return;
     }
-    // Vai buscar o ID do novo status
+
+    // Validação para garantir que a observação foi preenchida
+    if (!observacaoMotorista.trim()) {
+      setError('O campo de observação é obrigatório para aplicar o fluxo.');
+      setMostrarObservacao(true); // Garante que o campo esteja visível para preenchimento
+      return;
+    }
+    
     const novoStatusId = novoStatus === STATUS_COLETA_CONCLUIDA ? statusIds.concluida : statusIds.ausente;
     if (!novoStatusId) {
       setError('ID do novo status não encontrado. Recarregue a página.');
       return;
     }
+    
     setLoading(true);
     setError(null);
     setSuccess(null);
-    // Atualiza registro no banco
+
     const { error: updateError } = await supabase
       .from('ordens_servico')
-      .update({ status_os: novoStatusId })
+      .update({ 
+        status_os: novoStatusId,
+        observacao_motorista: observacaoMotorista
+      })
       .eq('id_ref_ordem_servico', ordemServico.id_ref_ordem_servico);
+
     setLoading(false);
-    // Erro ao tentar atualizar
     if (updateError) {
       setError('Erro ao atualizar o status da OS. Tente novamente.');
       return;
     }
-    // Sucesso
+    
     setSuccess(`Status da OS Nº ${ordemServico.numero_os.toString().padStart(4, '0')} atualizado para "${novoStatus}" com sucesso!`);
-    setOrdemServico(null); // limpa tela
+    setOrdemServico(null);
     setBuscaOS('');
     setNovoStatus('');
-  }, [ordemServico, novoStatus, statusIds.concluida, statusIds.ausente]);
+    setObservacaoMotorista('');
+    setMostrarObservacao(false);
+  }, [ordemServico, novoStatus, observacaoMotorista, statusIds.concluida, statusIds.ausente]);
 
   // Monta o card dos detalhes da OS encontrada
   const renderUserDetails = () => {
     if (!ordemServico || !ordemServico.usuarios) return null;
     const u = ordemServico.usuarios;
     const osNum = ordemServico.numero_os.toString().padStart(4, '0');
+    
     return (
       <div className="roteiro-os-card">
         <h3 className="roteiro-os-card-titulo">
@@ -151,7 +169,7 @@ const IconeMenuRoteiroColeta = () => {
         </div>
 
         {/* Botão para exibir/ocultar endereço */}
-        <div className="roteiro-address-toggle">
+        <div className="roteiro-toggle-container">
           <input
             type="checkbox"
             id="toggleEndereco"
@@ -160,10 +178,10 @@ const IconeMenuRoteiroColeta = () => {
           />
           <label htmlFor="toggleEndereco">Deseja visualizar o endereço?</label>
         </div>
-
+        
         {/* Dados do endereço, exibidos apenas se o checkbox estiver marcado */}
         {mostrarEndereco && (
-          <>
+          <div className="roteiro-detalhes-container">
             <div className="roteiro-address-details">
               Rua: {u.endereco || 'Não informado'}, {u.numero_casa || 'S/N'}
             </div>
@@ -173,7 +191,24 @@ const IconeMenuRoteiroColeta = () => {
             <div className="roteiro-address-details">
               Cidade/Estado: {u.cidade || 'Não informado'}/{u.estado || 'N/A'}
             </div>
-          </>
+          </div>
+        )}
+
+        {/* Campo de observação, renderizado condicionalmente */}
+        {mostrarObservacao && (
+          <div className="roteiro-detalhes-container">
+            <label htmlFor="obsMotorista" className="roteiro-observacao-label">
+              Relato / Observação do Atendimento (Obrigatório)
+            </label>
+            <textarea
+              id="obsMotorista"
+              className="roteiro-observacao-textarea"
+              placeholder="Descreva o atendimento (Ex: Coleta realizada com sucesso. Cliente ausente. Etc.)"
+              value={observacaoMotorista}
+              onChange={(e) => setObservacaoMotorista(e.target.value)}
+              rows="4"
+            />
+          </div>
         )}
 
         {/* Formulário para aplicar novo status */}
@@ -186,7 +221,10 @@ const IconeMenuRoteiroColeta = () => {
                 name="novoStatus"
                 value={STATUS_COLETA_CONCLUIDA}
                 checked={novoStatus === STATUS_COLETA_CONCLUIDA}
-                onChange={(e) => setNovoStatus(e.target.value)}
+                onChange={(e) => {
+                  setNovoStatus(e.target.value);
+                  setMostrarObservacao(true); // Abre o campo de observação
+                }}
               />
               {STATUS_COLETA_CONCLUIDA}
             </label>
@@ -196,13 +234,16 @@ const IconeMenuRoteiroColeta = () => {
                 name="novoStatus"
                 value={STATUS_CLIENTE_AUSENTE}
                 checked={novoStatus === STATUS_CLIENTE_AUSENTE}
-                onChange={(e) => setNovoStatus(e.target.value)}
+                onChange={(e) => {
+                  setNovoStatus(e.target.value);
+                  setMostrarObservacao(true); // Abre o campo de observação
+                }}
               />
               {STATUS_CLIENTE_AUSENTE}
             </label>
           </div>
           <button
-            className={`roteiro-update-btn${success ? ' ativo' : ''}`}
+            className={`roteiro-update-btn${novoStatus ? ' ativo' : ''}`}
             onClick={aplicarFluxo}
             disabled={loading || !novoStatus}
           >
@@ -216,10 +257,7 @@ const IconeMenuRoteiroColeta = () => {
   // Renderização principal da página
   return (
     <div className="roteiro-container">
-      {/* Título da tela */}
       <h2 className="roteiro-titulo">Roteiro de Coleta - Busca e Atualização</h2>
-      
-      {/* Formulário para digitar e consultar / buscar OS */}
       <form className="roteiro-busca-form" onSubmit={buscarOrdemServico}>
         <input
           type="text"
@@ -233,13 +271,9 @@ const IconeMenuRoteiroColeta = () => {
           Buscar OS
         </button>
       </form>
-      
-      {/* Mensagens de feedback da ação */}
       {loading && <p className="roteiro-loading">Buscando ou atualizando...</p>}
       {error && <p className="roteiro-error">{error}</p>}
       {success && <p className="roteiro-success">{success}</p>}
-      
-      {/* Card com detalhes da OS, exibido se encontrar */}
       {ordemServico && renderUserDetails()}
     </div>
   );

@@ -90,7 +90,7 @@
   box-shadow: 0 8px 25px rgb(149 193 34 / 0.19);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px; /* Ajustado para um espaçamento mais consistente */
   transition: box-shadow 0.25s;
   margin-bottom: 32px;
 }
@@ -99,20 +99,12 @@
   box-shadow: 0 12px 40px rgb(149 193 34 / 0.33);
 }
 
-.roteiro-os-card > * {
-  margin-bottom: 14px;
-}
-
-.roteiro-os-card > *:last-child {
-  margin-bottom: 0;
-}
-
 /* Título dos detalhes */
 .roteiro-os-card-titulo {
   color: #10395c;
   font-size: 1.45rem;
   font-weight: bold;
-  margin: 0 0 25px 0;
+  margin: 0 0 15px 0; /* Ajustado */
   border-bottom: 2px solid #95c122;
   padding-bottom: 10px;
 }
@@ -122,38 +114,84 @@
   font-size: 1.17rem;
   color: #222;
   padding-left: 8px;
-  margin-bottom: 13px;
   line-height: 1.5;
 }
 
-.roteiro-detail-item:last-child {
-  margin-bottom: 0;
-}
-
-/* Cor otimizada para Usuário, CPF, Celular (em negrito) */
 .roteiro-detail-highlight {
   color: #10395c;
   font-weight: bold;
 }
 
-/* Cor otimizada para campos de endereço: Rua, Bairro, Cidade/Estado */
-.roteiro-address-details {
-  color: #10395c; /* Cor aplicada */
-  font-weight: 600;
-  font-size: 1.15rem;
-  margin-bottom: 8px;
-}
-
-/* Toggle para visualizar endereço */
-.roteiro-address-toggle {
-  margin-top: 24px;
-  margin-bottom: 19px;
+/* --- MUDANÇA: Container para os toggles (checkbox + label) --- */
+.roteiro-toggle-container {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   font-size: 1.1rem;
   cursor: pointer;
   user-select: none;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.roteiro-toggle-container:hover {
+  background-color: #f0f8ff;
+}
+
+.roteiro-toggle-container input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #10395c;
+  cursor: pointer;
+}
+
+/* --- MUDANÇA: Container para os detalhes que aparecem (endereço, observação) --- */
+.roteiro-detalhes-container {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #95c122;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.roteiro-address-details {
+  color: #10395c;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.roteiro-observacao-label {
+  color: #10395c;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.roteiro-observacao-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  border: 2px solid #ccc;
+  border-radius: 9px;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.4s, box-shadow 0.4s;
+}
+
+.roteiro-observacao-textarea:focus {
+  border-color: #95c122;
+  box-shadow: 0 0 8px #95c1225c;
+  outline: none;
 }
 
 /* Formulário status */
@@ -316,8 +354,8 @@
     font-size: 1.05rem;
   }
 
-  .roteiro-address-toggle {
-    font-size: 1.08rem;
+  .roteiro-toggle-container {
+    font-size: 1rem; /* Ajustado para telas menores */
     gap: 8px;
   }
 

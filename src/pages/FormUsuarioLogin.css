@@ -3,7 +3,7 @@
   display: flex; /* Ativa o Flexbox para facilitar o alinhamento. */
   align-items: center; /* Alinha o formulário verticalmente ao centro. */
   justify-content: center; /* Alinha o formulário horizontalmente ao centro. */
-  min-height: 100vh; /* Garante que o wrapper ocupe no mínimo a altura total da tela. */
+  min-height: 70vh; /* Garante que o wrapper ocupe no mínimo a altura total da tela. */
   background-color: #f0f2f5; /* Cor de fundo cinza claro para a página. */
   padding: 20px; /* Adiciona um respiro nas laterais. */
 }

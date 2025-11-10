@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './FormUsuarioLogin.css'; // Seu CSS de login
-import { supabase } from "/supabaseClient.js"; 
+import './FormUsuarioLogin.css';
+import { supabase } from "/supabaseClient.js";
 
 const FormUsuarioLogin = () => {
   const [email, setEmail] = useState('');
@@ -16,19 +16,17 @@ const FormUsuarioLogin = () => {
     setCarregando(true);
 
     try {
-      // --- LÓGICA ESPECIAL PARA O ADMIN ---
-      // Passo 1: Verifica se é o email do admin antes de qualquer coisa.
+      // --- LÓGICA DE AUTENTICAÇÃO ---
+
+      // 1. VERIFICAÇÃO ESPECIAL PARA O ADMIN
       if (email.toLowerCase() === 'nicolasadmin@gmail.com') {
         const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
         if (error) throw new Error('Credenciais de administrador inválidas.');
-        
-        // Se o login do admin for bem-sucedido, redireciona e para a execução.
-        navigate('/admin'); 
-        return; 
+        navigate('/admin');
+        return;
       }
 
-      // --- FLUXO NORMAL PARA OUTROS USUÁRIOS ---
-      // Passo 2: Tenta fazer o login para usuários comuns.
+      // 2. FLUXO PARA OUTROS USUÁRIOS
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: email,
         password: senha,
@@ -37,27 +35,47 @@ const FormUsuarioLogin = () => {
       if (authError) throw new Error('E-mail ou senha inválidos.');
       if (!authData.user) throw new Error('Falha ao obter informações do usuário.');
 
-      // Passo 3: Busca o cargo na tabela 'colaboradores' usando o email.
-      const { data: colaboradorData, error: colaboradorError } = await supabase
+      // --- CORREÇÃO PRINCIPAL ESTÁ AQUI ---
+      // 3. TENTA ENCONTRAR O USUÁRIO EM AMBAS AS TABELAS DE PERFIS (Colaboradores e Usuários)
+      
+      // Busca na tabela de colaboradores
+      const { data: colaboradorData } = await supabase
         .from('colaboradores')
         .select('cargo_colaborador')
         .eq('email_colaborador', authData.user.email)
         .single();
 
-      if (colaboradorError && colaboradorError.code !== 'PGRST116') {
-        throw colaboradorError;
-      }
-
-      // Passo 4: Redireciona com base no cargo ou se é um usuário comum.
+      // Se encontrou como colaborador, redireciona e encerra
       if (colaboradorData) {
         const cargo = colaboradorData.cargo_colaborador;
         if (cargo === 'agente ambiental') navigate('/agentes');
         else if (cargo === 'motorista') navigate('/motoristas');
         else navigate('/'); // Fallback para cargos desconhecidos
-      } else {
-        // Se não está na tabela 'colaboradores', é um usuário padrão.
-        navigate('/tela-usuario');
+        return; // Encerra a função aqui
       }
+
+      // Se NÃO era colaborador, busca na tabela de usuários comuns
+      const { data: usuarioData } = await supabase
+        .from('usuarios') // Assumindo que sua tabela de usuários comuns se chama 'usuarios'
+        .select('id_usuario')
+        .eq('email', authData.user.email)
+        .single();
+
+      // Se encontrou como usuário comum, redireciona e encerra
+      if (usuarioData) {
+        navigate('/tela-usuario');
+        return; // Encerra a função aqui
+      }
+
+      // 4. SE CHEGOU AQUI, O USUÁRIO NÃO TEM PERFIL VÁLIDO
+      // Isso acontece se a conta de autenticação existe, mas não há registro correspondente
+      // nem em 'colaboradores' nem em 'usuarios'. Este é o caso do seu "ex-colaborador".
+      
+      // Desloga o usuário para segurança
+      await supabase.auth.signOut();
+      
+      // Lança um erro informando que o acesso foi revogado.
+      throw new Error('Acesso negado. Sua conta não possui um perfil ativo.');
 
     } catch (err) {
       setErro(err.message);
@@ -66,11 +84,10 @@ const FormUsuarioLogin = () => {
     }
   };
 
-  // O return do JSX continua o mesmo...
   return (
     <div className="cadastro-wrapper">
       <form className="cadastro-form" onSubmit={handleSubmit}>
-        <h2>Entrar</h2>
+        <h2>Login</h2>
         {erro && <p className="erro-login">{erro}</p>}
         <label htmlFor="email"></label>
         <input type="email" id="email" placeholder="Digite seu email" value={email} onChange={(e) => setEmail(e.target.value)} required />

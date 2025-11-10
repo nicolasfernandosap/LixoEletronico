@@ -4,9 +4,10 @@
 .form-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; /* Mantém a centralização para desktop */
   min-height: 100vh;
-  background: #0b2d4b; /* fundo azul escuro */
+  background: #0b2d4b;
+  padding: 20px 0; /* Adiciona um padding vertical para dar respiro */
 }
 
 /* Caixa do formulário */
@@ -18,12 +19,27 @@
   width: 100%;
   max-width: 475px;
   text-align: center;
+  position: relative; /* Necessário para posicionar o botão de voltar */
+}
+
+/* --- NOVO ESTILO: Botão de Voltar --- */
+.btn-voltar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 1.5rem;
+  color: #a9dc34; /* Mesma cor do título */
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.btn-voltar:hover {
+  transform: scale(1.1);
 }
 
 /* Título */
 .form-content h2 {
   margin-bottom: 20px;
-  color: #a9dc34; /* verde claro */
+  color: #a9dc34;
   font-size: 1.8rem;
   font-weight: bold;
   letter-spacing: 1px;
@@ -80,17 +96,39 @@
   font-weight: bold;
   margin-bottom: 10px;
 }
-/*
-  Este estilo se aplica às mensagens de erro que aparecem
-  imediatamente abaixo de um campo de input quando uma
-  regra de validação (como o limite de caracteres) é quebrada.
-*/
 .erro-campo {
-  color: #e53e3e; /* Um tom de vermelho vivo, mas não tão alarmante quanto o erro geral. */
-  font-size: 0.875rem; /* Um pouco menor que o texto normal para ser mais sutil. */
-  text-align: left; /* Alinha a mensagem à esquerda, abaixo do campo. */
-  width: 100%; /* Garante que a mensagem ocupe o espaço disponível. */
-  margin-top: -8px; /* Puxa a mensagem para mais perto do input acima dela. */
-  margin-bottom: 10px; /* Dá um respiro antes do próximo campo. */
-  padding-left: 5px; /* Adiciona um pequeno recuo para alinhar com o texto do input. */
+  color: #e53e3e;
+  font-size: 0.875rem;
+  text-align: left;
+  width: 100%;
+  margin-top: -8px;
+  margin-bottom: 10px;
+  padding-left: 5px;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE PARA MOBILE
+   ========================================================================== */
+@media (max-width: 768px) {
+  .form-container {
+    /* Em telas pequenas, alinha o formulário no TOPO */
+    align-items: flex-start;
+    /* Garante que o container possa rolar se o conteúdo for grande */
+    min-height: 100%; 
+    padding: 0; /* Remove o padding para o form ocupar a tela toda */
+  }
+
+  .form-content {
+    /* Remove bordas e sombras para uma aparência de tela cheia */
+    border-radius: 0;
+    box-shadow: none;
+    /* Garante que o formulário ocupe toda a altura disponível, permitindo rolagem interna se necessário */
+    min-height: 100vh; 
+    padding: 40px 20px 40px 20px; /* Adiciona padding no topo para o botão de voltar */
+  }
+
+  .btn-voltar {
+    top: 25px;
+    left: 20px;
+  }
 }

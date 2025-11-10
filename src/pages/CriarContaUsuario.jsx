@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
 import { supabase } from '/supabaseClient.js';
 import './CriarContaUsuario.css';
 
 const CriarContaUsuario = () => {
   const navigate = useNavigate();
 
+  // Seus estados continuam os mesmos...
   const [nomeCompleto, setNomeCompleto] = useState('');
   const [cpf, setCpf] = useState('');
   const [endereco, setEndereco] = useState('');
@@ -20,54 +22,48 @@ const CriarContaUsuario = () => {
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [erros, setErros] = useState({});
 
+  // Suas funções de handle... (sem alterações)
   const clearError = (fieldName) => {
     if (erros[fieldName]) {
       setErros((prev) => ({ ...prev, [fieldName]: undefined }));
     }
   };
-
   const handleCpfChange = (e) => {
     const value = e.target.value;
     clearError('cpf');
     if (value.length <= 11) setCpf(value);
     else setErros((prev) => ({ ...prev, cpf: 'O CPF deve ter no máximo 11 caracteres.' }));
   };
-
   const handleCepChange = (e) => {
     const value = e.target.value;
     clearError('cep');
     if (value.length <= 8) setCep(value);
     else setErros((prev) => ({ ...prev, cep: 'O CEP deve ter no máximo 8 caracteres.' }));
   };
-
   const handleEstadoChange = (e) => {
     const value = e.target.value.toUpperCase();
     clearError('estado');
     if (value.length <= 2) setEstado(value);
     else setErros((prev) => ({ ...prev, estado: 'O Estado deve ter no máximo 2 caracteres (ex: SP).' }));
   };
-
   const handleNumeroCasaChange = (e) => {
     const value = e.target.value;
     clearError('numeroCasa');
     if (value.length <= 5) setNumeroCasa(value);
     else setErros((prev) => ({ ...prev, numeroCasa: 'O Número deve ter no máximo 5 caracteres.' }));
   };
-
   const handleCelularChange = (e) => {
     const value = e.target.value;
     clearError('celular');
     if (value.length <= 13) setCelular(value);
     else setErros((prev) => ({ ...prev, celular: 'O Celular deve ter no máximo 13 caracteres.' }));
   };
-
   const handleSenhaChange = (e) => {
     const value = e.target.value;
     clearError('senha');
     if (value.length <= 6) setSenha(value);
     else setErros((prev) => ({ ...prev, senha: 'A Senha deve ter no máximo 6 caracteres.' }));
   };
-
   const handleConfirmarSenhaChange = (e) => {
     const value = e.target.value;
     clearError('confirmarSenha');
@@ -80,7 +76,6 @@ const CriarContaUsuario = () => {
       setErros((prev) => ({ ...prev, confirmarSenha: 'As senhas não coincidem.' }));
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErros({});
@@ -95,7 +90,6 @@ const CriarContaUsuario = () => {
     }
 
     try {
-      // 🔍 Verifica se o e-mail já existe na tabela 'usuarios'
       const { data: existingUser } = await supabase
         .from('usuarios')
         .select('email')
@@ -107,7 +101,6 @@ const CriarContaUsuario = () => {
         return;
       }
 
-      // 🟢 Cria o usuário no Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password: senha,
@@ -122,7 +115,6 @@ const CriarContaUsuario = () => {
         return;
       }
 
-      // 🟢 Insere dados na tabela 'usuarios'
       const { error: insertError } = await supabase.from('usuarios').insert([
         {
           id_usuario: authData.user.id,
@@ -154,10 +146,16 @@ const CriarContaUsuario = () => {
   return (
     <div className="form-container">
       <div className="form-content">
+        {/* --- Adicao botao Voltar --- */}
+        <Link to="/cadastro" className="btn-voltar">
+          <FaArrowLeft />
+        </Link>
+
         <h2>Criar Nova Conta</h2>
         {erros.geral && <p className="erro">{erros.geral}</p>}
 
         <form onSubmit={handleSubmit}>
+          {/* inputs */}
           <input type="text" placeholder="Nome completo" value={nomeCompleto} onChange={(e) => setNomeCompleto(e.target.value)} required />
           <input type="text" placeholder="CPF" value={cpf} onChange={handleCpfChange} required />
           <input type="text" placeholder="Endereço" value={endereco} onChange={(e) => setEndereco(e.target.value)} required />

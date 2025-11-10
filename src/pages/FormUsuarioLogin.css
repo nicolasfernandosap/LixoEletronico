@@ -1,125 +1,148 @@
-/* Seus estilos originais - mantidos como estão */
+
 .cadastro-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 70vh;
-  background-color: #f5f5f5;
-  padding: 1px;
+  display: flex; /* Ativa o Flexbox para facilitar o alinhamento. */
+  align-items: center; /* Alinha o formulário verticalmente ao centro. */
+  justify-content: center; /* Alinha o formulário horizontalmente ao centro. */
+  min-height: 100vh; /* Garante que o wrapper ocupe no mínimo a altura total da tela. */
+  background-color: #f0f2f5; /* Cor de fundo cinza claro para a página. */
+  padding: 20px; /* Adiciona um respiro nas laterais. */
 }
 
+/* ==========================================================================
+   2. ESTILOS PARA O FORMULÁRIO EM SI
+   Estiliza o "card" do formulário.
+   ========================================================================== */
 .cadastro-form {
-  background-color: #10395C;
-  padding: 90px 40px;  
-  border-radius: 8px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  color: white;
+  background-color: #10395c; /* Fundo azul escuro para o card. */
+  padding: 40px; /* Espaçamento interno generoso. */
+  border-radius: 12px; /* Bordas arredondadas. */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Sombra suave para dar profundidade. */
+  width: 100%; /* Ocupa 100% da largura disponível... */
+  max-width: 400px; /* ...mas no máximo 400px. */
+  color: #ffffff; /* Cor do texto padrão dentro do formulário. */
+  text-align: center; /* Centraliza o texto. */
 }
 
+/* Estilo para o título 'h2' ("Login"). */
 .cadastro-form h2 {
-  text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px; /* Espaço abaixo do título. */
+  font-size: 2rem; /* Tamanho da fonte. */
+  color: #a9dc34; /* Cor verde-limão solicitada. */
 }
 
+/* Esconde as tags <label> visualmente, mas as mantém para acessibilidade. */
 .cadastro-form label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: bold;
+  display: none;
 }
 
+/* Estilo para os campos de input. */
 .cadastro-form input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 16px;
-  border: none;
-  border-radius: 4px;
+  width: 100%; /* Ocupa toda a largura do formulário. */
+  padding: 14px 16px; /* Espaçamento interno. */
+  margin-bottom: 20px; /* Espaço abaixo de cada input. */
+  border: 1px solid #2c4a6b; /* Borda sutil. */
+  border-radius: 8px; /* Bordas arredondadas. */
+  background-color: #1a4d79; /* Fundo azul um pouco mais claro. */
+  color: #ffffff; /* Cor do texto digitado. */
+  font-size: 1rem; /* Tamanho da fonte. */
 }
 
+/* Estilo para o texto de placeholder (ex: "Digite seu email"). */
+.cadastro-form input::placeholder {
+  color: rgba(255, 255, 255, 0.5); /* Cor do placeholder com transparência. */
+}
+
+/* Efeito visual quando o input está em foco (selecionado). */
+.cadastro-form input:focus {
+  outline: none; /* Remove a borda padrão do navegador. */
+  border-color: #a9dc34; /* Muda a cor da borda para o verde-limão. */
+  box-shadow: 0 0 0 3px rgba(169, 220, 52, 0.2); /* Adiciona um brilho sutil. */
+}
+
+/* Estilo para o botão principal "Entrar". */
 .btn-entrar {
   width: 100%;
-  padding: 12px;
-  background-color: #95C122;
-  color: #10395C;
-  font-weight: bold;
+  padding: 15px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  background-color: #a9dc34; /* Fundo verde-limão. */
+  color: #10395c; /* Texto azul escuro. */
+  font-size: 1.1rem;
+  font-weight: bold;
   cursor: pointer;
-  margin-top: 10px;
-  transition: 0.3s;
+  transition: background-color 0.2s; /* Transição suave da cor de fundo. */
 }
 
+/* Efeito quando o mouse passa por cima do botão. */
 .btn-entrar:hover {
-  background-color: #7faa1d;
+  background-color: #8cc028; /* Um tom de verde um pouco mais escuro. */
 }
 
+/* Estilo do botão quando está desabilitado. */
+.btn-entrar:disabled {
+  background-color: #5c7a15; /* Verde bem escuro para indicar inatividade. */
+  cursor: not-allowed; /* Muda o cursor para indicar que não é clicável. */
+}
+
+/* Container para os links "Esqueceu sua senha?" e "Criar nova conta". */
 .cadastro-links {
-  margin-top: 16px;
-  text-align: center;
+  margin-top: 25px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.cadastro-links a {
-  color: #95C122;
-  text-decoration: underline;
+  flex-direction: column; /* Empilha os links verticalmente. */
+  gap: 15px; /* Espaço entre os links. */
   font-size: 0.9rem;
 }
 
+/* Estilo base para os links. */
+.cadastro-links a {
+  color: #bdc3c7; /* Cor cinza claro. */
+  text-decoration: none; /* Remove o sublinhado. */
+  transition: color 0.2s; /* Transição suave da cor. */
+}
+
+.cadastro-links a:hover {
+  color: #ffffff; /* Muda para branco no hover. */
+}
+
+/* Estilo específico para o botão "Criar nova conta". */
 .btn-criar-conta {
-  background-color: transparent;
-  color: #95C122;
-  border: 1px solid #95C122;
+  background-color: transparent; /* Fundo transparente. */
+  border: 1px solid #a9dc34; /* Borda verde-limão. */
+  color: #a9dc34 !important; /* Cor do texto verde-limão. O '!important' força a sobreposição. */
   padding: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: 0.3s;
-  margin-top: 40px;
+  border-radius: 8px;
 }
 
 .btn-criar-conta:hover {
-  background-color: #95C122;
-  color: #10395C;
+  background-color: rgba(169, 220, 52, 0.1); /* Fundo levemente verde no hover. */
+  color: #c0eb4a !important; /* Cor do texto um pouco mais clara no hover. */
 }
 
-/* Adicione esta classe para as mensagens de erro, se ainda não tiver */
+/* Estilo para a mensagem de erro que aparece no topo do formulário. */
 .erro-login {
-  background-color: #e74c3c;
+  background-color: #e74c3c; /* Fundo vermelho. */
   color: #ffffff;
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 20px;
   font-weight: 500;
-  text-align: center;
 }
 
-
 /* ==========================================================================
-   A SOLUÇÃO: RESPONSIVIDADE PARA MOBILE
+   3. RESPONSIVIDADE PARA MOBILE
+   Ajustes para telas com largura máxima de 768px.
    ========================================================================== */
 @media (max-width: 768px) {
+  /* No mobile, o wrapper alinha o formulário no topo. */
   .cadastro-wrapper {
-    /* --- A CORREÇÃO ESTÁ AQUI --- */
-    /* Em telas pequenas, alinha o formulário no TOPO */
     align-items: flex-start;
-    
-    /* Remove a altura mínima para que o conteúdo comece do topo */
-    min-height: auto;
-
-    /* Remove o fundo para que a página pareça mais integrada */
-    background-color: transparent;
-
-    /* Ajusta o padding para dar um respiro geral */
-    padding: 20px;
+    padding-top: 60px; /* Adiciona um espaço no topo. */
+    background-color: transparent; /* Remove o fundo cinza para se mesclar com o da página. */
   }
 
+  /* No mobile, o formulário perde a sombra para um visual mais "flat". */
   .cadastro-form {
-    /* Reduz o padding vertical excessivo no mobile */
-    padding: 40px 25px;
-    
-    /* Remove a sombra para um visual mais "flat" */
     box-shadow: none;
+    padding: 20px; /* Reduz o padding para telas menores. */
   }
 }

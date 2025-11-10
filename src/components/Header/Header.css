@@ -1,5 +1,5 @@
 /* Importa a fonte do Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap' );
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap'  );
 
 /* ======== CABEÇALHO PRINCIPAL ======== */
 .header {
@@ -39,7 +39,7 @@
   object-fit: cover;
 }
 
-/* ======== NAVEGAÇÃO (MENU) ======== */
+/* ======== NAVEGAÇÃO (MENU) - DESKTOP ======== */
 .nav-wrapper {
   background-color: #95C122;
   border-radius: 28px;
@@ -54,7 +54,7 @@
 }
 
 .menu-icon {
-  display: none;
+  display: none; /* O ícone é escondido no desktop */
   font-size: 1.8rem;
   color: white;
   cursor: pointer;
@@ -108,58 +108,54 @@
   .header {
     padding: 0.6rem;
     position: relative;
-    z-index: 10; /* garante que o logo fique acima */
+    z-index: 10;
   }
 
   .logo-container {
     width: 50px;
     height: 50px;
     margin-left: 15px;
-    z-index: 20; /* logo sempre acima do menu */
-    position: relative;
-  }
-
-  .nav-wrapper {
-    width: 40;
-    border-radius: 6px;
-    padding: 0.4rem;
-    flex-direction: column;
-    align-items: flex-end;
-    position: absolute; /* faz o menu flutuar */
-    margin-top: 2px; 
-    right: 0;
-    z-index: 15; /* acima do header azul, abaixo do logo */
-  }
-
-  .menu-icon {
-    display: block;
-    align-self: flex-end;
-    color: #10395c;
     z-index: 20;
     position: relative;
-    font-size: 1.1rem;
-    padding: 0.0rem 0.0rem; /* Espaçamento interno */
-    margin-top: 1px;
-    
   }
 
+  /* --- CORREÇÃO 1: Simplifica o wrapper do menu no mobile --- */
+  .nav-wrapper {
+    background-color: transparent; /* Remove o fundo verde */
+    border: none; /* Remove a borda */
+    padding: 0;
+    margin-right: 15px; /* Ajusta a margem */
+    position: static; /* Remove o posicionamento absoluto que não é mais necessário aqui */
+  }
+
+  /* --- CORREÇÃO 2: Estiliza o ícone de menu como solicitado --- */
+  .menu-icon {
+    display: block; /* Torna o ícone visível */
+    color: #95C122; /* Define a cor dos "risquinhos" para verde */
+    font-size: 2.0rem; /* Aumenta um pouco o tamanho para melhor toque */
+    padding: 0.2rem; /* Adiciona um pequeno respiro */
+    z-index: 20;
+  }
+
+  /* Estiliza o menu dropdown que abre */
   .navbar {
     width: 180px;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease-in-out;
-    background-color: #95C122;
-    border-radius: 10px 0 0 10px;
+    background-color: #95C122; /* O fundo verde agora fica só no menu que abre */
+    border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     position: absolute;
-    top: 75px; /* começa abaixo do logo */
-    right: 0;
+    top: 75px; /* Posição inicial abaixo do header */
+    right: 15px; /* Alinha com a margem do wrapper */
   }
 
   .navbar.active {
-    max-height: 500px;
+    max-height: 500px; /* Altura máxima para a animação de abertura */
   }
 
+  /* Estilos para os links dentro do menu dropdown */
   .nav-links {
     flex-direction: column;
     width: 100%;

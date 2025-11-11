@@ -319,3 +319,22 @@
     max-width: 97vw;
   }
 }
+
+/* Destaque para o relato do motorista no modal */
+.relato-motorista-destaque {
+  background-color: #95c122; /* Cor solicitada */
+  color: #2c3e50; /* Cor do texto para contraste */
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.relato-motorista-destaque strong {
+  color: #2c3e50; /* Mantém o título em destaque */
+}
+
+.relato-motorista-destaque p {
+  margin-bottom: 5px;
+}

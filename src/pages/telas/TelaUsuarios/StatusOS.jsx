@@ -34,6 +34,7 @@ const StatusOS = () => {
         url_foto, 
         mensagem, 
         observacao_agente_ambiental,
+        observacao_motorista,
         dia_agendamento_coleta,
         tipos_servicos(tipo_servico), 
         equipamentos_tipos(equipamento_tipo), 
@@ -177,6 +178,7 @@ const StatusOS = () => {
             <p>
               {ordemVisualizar.observacao_agente_ambiental || 'Aguarde pela análise da central! Em breve retornaremos sobre análise da tratativa.'}
             </p>
+
             {/* Mostrar a data de agendamento somente se o status não for "Ordem Cancelada" nem "Aguardando Análise" */}
             {ordemVisualizar.status_da_os?.status_os !== 'Ordem Cancelada' &&
              ordemVisualizar.status_da_os?.status_os !== 'Aguardando Análise' && (
@@ -188,6 +190,14 @@ const StatusOS = () => {
                     : 'Não agendado'}
                 </p>
               </>
+            )}
+            {ordemVisualizar.observacao_motorista && (
+              <div className="relato-motorista-destaque">
+                <p><strong>Relato sobre Atendimento presencial:</strong></p>
+                <p>
+                  {ordemVisualizar.observacao_motorista}
+                </p>
+              </div>
             )}
             <button className="btn-fechar" onClick={() => setOrdemVisualizar(null)}>Fechar</button>
           </div>

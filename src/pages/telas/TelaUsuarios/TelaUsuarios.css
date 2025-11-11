@@ -2,7 +2,6 @@
 /* ESTILOS GERAIS E LAYOUT DESKTOP    */
 /* ================================== */
 
-/* Classe para travar o scroll do corpo da página */
 body.no-scroll {
   overflow: hidden;
 }
@@ -24,7 +23,6 @@ body.no-scroll {
   justify-content: space-between;
   padding: 1.5rem 1rem;
   flex-shrink: 0;
- 
   position: sticky;
   top: 0;
 }
@@ -115,12 +113,12 @@ body.no-scroll {
   display: none;
 }
 
-
 /* ================================================= */
 /* MEDIA QUERIES PARA RESPONSIVIDADE (<= 768px)      */
 /* ================================================= */
 
 @media (max-width: 768px) {
+
   .sidebar {
     display: none;
   }
@@ -129,12 +127,13 @@ body.no-scroll {
     padding: 1.5rem 1rem 100px 1rem;
   }
 
+  /* Menu inferior mobile corrigido */
   .bottom-nav {
     display: block;
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: 100vw; /* Usa sempre toda a largura da viewport */
     background-color: #10395c;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -151,15 +150,18 @@ body.no-scroll {
   .bottom-nav li {
     flex: 1;
     text-align: center;
-    padding: 10px 0;
+    padding: 10px 0 4px 0;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     color: #d3d9e2;
     transition: color 0.2s;
-    
+    min-width: 0;
+    outline: none;
+    border: none;
+    background: transparent;
   }
 
   .bottom-nav li svg {
@@ -167,8 +169,13 @@ body.no-scroll {
   }
 
   .bottom-nav li span {
-    font-size: 0.72rem;
-  }
+  font-size: 0.75rem;
+  white-space: normal; /* Permite quebra de linha */
+  overflow-wrap: break-word; /* Força quebra de palavras se precisar */
+  max-width: 90px; /* Define largura máxima para texto quebrar */
+  display: block;
+  line-height: 1.3em; /* Ajuste de espaçamento vertical */
+}
 
   .bottom-nav li.active {
     color: #95c122;
@@ -220,10 +227,19 @@ body.no-scroll {
 
 /* Estilos de Carregamento (MANTIDOS) */
 .foto-placeholder.loading, .nome-usuario.loading {
-    background-color: #4a6d8c;
-    border-radius: 4px;
-    animation: pulse 1.5s infinite ease-in-out;
+  background-color: #4a6d8c;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
 }
-.foto-placeholder.loading { width: 70px; height: 70px; border-radius: 50%; margin-bottom: 1rem; }
-.nome-usuario.loading { width: 100px; height: 18px; margin-bottom: 0.5rem; }
+.foto-placeholder.loading {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+.nome-usuario.loading {
+  width: 100px;
+  height: 18px;
+  margin-bottom: 0.5rem;
+}
 @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }

@@ -119,19 +119,48 @@
   color: #721c24;
 }
 .status-default {
-  background: #e2e3e5;
-  color: #383d41;
+  background: #3498db;
+  color: white;
 }
-.status-agendamento-confirmado {
+
+/* CLASSE REMOVIDA: .status-agendamento-confirmado */
+
+/* NOVAS CLASSES ESPECIAIS PARA STATUS COM OBSERVAÇÃO */
+/* 1. Destino transporte Coleta (Cor solicitada: #95c122) */
+.status-destino-transporte-coleta {
   background-color: #95c122;
   color: white;
 }
+
+/* 2. Agendamento Presencial (Cor solicitada: #895129) */
+.status-agendamento-presencial-confirmado {
+  background-color: #895129;
+  color: white;
+}
+
+/* Outras classes especiais */
 .status-cancelado-especial {
   background-color: #c0392b;
   color: white;
 }
 .status-coleta-concluida {
   background-color: #af7fe8;
+  color: white;
+}
+
+/* NOVAS CLASSES COM CORES ESPECÍFICAS PARA CADA STATUS (Mapeamento padrão) */
+.status-coleta-concluida-badge {
+  background-color: #3498db;
+  color: white;
+}
+
+.status-cliente-ausente-badge {
+  background-color: #f39c12;
+  color: white;
+}
+
+.status-agendamento-presencial-badge {
+  background-color: #895129;
   color: white;
 }
 

@@ -67,9 +67,15 @@ const StatusOS = () => {
   };
 
   const getStatusClass = (status, observacao) => {
+    // Lógica para status com observação (casos especiais)
     if (observacao) {
-      if (status === 'Agendamento presencial' || status === 'Destino transporte Coleta') {
-        return 'status-agendamento-confirmado';
+      if (status === 'Destino transporte Coleta') {
+        // Nova classe para "Destino transporte Coleta"
+        return 'status-destino-transporte-coleta'; 
+      }
+      if (status === 'Agendamento presencial') {
+        // Nova classe para "Agendamento presencial"
+        return 'status-agendamento-presencial-confirmado'; 
       }
       if (status === 'Ordem Cancelada') {
         return 'status-cancelado-especial';
@@ -78,13 +84,19 @@ const StatusOS = () => {
         return 'status-coleta-concluida';
       }
     }
+    
+    // Mapeamento de status para classes CSS com cores específicas (casos padrão)
     const statusMap = {
+      'Coleta Concluída': 'status-coleta-concluida-badge',
+      'Cliente Ausente': 'status-cliente-ausente-badge',
+      'Agendamento presencial': 'status-agendamento-presencial-badge',
       'Aguardando Análise': 'status-pendente',
       'Em Atendimento': 'status-andamento',
       'Agendado': 'status-agendado',
       'Concluído': 'status-concluido',
       'Cancelado': 'status-cancelado'
     };
+    
     if (status && status.toUpperCase() === 'AGUARDANDO ANÁLISE') {
       return 'status-pendente';
     }

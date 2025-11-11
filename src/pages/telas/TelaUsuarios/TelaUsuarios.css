@@ -2,6 +2,7 @@
 /* ESTILOS GERAIS E LAYOUT DESKTOP    */
 /* ================================== */
 
+/* Classe para travar o scroll do corpo da página */
 body.no-scroll {
   overflow: hidden;
 }
@@ -127,13 +128,13 @@ body.no-scroll {
     padding: 1.5rem 1rem 100px 1rem;
   }
 
-  /* Menu inferior mobile corrigido */
+  /* Menu inferior mobile */
   .bottom-nav {
     display: block;
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100vw; /* Usa sempre toda a largura da viewport */
+    width: 100vw;
     background-color: #10395c;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -150,14 +151,14 @@ body.no-scroll {
   .bottom-nav li {
     flex: 1;
     text-align: center;
-    padding: 10px 0 4px 0;
+    padding: 10px 0 6px 0;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     color: #d3d9e2;
-    transition: color 0.2s;
+    transition: color 0.3s;
     min-width: 0;
     outline: none;
     border: none;
@@ -165,20 +166,42 @@ body.no-scroll {
   }
 
   .bottom-nav li svg {
-    font-size: 1.4rem;
+    font-size: 1.8rem;
   }
 
+  /* Texto do menu com quebra organizada */
   .bottom-nav li span {
-  font-size: 0.75rem;
-  white-space: normal; /* Permite quebra de linha */
-  overflow-wrap: break-word; /* Força quebra de palavras se precisar */
-  max-width: 90px; /* Define largura máxima para texto quebrar */
-  display: block;
-  line-height: 1.3em; /* Ajuste de espaçamento vertical */
-}
+    font-size: 0.72rem;
+    white-space: normal;         /* permite quebra de linha */
+    overflow-wrap: break-word;   /* quebra palavras longas */
+    max-width: 90px;             /* limite máximo para quebrar */
+    display: block;
+    line-height: 1.2em;
+  }
 
   .bottom-nav li.active {
     color: #95c122;
+  }
+
+  /* Ajustes responsivos para ícones e texto conforme a largura da tela */
+  @media (max-width: 480px) {
+    .bottom-nav li svg {
+      font-size: 1.1rem;
+    }
+    .bottom-nav li span {
+      font-size: 0.6rem;
+      max-width: 60px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .bottom-nav li svg {
+      font-size: 0.9rem;
+    }
+    .bottom-nav li span {
+      font-size: 0.5rem;
+      max-width: 50px;
+    }
   }
 
   .mobile-profile-menu {
@@ -188,7 +211,7 @@ body.no-scroll {
     position: fixed;
     top: 0;
     left: 0;
-    height: 100dvh; /* Usa a altura dinâmica da janela de visualização */
+    height: 100dvh;
     width: 250px;
     background-color: #10395c;
     color: #fff;

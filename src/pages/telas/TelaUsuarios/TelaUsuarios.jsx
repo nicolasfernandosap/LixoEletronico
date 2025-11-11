@@ -97,7 +97,7 @@ const TelaUsuarios = () => {
         className={abaSelecionada === 'inicio' ? 'active' : ''}
         onClick={() => { setAbaSelecionada('inicio'); setIsMobileMenuOpen(false); }}
       >
-        <FaHome aria-hidden="true" focusable="false" /> <span>Início</span>
+        <FaHome aria-hidden="true" focusable="false" /> <span>Tela Inicial</span>
       </li>
 
       <li
@@ -111,7 +111,7 @@ const TelaUsuarios = () => {
         className={abaSelecionada === 'acompanhamento' ? 'active' : ''}
         onClick={() => { setAbaSelecionada('acompanhamento'); setIsMobileMenuOpen(false); }}
       >
-        <FaClipboardCheck aria-hidden="true" focusable="false" /> <span>Status OS</span>
+        <FaClipboardCheck aria-hidden="true" focusable="false" /> <span>Status Ordem</span>
       </li>
 
       <li

@@ -7,23 +7,32 @@ const StatusOS = () => {
   // --- ESTADOS DO COMPONENTE ---
   const [ordens, setOrdens] = useState([]);
   const [userId, setUserId] = useState(null);
-  const [loadingOrdens, setLoadingOrdens] = useState(true);
-  const [ordemVisualizar, setOrdemVisualizar] = useState(null);
-  const [fotoVisivel, setFotoVisivel] = useState(null);
+  const [loading, setLoading] = useState(true); // Estado de loading simplificado
+  const [ordemVisualizar, setOrdemVisualizar] = useState(null); // Controla o modal de detalhes
+  const [fotoVisivel, setFotoVisivel] = useState(null); // Controla o overlay da foto
 
   // --- EFEITOS (useEffect) ---
+
+  // Efeito 1: Busca a sessão do usuário. Roda apenas uma vez quando o componente é montado.
   useEffect(() => {
-    const buscarUsuarioAtual = async () => {
+    const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session) setUserId(session.user.id);
-      else setLoadingOrdens(false);
+      setUserId(session?.user?.id || null);
     };
-    buscarUsuarioAtual();
+    getSession();
   }, []);
 
-  const buscarOrdensServico = useCallback(async () => {
-    if (!userId) return;
-    setLoadingOrdens(true);
+  // Efeito 2: Função para buscar as ordens de serviço no banco de dados.
+  // Usamos useCallback para otimização, garantindo que a função não seja recriada a cada renderização.
+  const buscarOrdensServico = useCallback(async (idDoUsuario) => {
+    // Se não houver um ID de usuário, não faz nada e para o loading.
+    if (!idDoUsuario) {
+      setLoading(false);
+      return;
+    }
+    
+    setLoading(true); // Ativa o loading sempre que uma busca é iniciada.
+    
     const { data, error } = await supabase
       .from('ordens_servico')
       .select(`
@@ -32,27 +41,66 @@ const StatusOS = () => {
         tipos_servicos(tipo_servico), equipamentos_tipos(equipamento_tipo), 
         status: status_da_os(status_os)
       `)
-      .eq('id_usuario', userId)
+      .eq('id_usuario', idDoUsuario)
       .order('data_criacao', { ascending: false });
 
     if (error) {
       console.error('Erro ao buscar ordens de serviço:', error);
-      setOrdens([]);
+      setOrdens([]); // Em caso de erro, garante que a lista fique vazia.
     } else {
       setOrdens(data || []);
     }
-    setLoadingOrdens(false);
-  }, [userId]);
+    
+    setLoading(false); // Desativa o loading após a conclusão da busca.
+  }, []); // O array de dependências vazio significa que esta função é criada apenas uma vez.
 
+  // Efeito 3: Controla a busca inicial de dados e a inscrição no Realtime.
+  // Este efeito roda sempre que o `userId` muda.
   useEffect(() => {
-    buscarOrdensServico();
-  }, [buscarOrdensServico]);
+    // 1. Se o userId foi definido, faz a busca inicial dos dados.
+    if (userId) {
+      buscarOrdensServico(userId);
+    }
+
+    // 2. Cria a "inscrição" (subscription) para ouvir as mudanças em tempo real.
+    // O nome do canal é único por usuário para otimizar a comunicação.
+    const subscription = supabase
+      .channel(`public:ordens_servico:id_usuario=eq.${userId}`)
+      .on(
+        'postgres_changes',
+        { 
+          event: '*', // Ouve qualquer evento: INSERT, UPDATE, DELETE
+          schema: 'public', 
+          table: 'ordens_servico',
+          filter: `id_usuario=eq.${userId}` // Filtro crucial: ouvir apenas as mudanças das OS deste usuário!
+        },
+        (payload) => {
+          console.log('Mudança em tempo real recebida!', payload);
+          // Ao receber uma notificação, simplesmente chama a função de busca novamente
+          // para garantir que a tela tenha as informações mais recentes.
+          buscarOrdensServico(userId);
+        }
+      )
+      .subscribe(); // Inicia a "escuta".
+
+    // 3. Função de limpeza: ESSENCIAL.
+    // É executada quando o usuário sai da tela (o componente é "desmontado").
+    // Ela cancela a inscrição para não consumir recursos desnecessariamente.
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+
+  }, [userId, buscarOrdensServico]); // Dependências: Roda se `userId` ou `buscarOrdensServico` mudarem.
+
 
   // --- FUNÇÕES AUXILIARES ---
+
+  // Alterna a visibilidade do overlay da foto
   const handleToggleFoto = (ordemId) => {
     setFotoVisivel(prevId => (prevId === ordemId ? null : ordemId));
   };
 
+  // Formata a data para o padrão brasileiro
   const formatarData = (dataString) => {
     if (!dataString) return 'Não definida';
     const data = new Date(dataString);
@@ -62,6 +110,7 @@ const StatusOS = () => {
     });
   };
 
+  // Retorna a classe CSS correta com base no status da OS
   const getStatusClass = (status, observacao) => {
     if (observacao) {
       if (status === 'Destino transporte Coleta') return 'status-destino-transporte-coleta';
@@ -78,29 +127,35 @@ const StatusOS = () => {
     return statusMap[status] || 'status-default';
   };
 
-  // --- RENDERIZAÇÃO DO COMPONENTE (JSX) ---
+  // --- RENDERIZAÇÃO DO COMPONENTE ---
+
+  // Exibe a mensagem de "Carregando..." enquanto os dados não chegam
+  if (loading) {
+    return <div className="loading-ordens">Carregando ordens...</div>;
+  }
+
   return (
     <div className="ordens-lista-section">
       <h2>Minhas Ordens de Serviço</h2>
-      {loadingOrdens ? (
-        <div className="loading-ordens">Carregando ordens...</div>
-      ) : ordens.length === 0 ? (
+      {ordens.length === 0 ? (
         <p className="sem-ordens">Nenhuma ordem de serviço encontrada.</p>
       ) : (
         <div className="ordens-grid">
           {ordens.map(ordem => (
             <div key={ordem.id_ref_ordem_servico} className="ordem-card">
+              {/* Ícone para abrir o modal de detalhes */}
               <div 
                 className="visualizacao-icone" 
                 title="Visualizar detalhes da ordem" 
                 onClick={() => {
-                  setFotoVisivel(null);
+                  setFotoVisivel(null); // Garante que a foto feche antes de abrir o modal
                   setOrdemVisualizar(ordem);
                 }}
               >
                 <FaEye />
               </div>
 
+              {/* Conteúdo principal do card */}
               <div className="ordem-header">
                 <div className="ordem-info-coluna">
                   <span className={`status-badge ${getStatusClass(ordem.status?.status_os, ordem.observacao_agente_ambiental)}`}>
@@ -119,6 +174,7 @@ const StatusOS = () => {
               <div className="ordem-body">
                 {ordem.mensagem && <p className="ordem-mensagem"><strong>Observações:</strong> {ordem.mensagem}</p>}
                 
+                {/* Botão para visualizar a foto, só aparece se houver foto */}
                 {ordem.foto_armazenamento && (
                   <div className="foto-toggle-bar" onClick={() => handleToggleFoto(ordem.id_ref_ordem_servico)}>
                     <FaCamera />
@@ -131,7 +187,7 @@ const StatusOS = () => {
                 <small>Criado em: {formatarData(ordem.data_criacao)}</small>
               </div>
 
-              {/* O overlay da foto é renderizado aqui, por cima do card */}
+              {/* Overlay da foto, renderizado condicionalmente */}
               {fotoVisivel === ordem.id_ref_ordem_servico && (
                 <div className="foto-overlay" onClick={() => handleToggleFoto(ordem.id_ref_ordem_servico)}>
                   <div className="foto-overlay-content" onClick={(e) => e.stopPropagation()}>
@@ -147,7 +203,7 @@ const StatusOS = () => {
         </div>
       )}
 
-      {/* Modal de detalhes (inalterado) */}
+      {/* Modal de detalhes, renderizado condicionalmente */}
       {ordemVisualizar && (
         <div className="modal-fundo" onClick={() => setOrdemVisualizar(null)}>
           <div className="modal-conteudo" onClick={e => e.stopPropagation()}>

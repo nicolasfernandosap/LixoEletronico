@@ -32,7 +32,6 @@
 
 .icon-heart {
   color: #e74c3c;
-  font-size: 1.6rem;
 }
 
 .descricao-formulario {
@@ -148,15 +147,10 @@
   gap: 10px;
 }
 
-.btn-submit:hover {
-  background: linear-gradient(135deg, #ff5e57, #c0392b);
-  transform: translateY(-2px);
-}
-
 .btn-submit:hover:not(:disabled) {
-  background: linear-gradient(135deg, #16a085 0%, #138d75 100%);
+  background: linear-gradient(135deg, #ff5e57, #d64541);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(26, 188, 156, 0.4);
+  box-shadow: 0 6px 16px rgba(231, 76, 60, 0.5);
 }
 
 .btn-submit:active:not(:disabled) {
@@ -167,6 +161,7 @@
   background: #95a5a6;
   cursor: not-allowed;
   box-shadow: none;
+  transform: none;
 }
 
 /* Ícones auxiliares */
@@ -176,36 +171,14 @@
 
 /* Responsividade */
 @media (max-width: 768px) {
-  .formulario-ordens-container {
-    padding: 15px;
-  }
-
-  .formulario-section {
-    padding: 25px;
-  }
-
-  .formulario-section h2 {
-    font-size: 1.6rem;
-  }
-
-  .btn-submit {
-    width: 100%;
-  }
+  .formulario-ordens-container { padding: 15px; }
+  .formulario-section { padding: 25px; }
+  .formulario-section h2 { font-size: 1.6rem; }
+  .btn-submit { width: 100%; }
 }
 
 @media (max-width: 480px) {
-  .formulario-section h2 {
-    font-size: 1.3rem;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    font-size: 0.95rem;
-  }
-
-  .btn-submit {
-    font-size: 1rem;
-    padding: 12px 20px;
-  }
+  .formulario-section h2 { font-size: 1.3rem; }
+  .form-group input, .form-group select, .form-group textarea { font-size: 0.95rem; }
+  .btn-submit { font-size: 1rem; padding: 12px 20px; }
 }

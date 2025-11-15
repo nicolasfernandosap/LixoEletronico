@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../../../../supabaseClient';
 import './IconeMenuRoteiroColeta.css';
 
-// Nomes dos possíveis status da OS
 const STATUS_COLETA_CONCLUIDA = 'Coleta Concluida';
 const STATUS_CLIENTE_AUSENTE = 'Cliente Ausente';
 const STATUS_INICIAL = 'Destino transporte Coleta';
 
+const GOOGLE_MAPS_API_KEY = 'AIzaSyCFVlNYHZm_nMQMPvXC4b2JotoghnuD-U';
+
 const IconeMenuRoteiroColeta = () => {
-  // Estados da tela
   const [buscaOS, setBuscaOS] = useState('');
   const [ordemServico, setOrdemServico] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -17,8 +17,11 @@ const IconeMenuRoteiroColeta = () => {
   const [novoStatus, setNovoStatus] = useState('');
   const [mostrarEndereco, setMostrarEndereco] = useState(false);
   const [observacaoMotorista, setObservacaoMotorista] = useState('');
-  
   const [mostrarObservacao, setMostrarObservacao] = useState(false);
+
+  const [mostrarMapa, setMostrarMapa] = useState(false);
+  const mapRef = useRef(null);
+  const mapaInstancia = useRef(null);
 
   const [statusIds, setStatusIds] = useState({
     inicial: null,
@@ -26,7 +29,6 @@ const IconeMenuRoteiroColeta = () => {
     ausente: null,
   });
 
-  // Carrega os IDs dos status (sem alterações)
   useEffect(() => {
     async function fetchStatusIds() {
       const { data, error } = await supabase
@@ -37,107 +39,113 @@ const IconeMenuRoteiroColeta = () => {
         setError('Erro ao carregar status necessários.');
         return;
       }
-      const ids = data.reduce((acc, item) => {
-        if (item.status_os === STATUS_INICIAL) acc.inicial = item.id_ref_status_os;
-        if (item.status_os === STATUS_COLETA_CONCLUIDA) acc.concluida = item.id_ref_status_os;
-        if (item.status_os === STATUS_CLIENTE_AUSENTE) acc.ausente = item.id_ref_status_os;
-        return acc;
-      }, {});
+      const ids = {};
+      data.forEach((item) => {
+        if (item.status_os === STATUS_INICIAL) ids.inicial = item.id_ref_status_os;
+        else if (item.status_os === STATUS_COLETA_CONCLUIDA) ids.concluida = item.id_ref_status_os;
+        else if (item.status_os === STATUS_CLIENTE_AUSENTE) ids.ausente = item.id_ref_status_os;
+      });
       setStatusIds(ids);
     }
     fetchStatusIds();
   }, []);
 
-  // Busca uma OS (limpa os novos estados)
-  const buscarOrdemServico = useCallback(async (e) => {
-    e.preventDefault();
-    setOrdemServico(null);
-    setError(null);
-    setSuccess(null);
-    setNovoStatus('');
-    setObservacaoMotorista('');
-    setMostrarObservacao(false); // Reseta a visibilidade da observação
-    setMostrarEndereco(false);   // Reseta a visibilidade do endereço
-    
-    const numOS = parseInt(buscaOS, 10);
-    if (isNaN(numOS) || !statusIds.inicial) {
-      setError('Número da OS inválido ou status não carregado.');
-      return;
-    }
-    setLoading(true);
-    const { data, error: fetchError } = await supabase
-      .from('ordens_servico')
-      .select(`
-        id_ref_ordem_servico,
-        numero_os,
-        observacao_agente_ambiental,
-        usuarios!id_usuario (
-          id_usuario,
-          nome_completo,
-          cpf,
-          celular,
-          endereco,
-          numero_casa,
-          bairro,
-          cidade,
-          estado
-        )
-      `)
-      .eq('numero_os', numOS)
-      .eq('status_os', statusIds.inicial)
-      .single();
-    setLoading(false);
-    if (fetchError && fetchError.code !== 'PGRST116') {
-      setError('Erro ao buscar Ordem de Serviço. Tente novamente.');
-      return;
-    }
-    if (!data) {
-      setError("Ordem não encontrada ou já realizada!");
-      return;
-    }
-    setOrdemServico(data);
-  }, [buscaOS, statusIds.inicial]);
+  const buscarOrdemServico = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setOrdemServico(null);
+      setError(null);
+      setSuccess(null);
+      setNovoStatus('');
+      setObservacaoMotorista('');
+      setMostrarObservacao(false);
+      setMostrarEndereco(false);
+      setMostrarMapa(false);
 
-  // Atualiza o status e a nova observação da OS
+      const numOS = parseInt(buscaOS, 10);
+      if (isNaN(numOS) || !statusIds.inicial) {
+        setError('Número da OS inválido ou status não carregado.');
+        return;
+      }
+
+      setLoading(true);
+
+      const { data, error: fetchError } = await supabase
+        .from('ordens_servico')
+        .select(`
+          id_ref_ordem_servico,
+          numero_os,
+          observacao_agente_ambiental,
+          usuarios!id_usuario (
+            id_usuario,
+            nome_completo,
+            cpf,
+            celular,
+            endereco,
+            numero_casa,
+            bairro,
+            cidade,
+            estado
+          )
+        `)
+        .eq('numero_os', numOS)
+        .eq('status_os', statusIds.inicial)
+        .single();
+
+      setLoading(false);
+
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        setError('Erro ao buscar Ordem de Serviço. Tente novamente.');
+        return;
+      }
+      if (!data) {
+        setError('Ordem não encontrada ou já realizada!');
+        return;
+      }
+
+      setOrdemServico(data);
+    },
+    [buscaOS, statusIds.inicial]
+  );
+
   const aplicarFluxo = useCallback(async () => {
-    
     if (!ordemServico || !novoStatus) {
       setError('Selecione um novo status antes de aplicar o fluxo.');
       return;
     }
-
-    // Validação para garantir que a observação foi preenchida
     if (!observacaoMotorista.trim()) {
       setError('O campo de observação é obrigatório para aplicar o fluxo.');
-      setMostrarObservacao(true); // Garante que o campo esteja visível para preenchimento
+      setMostrarObservacao(true);
       return;
     }
-    
     const novoStatusId = novoStatus === STATUS_COLETA_CONCLUIDA ? statusIds.concluida : statusIds.ausente;
     if (!novoStatusId) {
       setError('ID do novo status não encontrado. Recarregue a página.');
       return;
     }
-    
+
     setLoading(true);
     setError(null);
     setSuccess(null);
 
     const { error: updateError } = await supabase
       .from('ordens_servico')
-      .update({ 
+      .update({
         status_os: novoStatusId,
-        observacao_motorista: observacaoMotorista
+        observacao_motorista: observacaoMotorista,
       })
       .eq('id_ref_ordem_servico', ordemServico.id_ref_ordem_servico);
 
     setLoading(false);
+
     if (updateError) {
       setError('Erro ao atualizar o status da OS. Tente novamente.');
       return;
     }
-    
-    setSuccess(`Status da OS Nº ${ordemServico.numero_os.toString().padStart(4, '0')} atualizado para "${novoStatus}" com sucesso!`);
+
+    setSuccess(
+      `Status da OS Nº ${ordemServico.numero_os.toString().padStart(4, '0')} atualizado para "${novoStatus}" com sucesso!`
+    );
     setOrdemServico(null);
     setBuscaOS('');
     setNovoStatus('');
@@ -145,19 +153,124 @@ const IconeMenuRoteiroColeta = () => {
     setMostrarObservacao(false);
   }, [ordemServico, novoStatus, observacaoMotorista, statusIds.concluida, statusIds.ausente]);
 
-  // Monta o card dos detalhes da OS encontrada
+  const obterLocalizacaoAtual = useCallback(() => {
+    return new Promise((resolve) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+          () => resolve({ lat: -23.5505, lng: -46.6333 }) // fallback São Paulo
+        );
+      } else {
+        resolve({ lat: -23.5505, lng: -46.6333 }); // fallback São Paulo
+      }
+    });
+  }, []);
+
+  const carregarScriptGoogleMaps = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      if (window.google && window.google.maps) {
+        resolve();
+        return;
+      }
+      if (window.googleMapsLoading) {
+        window.googleMapsLoading.then(resolve).catch(reject);
+        return;
+      }
+      window.googleMapsLoading = new Promise((res, rej) => {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&language=pt-BR`;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          res();
+          resolve();
+        };
+        script.onerror = () => {
+          rej(new Error('Falha ao carregar Google Maps'));
+          reject(new Error('Falha ao carregar Google Maps'));
+        };
+        document.head.appendChild(script);
+      });
+    });
+  }, []);
+
+  const inicializarMapa = useCallback(async () => {
+    setError(null);
+    setLoading(true);
+
+    try {
+      await carregarScriptGoogleMaps();
+      const locAtual = await obterLocalizacaoAtual();
+
+      if (!mapRef.current) {
+        setLoading(false);
+        return;
+      }
+
+      const mapa = new window.google.maps.Map(mapRef.current, {
+        zoom: 15,
+        center: locAtual,
+        mapTypeControl: true,
+        fullscreenControl: true,
+        streetViewControl: true,
+      });
+
+      mapaInstancia.current = mapa;
+
+      new window.google.maps.Marker({
+        position: locAtual,
+        map: mapa,
+        title: 'Sua localização',
+        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+      });
+
+      if (ordemServico && ordemServico.usuarios) {
+        const u = ordemServico.usuarios;
+        const destino = `${u.endereco}, ${u.numero_casa}, ${u.bairro}, ${u.cidade}, ${u.estado}`;
+
+        const directionsService = new window.google.maps.DirectionsService();
+        const directionsRenderer = new window.google.maps.DirectionsRenderer({ map: mapa });
+
+        directionsService.route(
+          {
+            origin: locAtual,
+            destination: destino,
+            travelMode: window.google.maps.TravelMode.DRIVING,
+            optimizeWaypoints: true, // otimização da rota (se houvesse waypoints)
+          },
+          (result, status) => {
+            if (status === 'OK') {
+              directionsRenderer.setDirections(result);
+            } else {
+              setError('Não foi possível traçar a rota: ' + status);
+            }
+            setLoading(false);
+          }
+        );
+      } else {
+        setLoading(false);
+      }
+    } catch (err) {
+      setError('Erro ao carregar mapa: ' + err.message);
+      setLoading(false);
+    }
+  }, [carregarScriptGoogleMaps, obterLocalizacaoAtual, ordemServico]);
+
+  const abrirMapa = () => {
+    setMostrarMapa(true);
+    setTimeout(() => {
+      inicializarMapa();
+    }, 100);
+  };
+
   const renderUserDetails = () => {
     if (!ordemServico || !ordemServico.usuarios) return null;
     const u = ordemServico.usuarios;
     const osNum = ordemServico.numero_os.toString().padStart(4, '0');
-    
+
     return (
       <div className="roteiro-os-card">
-        <h3 className="roteiro-os-card-titulo">
-          Detalhes da Ordem de Serviço Nº {osNum}
-        </h3>
-
-        {/* Dados principais do usuário */}
+        <h3 className="roteiro-os-card-titulo">Detalhes da Ordem de Serviço Nº {osNum}</h3>
         <div className="roteiro-detail-item">
           <span className="roteiro-detail-highlight">Usuário:</span> {u.nome_completo}
         </div>
@@ -165,36 +278,41 @@ const IconeMenuRoteiroColeta = () => {
           <span className="roteiro-detail-highlight">CPF:</span> {u.cpf}
         </div>
         <div className="roteiro-detail-item">
-          <span className="roteiro-detail-highlight">Celular:</span> {u.celular || 'Não informado'}
+          <span className="roteiro-detail-highlight">
+            Celular:
+          </span> {u.celular || 'Não informado'}
         </div>
 
-        {/* Botão para exibir/ocultar endereço */}
         <div className="roteiro-toggle-container">
           <input
             type="checkbox"
             id="toggleEndereco"
             checked={mostrarEndereco}
-            onChange={() => setMostrarEndereco(prev => !prev)}
+            onChange={() => setMostrarEndereco((prev) => !prev)}
           />
           <label htmlFor="toggleEndereco">Deseja visualizar o endereço?</label>
         </div>
-        
-        {/* Dados do endereço, exibidos apenas se o checkbox estiver marcado */}
+
         {mostrarEndereco && (
           <div className="roteiro-detalhes-container">
             <div className="roteiro-address-details">
               Rua: {u.endereco || 'Não informado'}, {u.numero_casa || 'S/N'}
             </div>
-            <div className="roteiro-address-details">
-              Bairro: {u.bairro || 'Não informado'}
-            </div>
+            <div className="roteiro-address-details">Bairro: {u.bairro || 'Não informado'}</div>
             <div className="roteiro-address-details">
               Cidade/Estado: {u.cidade || 'Não informado'}/{u.estado || 'N/A'}
             </div>
+
+            <button
+              className="roteiro-rastreamento-btn"
+              onClick={abrirMapa}
+              disabled={loading}
+            >
+              {loading ? 'Carregando Mapa...' : '📍 Rastreamento Endereço'}
+            </button>
           </div>
         )}
 
-        {/* Campo de observação, renderizado condicionalmente */}
         {mostrarObservacao && (
           <div className="roteiro-detalhes-container">
             <label htmlFor="obsMotorista" className="roteiro-observacao-label">
@@ -211,7 +329,6 @@ const IconeMenuRoteiroColeta = () => {
           </div>
         )}
 
-        {/* Formulário para aplicar novo status */}
         <div className="roteiro-status-form">
           <label className="roteiro-status-label">Aplicar Fluxo (Novo Status):</label>
           <div className="roteiro-status-options">
@@ -223,7 +340,7 @@ const IconeMenuRoteiroColeta = () => {
                 checked={novoStatus === STATUS_COLETA_CONCLUIDA}
                 onChange={(e) => {
                   setNovoStatus(e.target.value);
-                  setMostrarObservacao(true); // Abre o campo de observação
+                  setMostrarObservacao(true);
                 }}
               />
               {STATUS_COLETA_CONCLUIDA}
@@ -236,7 +353,7 @@ const IconeMenuRoteiroColeta = () => {
                 checked={novoStatus === STATUS_CLIENTE_AUSENTE}
                 onChange={(e) => {
                   setNovoStatus(e.target.value);
-                  setMostrarObservacao(true); // Abre o campo de observação
+                  setMostrarObservacao(true);
                 }}
               />
               {STATUS_CLIENTE_AUSENTE}
@@ -254,7 +371,6 @@ const IconeMenuRoteiroColeta = () => {
     );
   };
 
-  // Renderização principal da página
   return (
     <div className="roteiro-container">
       <h2 className="roteiro-titulo">Roteiro de Coleta - Busca e Atualização</h2>
@@ -264,17 +380,38 @@ const IconeMenuRoteiroColeta = () => {
           className="roteiro-busca-input"
           placeholder="Buscar por Nº da OS (ex: 0001)"
           value={buscaOS}
-          onChange={e => setBuscaOS(e.target.value)}
+          onChange={(e) => setBuscaOS(e.target.value)}
           disabled={loading}
         />
         <button className="roteiro-busca-btn" type="submit" disabled={loading}>
           Buscar OS
         </button>
       </form>
-      {loading && <p className="roteiro-loading">Buscando ou atualizando...</p>}
       {error && <p className="roteiro-error">{error}</p>}
       {success && <p className="roteiro-success">{success}</p>}
       {ordemServico && renderUserDetails()}
+
+      {mostrarMapa && (
+        <div className="roteiro-mapa-overlay" onClick={() => setMostrarMapa(false)}>
+          <div className="roteiro-mapa-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="roteiro-mapa-header">
+              <h3>Rastreamento de Endereço</h3>
+              <button
+                className="roteiro-mapa-fechar"
+                onClick={() => setMostrarMapa(false)}
+              >
+                ✕
+              </button>
+            </div>
+            <div
+              className="roteiro-mapa-container"
+              ref={mapRef}
+              style={{ width: '100%', height: '100%' }}
+            />
+            {loading && <p className="roteiro-mapa-loading">Carregando mapa...</p>}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

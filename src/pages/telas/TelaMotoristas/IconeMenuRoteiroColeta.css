@@ -169,7 +169,7 @@
   font-size: 1.1rem;
 }
 
-/* --- NOVO: Botão de Rastreamento de Endereço --- */
+/* --- Botão de Rastreamento de Endereço --- */
 .roteiro-rastreamento-btn {
   background: linear-gradient(135deg, #2196F3, #1976D2);
   color: #fff;
@@ -197,7 +197,7 @@
   box-shadow: none;
 }
 
-/* --- NOVO: Overlay do Mapa --- */
+/* --- Overlay do Mapa --- */
 .roteiro-mapa-overlay {
   position: fixed;
   top: 0;
@@ -217,7 +217,7 @@
   to { opacity: 1; }
 }
 
-/* --- NOVO: Modal do Mapa --- */
+/* --- Modal do Mapa --- */
 .roteiro-mapa-modal {
   background-color: #fff;
   border-radius: 12px;
@@ -243,7 +243,7 @@
   }
 }
 
-/* --- NOVO: Header do Modal do Mapa --- */
+/* --- Header do Modal do Mapa --- */
 .roteiro-mapa-header {
   display: flex;
   justify-content: space-between;
@@ -260,7 +260,7 @@
   font-weight: 600;
 }
 
-/* --- NOVO: Botão Fechar do Modal do Mapa --- */
+/* --- Botão Fechar do Modal do Mapa --- */
 .roteiro-mapa-fechar {
   background: none;
   border: none;
@@ -281,7 +281,7 @@
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* --- NOVO: Container do Mapa --- */
+/* --- Container do Mapa --- */
 .roteiro-mapa-container {
   flex: 1;
   width: 100%;
@@ -289,7 +289,7 @@
   position: relative;
 }
 
-/* --- NOVO: Mensagem de Carregamento do Mapa --- */
+/* --- Mensagem de Carregamento do Mapa --- */
 .roteiro-mapa-loading {
   position: absolute;
   top: 50%;
@@ -303,7 +303,7 @@
   z-index: 10;
 }
 
-/* --- NOVO: Mensagem de Erro do Mapa --- */
+/* --- Mensagem de Erro do Mapa --- */
 .roteiro-mapa-erro {
   padding: 20px;
   background-color: #f8d7da;
@@ -519,7 +519,7 @@
     padding: 18px 0;
   }
 
-  /* --- NOVO: Responsividade do Modal do Mapa --- */
+  /* --- Responsividade do Modal do Mapa --- */
   .roteiro-mapa-modal {
     width: 95%;
     height: 95vh;

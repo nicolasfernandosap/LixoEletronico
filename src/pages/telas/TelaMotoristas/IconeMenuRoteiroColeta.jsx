@@ -7,7 +7,7 @@ const STATUS_COLETA_CONCLUIDA = 'Coleta Concluida';
 const STATUS_CLIENTE_AUSENTE = 'Cliente Ausente';
 const STATUS_INICIAL = 'Destino transporte Coleta';
 
-// Chave da API do Google Maps (substitua pela sua chave)
+// Chave da API do Google Maps 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyDebZ01zrTckNU6oQKPSsAAQqQ30KjcGd4';
 
 const IconeMenuRoteiroColeta = () => {
@@ -23,12 +23,12 @@ const IconeMenuRoteiroColeta = () => {
   const [mostrarObservacao, setMostrarObservacao] = useState(false);
 
   // --- ESTADOS PARA O MAPA ---
-  const [mostrarMapa, setMostrarMapa] = useState(false); // Controla visibilidade do modal
-  const [loadingMapa, setLoadingMapa] = useState(false); // Estado de carregamento do mapa
-  const [erroMapa, setErroMapa] = useState(null); // Estado para erros do mapa
-  const mapRef = useRef(null); // Referência para o elemento do mapa
-  const mapaInstancia = useRef(null); // Referência para a instância do mapa
-  const watchPositionId = useRef(null); // ID do watch de localização em tempo real
+  const [mostrarMapa, setMostrarMapa] = useState(false);
+  const [, setLocalizacaoAtual] = useState(null);
+  const [loadingMapa, setLoadingMapa] = useState(false);
+  const [erroMapa, setErroMapa] = useState(null);
+  const mapRef = useRef(null);
+  const mapaInstancia = useRef(null);
 
   const [statusIds, setStatusIds] = useState({
     inicial: null,
@@ -36,7 +36,6 @@ const IconeMenuRoteiroColeta = () => {
     ausente: null,
   });
 
-  // Carrega os IDs dos status
   useEffect(() => {
     async function fetchStatusIds() {
       const { data, error } = await supabase
@@ -58,7 +57,6 @@ const IconeMenuRoteiroColeta = () => {
     fetchStatusIds();
   }, []);
 
-  // Busca uma OS
   const buscarOrdemServico = useCallback(
     async (e) => {
       e.preventDefault();
@@ -112,7 +110,6 @@ const IconeMenuRoteiroColeta = () => {
     [buscaOS, statusIds.inicial]
   );
 
-  // Atualiza o status da OS
   const aplicarFluxo = useCallback(async () => {
     if (!ordemServico || !novoStatus) {
       setError('Selecione um novo status antes de aplicar o fluxo.');
@@ -159,41 +156,29 @@ const IconeMenuRoteiroColeta = () => {
     setMostrarObservacao(false);
   }, [ordemServico, novoStatus, observacaoMotorista, statusIds.concluida, statusIds.ausente]);
 
-  // --- FUNÇÃO: Obter localização atual com alta precisão em tempo real ---
-  const obterLocalizacaoEmTempoReal = useCallback(() => {
+  const obterLocalizacaoAtual = useCallback(() => {
     return new Promise((resolve) => {
-      if (!navigator.geolocation) {
-        console.error('Geolocalização não suportada pelo navegador');
-        // Usa localização padrão se não suportado
-        resolve({ lat: -23.5505, lng: -46.6333 });
-        return;
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocalizacaoAtual({ lat: latitude, lng: longitude });
+            resolve({ lat: latitude, lng: longitude });
+          },
+          () => {
+            const localizacaoPadrao = { lat: -23.5505, lng: -46.6333 };
+            setLocalizacaoAtual(localizacaoPadrao);
+            resolve(localizacaoPadrao);
+          }
+        );
+      } else {
+        const localizacaoPadrao = { lat: -23.5505, lng: -46.6333 };
+        setLocalizacaoAtual(localizacaoPadrao);
+        resolve(localizacaoPadrao);
       }
-
-      // Opções para melhor precisão
-      const opcoes = {
-        enableHighAccuracy: true, // Ativa GPS para maior precisão
-        timeout: 10000, // Aguarda até 10 segundos
-        maximumAge: 0, // Não usa cache, sempre busca localização atual
-      };
-
-      // Primeiro, tenta obter a localização com alta precisão
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude, accuracy } = position.coords;
-          console.log(`Localização obtida com precisão de ${accuracy.toFixed(2)}m`);
-          resolve({ lat: latitude, lng: longitude });
-        },
-        (error) => {
-          console.error('Erro ao obter localização:', error.message);
-          // Se falhar, usa localização padrão (São Paulo)
-          resolve({ lat: -23.5505, lng: -46.6333 });
-        },
-        opcoes
-      );
     });
   }, []);
 
-  // --- FUNÇÃO: Carregar o script do Google Maps ---
   const carregarScriptGoogleMaps = useCallback(() => {
     return new Promise((resolve, reject) => {
       if (window.google && window.google.maps) {
@@ -204,9 +189,9 @@ const IconeMenuRoteiroColeta = () => {
         window.googleMapsLoading.then(resolve).catch(reject);
         return;
       }
-
       window.googleMapsLoading = new Promise((res, rej) => {
         const script = document.createElement('script');
+        // Corrigido: removida biblioteca "directions" pois é inválida
         script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&language=pt-BR`;
         script.async = true;
         script.defer = true;
@@ -223,70 +208,37 @@ const IconeMenuRoteiroColeta = () => {
     });
   }, []);
 
-  // --- FUNÇÃO: Inicializar o mapa com localização em tempo real ---
   const inicializarMapa = useCallback(async () => {
     setLoadingMapa(true);
     setErroMapa(null);
 
     try {
-      // 1. Carrega o script do Google Maps
       await carregarScriptGoogleMaps();
+      const locAtual = await obterLocalizacaoAtual();
 
-      // 2. Obtém a localização atual com alta precisão
-      const locAtual = await obterLocalizacaoEmTempoReal();
-
-      // 3. Verifica se o elemento do mapa existe
       if (!mapRef.current) {
         setLoadingMapa(false);
         return;
       }
 
-      // 4. Cria a instância do mapa
       const mapa = new window.google.maps.Map(mapRef.current, {
         zoom: 15,
         center: locAtual,
         mapTypeControl: true,
         fullscreenControl: true,
         streetViewControl: true,
+        gestureHandling: "auto",
       });
 
       mapaInstancia.current = mapa;
 
-      // 5. Adiciona um marcador para a localização atual (azul)
-      const marcadorAtual = new window.google.maps.Marker({
+      new window.google.maps.Marker({
         position: locAtual,
         map: mapa,
         title: 'Sua localização',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
       });
 
-      // 6. Inicia o rastreamento em tempo real da localização
-      if (navigator.geolocation) {
-        watchPositionId.current = navigator.geolocation.watchPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            const novaLocalizacao = { lat: latitude, lng: longitude };
-
-            // Atualiza a posição do marcador
-            marcadorAtual.setPosition(novaLocalizacao);
-
-            // Atualiza o centro do mapa para seguir a localização
-            mapa.setCenter(novaLocalizacao);
-
-            console.log('Localização atualizada em tempo real:', novaLocalizacao);
-          },
-          (error) => {
-            console.error('Erro ao rastrear localização:', error.message);
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0,
-          }
-        );
-      }
-
-      // 7. Se houver uma OS, traça a rota até o destino
       if (ordemServico && ordemServico.usuarios) {
         const u = ordemServico.usuarios;
         const enderecoDestino = `${u.endereco}, ${u.numero_casa}, ${u.bairro}, ${u.cidade}, ${u.estado}`;
@@ -296,10 +248,6 @@ const IconeMenuRoteiroColeta = () => {
           const directionsRenderer = new window.google.maps.DirectionsRenderer({
             map: mapa,
             suppressMarkers: false,
-            polylineOptions: {
-              strokeColor: '#4285F4', // Azul do Google
-              strokeWeight: 5,
-            },
           });
 
           directionsService.route(
@@ -311,10 +259,8 @@ const IconeMenuRoteiroColeta = () => {
             (result, status) => {
               if (status === window.google.maps.DirectionsStatus.OK) {
                 directionsRenderer.setDirections(result);
-                console.log('Rota traçada com sucesso');
               } else {
                 console.error('Erro ao traçar rota:', status);
-                // Se não conseguir traçar a rota, adiciona um marcador no destino
                 if (window.google.maps.Geocoder) {
                   const geocoder = new window.google.maps.Geocoder();
                   geocoder.geocode({ address: enderecoDestino }, (results, status) => {
@@ -342,9 +288,8 @@ const IconeMenuRoteiroColeta = () => {
       setErroMapa(`Erro ao carregar mapa: ${err.message}`);
       setLoadingMapa(false);
     }
-  }, [ordemServico, carregarScriptGoogleMaps, obterLocalizacaoEmTempoReal]);
+  }, [ordemServico, carregarScriptGoogleMaps, obterLocalizacaoAtual]);
 
-  // --- FUNÇÃO: Abrir o modal do mapa ---
   const abrirMapa = useCallback(() => {
     setMostrarMapa(true);
     setErroMapa(null);
@@ -353,17 +298,6 @@ const IconeMenuRoteiroColeta = () => {
     }, 100);
   }, [inicializarMapa]);
 
-  // --- FUNÇÃO: Fechar o mapa e parar o rastreamento ---
-  const fecharMapa = useCallback(() => {
-    setMostrarMapa(false);
-    // Para o rastreamento em tempo real
-    if (watchPositionId.current !== null) {
-      navigator.geolocation.clearWatch(watchPositionId.current);
-      watchPositionId.current = null;
-    }
-  }, []);
-
-  // Renderiza os detalhes da OS
   const renderUserDetails = () => {
     if (!ordemServico || !ordemServico.usuarios) return null;
     const u = ordemServico.usuarios;
@@ -376,7 +310,7 @@ const IconeMenuRoteiroColeta = () => {
         </h3>
 
         <div className="roteiro-detail-item">
-          <span className="roteiro-detail-highlight">Usuário:</span> {u.nome_completo}
+          <span className="roteiro-detail-highlight">Nome:</span> {u.nome_completo}
         </div>
         <div className="roteiro-detail-item">
           <span className="roteiro-detail-highlight">CPF:</span> {u.cpf}
@@ -390,7 +324,7 @@ const IconeMenuRoteiroColeta = () => {
             type="checkbox"
             id="toggleEndereco"
             checked={mostrarEndereco}
-            onChange={() => setMostrarEndereco(prev => !prev)}
+            onChange={() => setMostrarEndereco((prev) => !prev)}
           />
           <label htmlFor="toggleEndereco">Deseja visualizar o endereço?</label>
         </div>
@@ -400,14 +334,11 @@ const IconeMenuRoteiroColeta = () => {
             <div className="roteiro-address-details">
               Rua: {u.endereco || 'Não informado'}, {u.numero_casa || 'S/N'}
             </div>
-            <div className="roteiro-address-details">
-              Bairro: {u.bairro || 'Não informado'}
-            </div>
+            <div className="roteiro-address-details">Bairro: {u.bairro || 'Não informado'}</div>
             <div className="roteiro-address-details">
               Cidade/Estado: {u.cidade || 'Não informado'}/{u.estado || 'N/A'}
             </div>
 
-            {/* Botão para Rastreamento de Endereço */}
             <button
               className="roteiro-rastreamento-btn"
               onClick={abrirMapa}
@@ -485,7 +416,7 @@ const IconeMenuRoteiroColeta = () => {
           className="roteiro-busca-input"
           placeholder="Buscar por Nº da OS (ex: 0001)"
           value={buscaOS}
-          onChange={e => setBuscaOS(e.target.value)}
+          onChange={(e) => setBuscaOS(e.target.value)}
           disabled={loading}
         />
         <button className="roteiro-busca-btn" type="submit" disabled={loading}>
@@ -497,15 +428,14 @@ const IconeMenuRoteiroColeta = () => {
       {success && <p className="roteiro-success">{success}</p>}
       {ordemServico && renderUserDetails()}
 
-      {/* Modal do Mapa */}
       {mostrarMapa && (
-        <div className="roteiro-mapa-overlay" onClick={fecharMapa}>
+        <div className="roteiro-mapa-overlay" onClick={() => setMostrarMapa(false)}>
           <div className="roteiro-mapa-modal" onClick={(e) => e.stopPropagation()}>
             <div className="roteiro-mapa-header">
-              <h3>Rastreamento de Endereço (Em Tempo Real)</h3>
+              <h3>Rastreamento de Endereço</h3>
               <button
                 className="roteiro-mapa-fechar"
-                onClick={fecharMapa}
+                onClick={() => setMostrarMapa(false)}
               >
                 ✕
               </button>
@@ -514,7 +444,7 @@ const IconeMenuRoteiroColeta = () => {
               <div className="roteiro-mapa-erro">
                 <p>{erroMapa}</p>
                 <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>
-                  Verifique se sua chave da API do Google Maps está configurada corretamente.
+                  Verifique se sua chave da API do Google Maps está configurada corretamente e tem as permissões necessárias.
                 </p>
               </div>
             )}

@@ -4,10 +4,10 @@
 .form-container {
   display: flex;
   justify-content: center;
-  align-items: center; /* Mantém a centralização para desktop */
+  align-items: center;
   min-height: 100vh;
   background: #0b2d4b;
-  padding: 20px 0; /* Adiciona um padding vertical para dar respiro */
+  padding: 20px 0;
 }
 
 /* Caixa do formulário */
@@ -19,16 +19,16 @@
   width: 100%;
   max-width: 475px;
   text-align: center;
-  position: relative; /* Necessário para posicionar o botão de voltar */
+  position: relative;
 }
 
-/* --- NOVO ESTILO: Botão de Voltar --- */
+/* Botão de Voltar */
 .btn-voltar {
   position: absolute;
   top: 20px;
   left: 20px;
   font-size: 1.5rem;
-  color: #a9dc34; /* Mesma cor do título */
+  color: #a9dc34;
   cursor: pointer;
   transition: transform 0.2s;
 }
@@ -47,7 +47,7 @@
 
 /* Inputs */
 .form-content input {
-  width: 90%;
+  width: 100%;
   padding: 12px 15px;
   margin: 8px 0;
   border: none;
@@ -56,6 +56,7 @@
   font-size: 1rem;
   color: #333;
   transition: all 0.3s ease-in-out;
+  box-sizing: border-box;
 }
 
 /* Placeholder */
@@ -71,8 +72,8 @@
   box-shadow: 0px 0px 8px rgba(169, 220, 52, 0.6);
 }
 
-/* Botão */
-.form-content button {
+/* Botão principal de submit */
+.form-content button[type="submit"] {
   width: 100%;
   padding: 14px;
   margin-top: 15px;
@@ -86,7 +87,7 @@
   transition: background 0.3s;
 }
 
-.form-content button:hover {
+.form-content button[type="submit"]:hover {
   background: #8cc028;
 }
 
@@ -96,14 +97,55 @@
   font-weight: bold;
   margin-bottom: 10px;
 }
-.erro-campo {
-  color: #e53e3e;
-  font-size: 0.875rem;
-  text-align: left;
+
+/* --- ESTILOS FINAIS PARA O ÍCONE DE SENHA --- */
+
+/* 1. O Container que envolve o input e o botão */
+.senha-container {
+  position: relative;
   width: 100%;
-  margin-top: -8px;
-  margin-bottom: 10px;
-  padding-left: 5px;
+  margin: 8px 0;
+}
+
+/* 2. O Input de senha dentro do container */
+.senha-container input {
+  padding-right: 45px !important;
+  margin: 0;
+}
+
+/* 3. O Botão de visualização (sem fundo, sombra ou bordas) */
+.botao-visualizacao-senha {
+  /* Resetando completamente a aparência de botão */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important; /* Remove a sombra */
+  border-radius: 0 !important; /* Remove as bordas arredondadas */
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 45px;
+  
+  /* Posicionamento e centralização */
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: auto;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Estilo do ícone */
+  color: #555 !important;
+  font-size: 1.4rem;
+  cursor: pointer;
+  z-index: 2;
+  transition: color 0.2s;
+}
+
+.botao-visualizacao-senha:hover {
+  background: transparent !important;
+  color: #111 !important;
 }
 
 /* ==========================================================================
@@ -111,20 +153,16 @@
    ========================================================================== */
 @media (max-width: 768px) {
   .form-container {
-    /* Em telas pequenas, alinha o formulário no TOPO */
     align-items: flex-start;
-    /* Garante que o container possa rolar se o conteúdo for grande */
     min-height: 100%; 
-    padding: 0; /* Remove o padding para o form ocupar a tela toda */
+    padding: 0;
   }
 
   .form-content {
-    /* Remove bordas e sombras para uma aparência de tela cheia */
     border-radius: 0;
     box-shadow: none;
-    /* Garante que o formulário ocupe toda a altura disponível, permitindo rolagem interna se necessário */
     min-height: 100vh; 
-    padding: 40px 20px 40px 20px; /* Adiciona padding no topo para o botão de voltar */
+    padding: 40px 20px 40px 20px;
   }
 
   .btn-voltar {

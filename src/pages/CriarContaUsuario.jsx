@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { supabase } from '/supabaseClient.js';
 import './CriarContaUsuario.css';
 
 const CriarContaUsuario = () => {
   const navigate = useNavigate();
 
-  // Seus estados continuam os mesmos...
+  // Seus estados
   const [nomeCompleto, setNomeCompleto] = useState('');
   const [cpf, setCpf] = useState('');
   const [endereco, setEndereco] = useState('');
@@ -22,7 +23,11 @@ const CriarContaUsuario = () => {
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [erros, setErros] = useState({});
 
-  // Suas funções de handle... (sem alterações)
+  // Estados para controlar a visibilidade da senha
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
+
+  // Funções de handle e submit (sem alterações)
   const clearError = (fieldName) => {
     if (erros[fieldName]) {
       setErros((prev) => ({ ...prev, [fieldName]: undefined }));
@@ -146,7 +151,6 @@ const CriarContaUsuario = () => {
   return (
     <div className="form-container">
       <div className="form-content">
-        {/* --- Adicao botao Voltar --- */}
         <Link to="/cadastro" className="btn-voltar">
           <FaArrowLeft />
         </Link>
@@ -155,7 +159,6 @@ const CriarContaUsuario = () => {
         {erros.geral && <p className="erro">{erros.geral}</p>}
 
         <form onSubmit={handleSubmit}>
-          {/* inputs */}
           <input type="text" placeholder="Nome completo" value={nomeCompleto} onChange={(e) => setNomeCompleto(e.target.value)} required />
           <input type="text" placeholder="CPF" value={cpf} onChange={handleCpfChange} required />
           <input type="text" placeholder="Endereço" value={endereco} onChange={(e) => setEndereco(e.target.value)} required />
@@ -166,8 +169,32 @@ const CriarContaUsuario = () => {
           <input type="text" placeholder="CEP" value={cep} onChange={handleCepChange} required />
           <input type="text" placeholder="Celular" value={celular} onChange={handleCelularChange} required />
           <input type="email" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <input type="password" placeholder="Senha" value={senha} onChange={handleSenhaChange} required />
-          <input type="password" placeholder="Confirmar Senha" value={confirmarSenha} onChange={handleConfirmarSenhaChange} required />
+          
+          <div className="senha-container">
+            <input
+              type={mostrarSenha ? 'text' : 'password'}
+              placeholder="Senha"
+              value={senha}
+              onChange={handleSenhaChange}
+              required
+            />
+            <button type="button" className="botao-visualizacao-senha" onClick={() => setMostrarSenha(!mostrarSenha)}>
+              {mostrarSenha ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </button>
+          </div>
+
+          <div className="senha-container">
+            <input
+              type={mostrarConfirmarSenha ? 'text' : 'password'}
+              placeholder="Confirmar Senha"
+              value={confirmarSenha}
+              onChange={handleConfirmarSenhaChange}
+              required
+            />
+            <button type="button" className="botao-visualizacao-senha" onClick={() => setMostrarConfirmarSenha(!mostrarConfirmarSenha)}>
+              {mostrarConfirmarSenha ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </button>
+          </div>
 
           <button type="submit">Criar Conta e Entrar</button>
         </form>

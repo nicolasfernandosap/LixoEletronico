@@ -156,6 +156,8 @@
     align-items: flex-start;
     min-height: 100%; 
     padding: 0;
+    
+    
   }
 
   .form-content {
@@ -163,6 +165,7 @@
     box-shadow: none;
     min-height: 100vh; 
     padding: 40px 20px 40px 20px;
+    max-width: 475px; /* Aplicação de tamanho maximo*/
   }
 
   .btn-voltar {

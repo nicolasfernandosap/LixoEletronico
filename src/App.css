@@ -24,6 +24,7 @@
   /* Permite que o conteúdo interno (as páginas) também use flexbox para se expandir */
   display: flex;
   flex-direction: column;
+  background-color: #E5F0ED;
 }
 
 

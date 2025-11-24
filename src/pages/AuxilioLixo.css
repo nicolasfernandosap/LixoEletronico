@@ -1,0 +1,144 @@
+/* Título principal */
+.titulo-principal {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+/* Texto do parágrafo justificado */
+.descricao-texto {
+  text-align: justify;
+  margin: 0 auto 30px auto;
+  max-width: 700px;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #222;
+}
+
+/* Área que contém todos os cards */
+.cards-area {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px;
+  padding-bottom: 30px;
+  width: 100%;
+}
+
+/* Card Base com largura maior para melhor leitura */
+.card-base {
+  width: 380px; /* aumento de largura */
+  border-radius: 12px;
+  padding: 15px;
+  background: #ffffff; /* padrão será sobrescrito por cores específicas */
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: 0.3s ease;
+  text-align: center;
+  align-self: flex-start !important;
+}
+
+.card-base:hover {
+  transform: scale(1.03);
+}
+
+/* Imagem arredondada */
+.card-imagem {
+  border-radius: 50%;
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  margin: 0 auto 10px auto;
+}
+
+/* Conteúdo expansível com altura maior e rolagem para textos longos */
+.conteudo-expandido {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.conteudo-expandido.mostrar {
+  max-height: 400px; /* altura aumentada para texto completo */
+  overflow-y: auto; /* scrollbar vertical para textos longos */
+  padding-right: 8px; /* evita corte do texto pelo scrollbar */
+}
+
+/* Classes individuais com borda colorida no topo e cor de fundo representativa */
+.card-maquina {
+  border-top: 5px solid #4e9eff;
+  background-color: #d0e7ff; /* azul claro - linha branca */
+}
+
+.card-microondas {
+  border-top: 5px solid #7480ff;
+  background-color: #a0b8ff; /* azul médio - linha azul */
+}
+
+.card-pilhas {
+  border-top: 5px solid #ffbb00;
+  background-color: #ffe5b4; /* laranja claro - pilhas e baterias */
+}
+
+.card-televisao {
+  border-top: 5px solid #8f4b2e;
+  background-color: #d6b69a; /* marrom claro - linha marrom */
+}
+
+.card-impressora {
+  border-top: 5px solid #2ecc71;
+  background-color: #b5e7b3; /* verde suave - linha verde */
+}
+
+/* Quando card está aberto */
+.card-base.aberto {
+  background: #f4f8ff; /* leve destaque ao abrir */
+  transform: scale(1.05);
+  box-shadow: 0 0 14px rgba(0,0,0,0.2);
+}
+
+/* Responsividade para telas maiores que tablets */
+@media (max-width: 1024px) {
+  .card-base {
+    width: 90%;
+    max-width: 360px;
+  }
+  
+  .conteudo-expandido.mostrar {
+    max-height: 350px;
+  }
+  
+  .card-imagem {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+/* Responsividade para tablets e celulares */
+@media (max-width: 768px) {
+  .cards-area {
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .card-base {
+    width: 90%;
+    max-width: 320px;
+  }
+
+  .card-imagem {
+    width: 140px;
+    height: 140px;
+  }
+
+  .descricao-texto {
+    font-size: 0.9rem;
+    max-width: 90%;
+  }
+
+  .conteudo-expandido.mostrar {
+    max-height: 300px;
+  }
+}

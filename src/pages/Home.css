@@ -61,6 +61,9 @@
   gap: 2rem;
   flex-wrap: wrap; /* Permite que as caixas quebrem a linha em telas menores */
   margin-top: 2rem; /* Adiciona um espaço acima das caixas */
+
+  /* 🔥 Impede esticamento vertical dos cards somente na Home */
+  align-items: flex-start;
 }
 
 /* Estilo individual de cada caixa */

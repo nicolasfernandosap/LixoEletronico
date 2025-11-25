@@ -29,10 +29,10 @@
 
 /* Card Base com largura maior para melhor leitura */
 .card-base {
-  width: 380px; /* aumento de largura */
+  width: 380px;
   border-radius: 12px;
   padding: 15px;
-  background: #ffffff; /* padrão será sobrescrito por cores específicas */
+  background: #ffffff;
   box-shadow: 0 0 12px rgba(0,0,0,0.1);
   cursor: pointer;
   transition: 0.3s ease;
@@ -53,7 +53,7 @@
   margin: 0 auto 10px auto;
 }
 
-/* Conteúdo expansível com altura maior e rolagem para textos longos */
+/* Conteúdo expansível que expande o fluxo, empurrando footer para baixo */
 .conteudo-expandido {
   max-height: 0;
   overflow: hidden;
@@ -61,40 +61,40 @@
 }
 
 .conteudo-expandido.mostrar {
-  max-height: 400px; /* altura aumentada para texto completo */
-  overflow-y: auto; /* scrollbar vertical para textos longos */
-  padding-right: 8px; /* evita corte do texto pelo scrollbar */
+  max-height: 1000px; /* valor alto para garantir expansão */
+  overflow: visible;
+  padding-right: 0;
 }
 
 /* Classes individuais com borda colorida no topo e cor de fundo representativa */
 .card-maquina {
   border-top: 5px solid #4e9eff;
-  background-color: #d0e7ff; /* azul claro - linha branca */
+  background-color: #d0e7ff;
 }
 
 .card-microondas {
   border-top: 5px solid #7480ff;
-  background-color: #a0b8ff; /* azul médio - linha azul */
+  background-color: #a0b8ff;
 }
 
 .card-pilhas {
   border-top: 5px solid #ffbb00;
-  background-color: #ffe5b4; /* laranja claro - pilhas e baterias */
+  background-color: #ffe5b4;
 }
 
 .card-televisao {
   border-top: 5px solid #8f4b2e;
-  background-color: #d6b69a; /* marrom claro - linha marrom */
+  background-color: #d6b69a;
 }
 
 .card-impressora {
   border-top: 5px solid #2ecc71;
-  background-color: #b5e7b3; /* verde suave - linha verde */
+  background-color: #b5e7b3;
 }
 
 /* Quando card está aberto */
 .card-base.aberto {
-  background: #f4f8ff; /* leve destaque ao abrir */
+  background: #f4f8ff;
   transform: scale(1.05);
   box-shadow: 0 0 14px rgba(0,0,0,0.2);
 }
@@ -105,11 +105,7 @@
     width: 90%;
     max-width: 360px;
   }
-  
-  .conteudo-expandido.mostrar {
-    max-height: 350px;
-  }
-  
+
   .card-imagem {
     width: 160px;
     height: 160px;
@@ -136,9 +132,5 @@
   .descricao-texto {
     font-size: 0.9rem;
     max-width: 90%;
-  }
-
-  .conteudo-expandido.mostrar {
-    max-height: 300px;
   }
 }

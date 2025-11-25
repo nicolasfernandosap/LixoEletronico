@@ -15,9 +15,7 @@ const AuxilioLixo = () => {
       id: 1,
       linha: "Linha Branca",
       descricao: `Eletrodomésticos grandes como geladeiras, freezers, máquinas de lavar e micro-ondas.
-      Esses equipamentos contêm componentes recicláveis e precisam de descarte adequado para evitar contaminação e promover a reutilização eficiente dos materiais. 
-      É importante não descartá-los em lixo comum devido a fluidos e metais pesados.`,
-
+      Esses equipamentos contêm componentes recicláveis e precisam de descarte adequado para evitar contaminação e promover a reutilização eficiente dos materiais. É importante não descartá-los em lixo comum devido a fluidos e metais pesados.`,
       imagem: ImagemMaquina,
       classe: "card-maquina"
     },
@@ -25,9 +23,7 @@ const AuxilioLixo = () => {
       id: 2,
       linha: "Linha Azul",
       descricao: `Equipamentos elétricos e eletrônicos como micro-ondas, ferramentas, brinquedos eletrônicos e dispositivos médicos.
-      Devem ser descartados corretamente para evitar poluição por componentes tóxicos e garantir o reaproveitamento de partes úteis. 
-      Possuem circuitos e baterias que merecem manejo especializado.`,
-
+      Devem ser descartados corretamente para evitar poluição por componentes tóxicos e garantir o reaproveitamento de partes úteis. Possuem circuitos e baterias que merecem manejo especializado.`,
       imagem: ImagemMicroondas,
       classe: "card-microondas"
     },
@@ -36,7 +32,6 @@ const AuxilioLixo = () => {
       linha: "Pilhas e Baterias",
       descricao: `Pilhas e baterias portáteis contêm metais tóxicos como mercúrio, cádmio e chumbo que podem contaminar o solo e a água.
       O descarte deve ser feito exclusivamente em pontos específicos ou programas de logística reversa para evitar danos ambientais e riscos à saúde.`,
-
       imagem: ImagemPilhas,
       classe: "card-pilhas"
     },
@@ -45,7 +40,6 @@ const AuxilioLixo = () => {
       linha: "Linha Marrom",
       descricao: `Equipamentos de áudio e vídeo como televisores, rádios e aparelhos de som.
       Esses itens contêm substâncias tóxicas, como chumbo em telas e outros componentes perigosos, que precisam ser manejados separadamente para não prejudicar o meio ambiente.`,
-
       imagem: ImagemTelevisao,
       classe: "card-televisao"
     },
@@ -54,14 +48,21 @@ const AuxilioLixo = () => {
       linha: "Linha Verde",
       descricao: `Computadores, notebooks, impressoras, celulares e tablets.
       Aparelhos com metais preciosos e circuitos complexos que necessitam de descarte em locais apropriados para evitar contaminação e garantir a recuperação de materiais valiosos.`,
-
       imagem: ImagemImpressora,
       classe: "card-impressora"
     }
   ];
 
   const handleClick = (id) => {
-    setCardAberto(cardAberto === id ? null : id);
+    const novoEstado = cardAberto === id ? null : id;
+    setCardAberto(novoEstado);
+
+    if (novoEstado) {
+      setTimeout(() => {
+        const el = document.getElementById(`card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
   };
 
   return (
@@ -79,6 +80,7 @@ const AuxilioLixo = () => {
         {cards.map((item) => (
           <div
             key={item.id}
+            id={`card-${item.id}`}
             className={`card-base ${item.classe} ${cardAberto === item.id ? "aberto" : ""}`}
             onClick={() => handleClick(item.id)}
           >

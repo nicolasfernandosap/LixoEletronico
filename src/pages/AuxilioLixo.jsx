@@ -84,11 +84,13 @@ const AuxilioLixo = () => {
             className={`card-base ${item.classe} ${cardAberto === item.id ? "aberto" : ""}`}
             onClick={() => handleClick(item.id)}
           >
-            <img
-              src={item.imagem}
-              alt={item.linha}
-              className="card-imagem"
-            />
+            <div className="imagem-container">
+              <img
+                src={item.imagem}
+                alt={item.linha}
+                className="card-imagem"
+              />
+            </div>
 
             <h3 className="linha-titulo">{item.linha}</h3>
 

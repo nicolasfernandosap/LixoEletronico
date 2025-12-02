@@ -1,0 +1,108 @@
+/* 
+  Classe global controlada pelo componente PontosAutorizados via useEffect
+  para desativar a barra de rolagem da página.
+*/
+body.sem-scroll {
+  overflow: hidden; /* Esconde a barra de rolagem */
+}
+
+/* 
+  Estilização exclusiva para o componente PontosAutorizados.
+*/
+
+/* Container principal que ocupa toda a área visível */
+.ponto-coleta-pagina {
+  position: relative; /* Necessário para posicionar o pseudo-elemento ::before */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+
+  /* Imagem de fundo */
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* --- NOVO: Camada escura sobre toda a página --- */
+.ponto-coleta-pagina::before {
+  content: ''; /* Pseudo-elementos precisam de 'content' */
+  position: absolute; /* Posição absoluta em relação ao .ponto-coleta-pagina */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+  /* A cor semitransparente que você pediu, aplicada sobre a imagem de fundo */
+  background-color: rgba(0, 0, 0, 0.55);
+  
+  z-index: 0; /* Garante que a camada fique atrás do conteúdo (o card) */
+}
+
+/* Card translúcido com informações */
+.ponto-coleta-card {
+  position: relative; /* Garante que o card fique na frente da camada escura */
+  z-index: 1;
+  
+  /* --- MUDANÇA: Fundo removido para o card ficar "invisível" --- */
+  /* background-color: rgba(0, 0, 0, 0.55); */ /* Esta linha foi removida */
+  
+  color: white;
+  padding: 30px 35px;
+  border-radius: 15px;
+  max-width: 650px;
+  width: 100%;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Título dentro do card */
+.ponto-coleta-card__titulo {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+
+/* Parágrafos de texto dentro do card */
+.ponto-coleta-card__texto {
+  margin: 12px 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #f0f0f0;
+}
+
+/* Texto em negrito (destaque) dentro do card */
+.ponto-coleta-card__texto--destaque {
+  color: #9EEAF9;
+  font-weight: 700;
+}
+
+/* --- Media Query para Responsividade --- */
+@media (max-width: 768px) {
+  .ponto-coleta-pagina {
+    align-items: flex-start;
+    padding-top: 50px;
+  }
+
+  .ponto-coleta-card {
+    padding: 25px 20px;
+    max-width: 90%;
+  }
+
+  .ponto-coleta-card__titulo {
+    font-size: 1.6rem;
+  }
+
+  .ponto-coleta-card__texto {
+    font-size: 1rem;
+  }
+}

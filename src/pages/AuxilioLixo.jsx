@@ -46,7 +46,7 @@ const AuxilioLixo = () => {
     {
       id: 5,
       linha: "Linha Verde",
-      descricao: `Computadores, notebooks, impressoras, celulares e tablets.
+      descricao: `Computadores, notebooks, impressoras, celulares, placa mãe computador e tablets.
       Aparelhos com metais preciosos e circuitos complexos que necessitam de descarte em locais apropriados para evitar contaminação e garantir a recuperação de materiais valiosos.`,
       imagem: ImagemImpressora,
       classe: "card-impressora"

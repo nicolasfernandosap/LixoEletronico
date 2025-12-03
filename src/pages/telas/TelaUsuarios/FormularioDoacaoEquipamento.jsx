@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../../supabaseClient';
 import './FormularioDoacaoEquipamento.css';
-import { FaCamera, FaCheckCircle, FaHeart } from 'react-icons/fa';
+import { FaCamera, FaCheckCircle, FaHeart, FaTimes } from 'react-icons/fa'; // Adicionado FaTimes
 
 const FormularioDoacaoEquipamento = () => {
   // --- ESTADOS DO COMPONENTE ---
@@ -136,7 +136,11 @@ const FormularioDoacaoEquipamento = () => {
       setMensagemSucesso('Doação registrada com sucesso! Agradecemos sua contribuição.');
       setFormData({ id_equipamento_tipo: '', descricao: '', mensagem: '' });
       setFotoFile(null);
-      document.getElementById('foto_arquivo').value = ''; // Limpa o campo de input de arquivo.
+      // Limpa o campo de input de arquivo.
+      const fileInput = document.getElementById('foto_arquivo');
+      if (fileInput) {
+        fileInput.value = '';
+      }
 
       setTimeout(() => setMensagemSucesso(''), 5000);
 
@@ -148,16 +152,36 @@ const FormularioDoacaoEquipamento = () => {
     }
   };
 
+  // Função para fechar o card de sucesso manualmente
+  const handleCloseSuccess = () => {
+    setMensagemSucesso('');
+  };
+
   // --- RENDERIZAÇÃO DO COMPONENTE (JSX) ---
   return (
     <div className="formulario-ordens-container">
+      
+      {/* NOVO CARD DE NOTIFICAÇÃO DE SUCESSO */}
+      {mensagemSucesso && (
+        <div className="card-notificacao-backdrop">
+          <div className="card-doacao-equipamento"> {/* Classe solicitada */}
+            <button className="close-btn" onClick={handleCloseSuccess}>
+              <FaTimes />
+            </button>
+            <FaCheckCircle size={40} />
+            <h3>Sucesso!</h3>
+            <p>{mensagemSucesso}</p>
+          </div>
+        </div>
+      )}
+
       <div className="formulario-section">
         <h2><FaHeart className="icon-heart" /> Doação de Equipamento</h2>
         <p className="descricao-formulario">
           Preencha os campos abaixo para registrar sua doação. Nossa equipe analisará e entrará em contato.
         </p>
 
-        {mensagemSucesso && <div className="mensagem-sucesso"><FaCheckCircle /> {mensagemSucesso}</div>}
+        {/* A mensagem de sucesso antiga foi removida. A de erro permanece. */}
         {mensagemErro && <div className="mensagem-erro">{mensagemErro}</div>}
 
         <form onSubmit={handleSubmit} className="ordem-form" noValidate>

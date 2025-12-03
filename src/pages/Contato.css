@@ -1,0 +1,107 @@
+/* 
+  Classe global controlada pelo componente Contato via useEffect
+  para desativar a barra de rolagem da página.
+*/
+body.sem-scroll {
+  overflow: hidden; /* Esconde a barra de rolagem */
+}
+
+/* 
+  Estilização exclusiva para o componente Contato.
+  As classes usam o prefixo "contato-" para evitar conflitos.
+*/
+
+/* Container principal que ocupa toda a área visível */
+.contato-pagina {
+  position: relative; /* Necessário para posicionar o pseudo-elemento ::before */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+
+  /* Imagem de fundo */
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Camada escura sobre toda a página */
+.contato-pagina::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+  /* Cor semitransparente aplicada sobre a imagem de fundo */
+  background-color: rgba(0, 0, 0, 0.55);
+  
+  z-index: 0; /* Garante que a camada fique atrás do conteúdo (o card) */
+}
+
+/* Card com as informações de contato */
+.contato-card {
+  position: relative;
+  z-index: 1;
+  
+  /* O fundo do card é transparente, mostrando a camada escura da página */
+  color: white;
+  padding: 30px 35px;
+  border-radius: 15px;
+  max-width: 650px;
+  width: 100%;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Título dentro do card */
+.contato-card__titulo {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+
+/* Parágrafos de texto dentro do card */
+.contato-card__texto {
+  margin: 12px 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #f0f0f0;
+}
+
+/* Texto em negrito (destaque) dentro do card */
+.contato-card__texto--destaque {
+  color: #9EEAF9; /* Mantendo a mesma cor de destaque para consistência */
+  font-weight: 700;
+}
+
+/* --- Media Query para Responsividade --- */
+@media (max-width: 768px) {
+  .contato-pagina {
+    align-items: flex-start;
+    padding-top: 50px;
+  }
+
+  .contato-card {
+    padding: 25px 20px;
+    max-width: 90%;
+  }
+
+  .contato-card__titulo {
+    font-size: 1.6rem;
+  }
+
+  .contato-card__texto {
+    font-size: 1rem;
+  }
+}

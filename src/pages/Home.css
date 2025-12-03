@@ -1,9 +1,5 @@
-
 .home-wrapper {
-  /* Cor de fundo com o gradiente*/
   background: linear-gradient(to bottom, #43cea2, #18d26e);
-  
-  /* Layout e espaçamento */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,12 +7,11 @@
   padding: 2rem;
   flex: 1;
   width: 100%;
-  box-sizing: border-box; /* Evita problemas com padding */
+  box-sizing: border-box;
   text-align: center;
   color: white;
 }
 
-/* Seção de introdução (título, parágrafo, botão) */
 .home-intro {
   max-width: 800px;
   margin-bottom: 1rem;
@@ -29,69 +24,52 @@
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.home-description {
+.home-intro .home-description { /* Adicionado seletor para especificidade */
   font-size: 1.2rem;
   line-height: 1.6;
   margin-bottom: 2rem;
 }
 
-/* Botão principal */
-.home-button {
-  background-color: #10395C; /* Cor azul do seu header */
-  color: white;
-  border: none;
-  border-radius: 25px;
-  padding: 12px 30px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.home-button:hover {
-  background-color: #1a5a8d; /* Um tom mais claro de azul */
-  transform: translateY(-2px); /* Efeito de levantar */
-}
-
-/* Contêiner das caixas */
 .home-container {
   display: flex;
   justify-content: center;
   gap: 2rem;
-  flex-wrap: wrap; /* Permite que as caixas quebrem a linha em telas menores */
-  margin-top: 2rem; /* Adiciona um espaço acima das caixas */
-
-  /* 🔥 Impede esticamento vertical dos cards somente na Home */
+  flex-wrap: wrap;
+  margin-top: 2rem;
   align-items: flex-start;
 }
 
-/* Estilo individual de cada caixa */
-.box {
+/* Wrapper para cada conjunto de card + descrição */
+.card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   max-width: 320px;
+}
+
+.box {
+  width: 100%;
   height: 250px;
   border-radius: 15px;
-  overflow: hidden; /* Garante que a imagem não saia das bordas arredondadas */
-  position: relative; /* Necessário para o overlay */
+  overflow: hidden;
+  position: relative;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.4s ease;
   cursor: pointer;
 }
 
 .box:hover {
-  transform: scale(1.05); /* Efeito de zoom ao passar o mouse */
+  transform: scale(1.05);
 }
 
-/* Estilo da imagem dentro da caixa */
 .box img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Faz a imagem preencher a caixa sem distorcer */
+  object-fit: cover;
   transition: filter 0.4s ease;
 }
 
-/* Camada escura que aparece por cima da imagem */
 .box .box-overlay {
   position: absolute;
   top: 0;
@@ -103,16 +81,61 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0; /* Começa invisível */
+  opacity: 0;
   transition: opacity 0.4s ease;
 }
 
 .box:hover .box-overlay {
-  opacity: 1; /* Fica visível ao passar o mouse na caixa */
+  opacity: 1;
 }
 
 .box .box-overlay h3 {
   font-size: 1.8rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* Descrição que fica ABAIXO do card */
+.box-description {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  margin-top: 15px;
+  padding: 0 10px;
+  font-weight: 400;
+}
+
+
+/* --- OTIMIZAÇÃO: Media Query para Responsividade Mobile --- */
+/* Aplica estes estilos em telas com largura máxima de 768px */
+@media (max-width: 768px) {
+  .home-wrapper {
+    padding: 2rem 1rem; /* Menos padding lateral em telas pequenas */
+  }
+
+  .home-intro h1 {
+    font-size: 2.2rem; /* Título principal menor */
+  }
+
+  .home-intro .home-description {
+    font-size: 1.1rem; /* Descrição principal menor */
+  }
+
+  .home-container {
+    gap: 2.5rem; /* Aumenta o espaço vertical entre os cards empilhados */
+  }
+
+  .card-wrapper {
+    max-width: 340px; /* Permite que o card ocupe um pouco mais da tela */
+  }
+
+  .box {
+    height: 220px; /* Altura dos cards ligeiramente menor */
+  }
+
+  .box-description {
+    font-size: 0.95rem; /* Texto da descrição um pouco menor para caber melhor */
+    margin-top: 12px;
+  }
 }

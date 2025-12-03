@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../../supabaseClient'; // Garanta que o caminho para seu cliente Supabase está correto.
 import './FormularioOrdensServico.css'; // Arquivo de estilos para o componente.
-import { FaCamera, FaCheckCircle } from 'react-icons/fa'; // Ícones para a interface.
+import { FaCamera, FaCheckCircle, FaTimes } from 'react-icons/fa'; // Adicionado FaTimes para o botão de fechar.
 
 const FormularioOrdensServico = () => {
   // --- ESTADOS DO COMPONENTE ---
@@ -190,7 +190,11 @@ const FormularioOrdensServico = () => {
         mensagem: ''
       });
       setFotoFile(null); // Limpa o estado do arquivo.
-      document.getElementById('foto_armazenamento').value = ''; // Limpa o campo de input de arquivo.
+      // Limpa o campo de input de arquivo.
+      const fileInput = document.getElementById('foto_armazenamento');
+      if (fileInput) {
+        fileInput.value = '';
+      }
 
       // Remove a mensagem de sucesso após 5 segundos.
       setTimeout(() => setMensagemSucesso(''), 5000);
@@ -208,17 +212,36 @@ const FormularioOrdensServico = () => {
     }
   };
 
+  // Função para fechar o card de sucesso manualmente
+  const handleCloseSuccess = () => {
+    setMensagemSucesso('');
+  };
+
   // --- RENDERIZAÇÃO DO COMPONENTE (JSX) ---
   return (
     <div className="formulario-ordens-container">
+      
+      {/* NOVO CARD DE NOTIFICAÇÃO DE SUCESSO */}
+      {mensagemSucesso && (
+        <div className="card-notificacao-backdrop">
+          <div className="card-notificacao-sucesso">
+            <button className="close-btn" onClick={handleCloseSuccess}>
+              <FaTimes />
+            </button>
+            <FaCheckCircle size={40} />
+            <h3>Sucesso!</h3>
+            <p>{mensagemSucesso}</p>
+          </div>
+        </div>
+      )}
+
       <div className="formulario-section">
         <h2>Nova Ordem de Serviço</h2>
         <p className="descricao-formulario">
           Preencha o formulário abaixo para solicitar um serviço. Nossa equipe entrará em contato em breve.
         </p>
 
-        {/* Exibição condicional das mensagens de feedback */}
-        {mensagemSucesso && <div className="mensagem-sucesso"><FaCheckCircle /> {mensagemSucesso}</div>}
+        {/* Exibição condicional da mensagem de erro (a de sucesso foi movida para o card) */}
         {mensagemErro && <div className="mensagem-erro">{mensagemErro}</div>}
 
         <form onSubmit={handleSubmit} className="ordem-form" noValidate>
